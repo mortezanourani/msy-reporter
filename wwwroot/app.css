@@ -1,3 +1,5 @@
+@import 'fontiran.css';
+
 html {
     direction: rtl;
 }
@@ -11,6 +13,8 @@ body {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    background-color: lavender;
+    font-family: IRANSans;
 }
 
 /*

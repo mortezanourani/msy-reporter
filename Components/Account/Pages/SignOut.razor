@@ -1,0 +1,15 @@
+﻿@page "/Account/SignOut"
+
+@using Microsoft.AspNetCore.Identity
+@using Reporter.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+<h3>SignOut</h3>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await SignInManager.SignOutAsync();
+    }
+}
