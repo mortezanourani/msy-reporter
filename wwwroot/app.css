@@ -1,3 +1,50 @@
+html {
+    direction: rtl;
+}
+
+body {
+    margin: 0 auto;
+    max-width: 1280px;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+/*
+ * Tablet (Landscape) *****/
+@media only screen and (max-width: 1024px) {
+    body {
+        max-width: 1024px;
+    }
+}
+
+/*
+ * Tablet (Portrait) *****/
+@media only screen and (max-width: 834px) {
+    body {
+        max-width: 834px;
+    }
+}
+
+/*
+ * Mobile (Landscape) *****/
+@media only screen and (max-width: 768px) {
+    body {
+        max-width: 768px;
+    }
+}
+
+/*
+ * Mobile (Portrait) *****/
+@media only screen and (max-width: 480px) {
+    body {
+        max-width: 480px;
+    }
+}
+
 h1:focus {
     outline: none;
 }
