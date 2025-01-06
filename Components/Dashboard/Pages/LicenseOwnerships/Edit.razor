@@ -1,0 +1,89 @@
+﻿@page "/Dashboard/LicenseOwnerships/Edit"
+@using Microsoft.EntityFrameworkCore
+@using Reporter.Models
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>LicenseOwnership</h2>
+<hr />
+@if (LicenseOwnership is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="LicenseOwnership" OnValidSubmit="UpdateLicenseOwnership" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="LicenseOwnership.Id" value="@LicenseOwnership.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="LicenseOwnership.Name" class="form-control" />
+                    <ValidationMessage For="() => LicenseOwnership.Name" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/Dashboard/LicenseOwnerships">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private LicenseOwnership? LicenseOwnership { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        LicenseOwnership ??= await context.LicenseOwnerships.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (LicenseOwnership is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateLicenseOwnership()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(LicenseOwnership!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!LicenseOwnershipExists(LicenseOwnership!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/Dashboard/LicenseOwnerships");
+    }
+
+    private bool LicenseOwnershipExists(Guid id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.LicenseOwnerships.Any(e => e.Id == id);
+    }
+}

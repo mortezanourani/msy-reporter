@@ -9,4 +9,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Gender> Genders { get; set; }
 
     public DbSet<BuildingOwnership> BuildingOwnerships { get; set; }
+
+    public DbSet<LicenseOwnership> LicenseOwnerships { get; set; }
 }

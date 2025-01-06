@@ -1,0 +1,36 @@
+﻿@page "/Dashboard/LicenseOwnerships"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Reporter.Models
+@using Reporter.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="/Dashboard/LicenseOwnerships/Create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.LicenseOwnerships">
+    <PropertyColumn Property="licenseownership => licenseownership.Name" />
+
+    <TemplateColumn Context="licenseownership">
+        <a href="@($"/Dashboard/LicenseOwnerships/Edit?id={licenseownership.Id}")">Edit</a> |
+        <a href="@($"/Dashboard/LicenseOwnerships/Details?id={licenseownership.Id}")">Details</a> |
+        <a href="@($"/Dashboard/LicenseOwnerships/Delete?id={licenseownership.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private AppDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
