@@ -9,5 +9,5 @@ public class City
 
     public string Name { get; set; }
 
-    public virtual ICollection<Gym>? Gyms { get; set; }
+    public virtual ICollection<SportFacility>? SportFacilities { get; set; }
 }

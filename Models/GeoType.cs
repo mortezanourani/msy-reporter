@@ -2,7 +2,7 @@
 
 namespace Reporter.Models;
 
-public class LocationType
+public class GeoType
 {
     [DefaultValue("NewId()")]
     public Guid Id { get; set; }
