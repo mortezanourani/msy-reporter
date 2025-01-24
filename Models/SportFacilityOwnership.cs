@@ -1,6 +1,6 @@
 ﻿namespace Reporter.Models;
 
-public class Gender
+public class SportFacilityOwnership
 {
     public Guid Id { get; set; }
 

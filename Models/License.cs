@@ -4,17 +4,20 @@ public class License
 {
     public Guid Id { get; set; }
 
-    // دولتی / خصوصی - حقیقی / خصوصی - حقوقی
+    // حقوقی / حقیقی
+    public virtual LicenseType Type { get; set; }
+
+    // تملیکی / استیجاری / دولتی
     public virtual LicenseOwnership Ownership { get; set; }
+
+    // فعال / منقضی / غیرفعال
+    public virtual LicenseStatus? Status { get; set; }
 
     public DateOnly StartDate { get; set; }
 
     public DateOnly ExtensionDate { get; set; }
 
     public DateOnly ExpireDate { get; set; }
-
-    // فعال / منقضی / غیرفعال
-    public virtual LicenseStatus? Status { get; set; }
 
     public string? CompanyName { get; set; }
 

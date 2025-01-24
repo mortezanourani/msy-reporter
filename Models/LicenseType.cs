@@ -1,8 +1,8 @@
 ﻿namespace Reporter.Models;
 
-public class Gender
+public class LicenseType
 {
     public Guid Id { get; set; }
 
-    public string Name { get; set; }
+    public string Type { get; set; }
 }

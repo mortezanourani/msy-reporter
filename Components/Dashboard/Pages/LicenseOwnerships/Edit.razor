@@ -42,7 +42,7 @@ else
     private Guid Id { get; set; }
 
     [SupplyParameterFromForm]
-    private LicenseOwnership? LicenseOwnership { get; set; }
+    private LicenseType? LicenseOwnership { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
