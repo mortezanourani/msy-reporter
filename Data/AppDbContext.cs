@@ -6,9 +6,23 @@ namespace Reporter.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<Gender> Genders { get; set; }
-
     public DbSet<BuildingOwnership> BuildingOwnerships { get; set; }
 
+    public DbSet<BuildingType> BuildingTypes { get; set; }
+
+    public DbSet<City> Cities { get; set; }
+
+    public DbSet<Contract> Contracts { get; set; }
+
+    public DbSet<Gender> Genders { get; set; }
+
+    public DbSet<GeoType> GeoTypes { get; set; }
+
+    public DbSet<License> Licenses { get; set; }
+
     public DbSet<LicenseOwnership> LicenseOwnerships { get; set; }
+
+    public DbSet<LicenseStatus> LicenseStatus { get; set; }
+
+    public DbSet<SportFacility> SportsFacilities { get; set; }
 }

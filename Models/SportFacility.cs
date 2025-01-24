@@ -38,11 +38,14 @@ public class SportFacility
     public string? TelNumber { get; set; }
 
     // M5
-    public virtual License? License { get; set; }
+    public Guid? LicenseId { get; set; }
 
     // M88
-    public virtual Contract? Contract { get; set; }
+    public Guid? ContractId { get; set; }
 
-    [DefaultValue("DateTime.Now()")]
     public DateTime Edited { get; set; }
+
+    public virtual License? License { get; set; }
+
+    public virtual Contract? Contract { get; set; }
 }
