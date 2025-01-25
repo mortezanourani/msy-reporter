@@ -36,13 +36,11 @@ public class SportFacility
 
     public string? TelNumber { get; set; }
 
-    // ماده 5
     public Guid? LicenseId { get; set; }
 
-    // ماده 88
     public Guid? ContractId { get; set; }
 
-    public DateTime Edited { get; set; } = DateTime.UtcNow;
+    public DateTime Edited { get; set; }
 
     public virtual License? License { get; set; }
 

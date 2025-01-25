@@ -116,9 +116,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             );
         });
 
-        modelBuilder.Entity<SportFacility>()
-            .Property(e => e.Id)
+        modelBuilder.Entity<SportFacility>(f =>
+        {
+            f.Property(e => e.Id)
             .HasDefaultValueSql("NEWID()");
+
+            f.Property(e => e.Edited)
+            .HasDefaultValueSql("GETDATE()");
+        });
 
         modelBuilder.Entity<Contract>()
             .Property(e => e.Id)
