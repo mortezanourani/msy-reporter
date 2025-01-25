@@ -35,7 +35,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<City>(c =>
         {
             c.Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
             c.HasData(
                 new City { Id = new Guid("18e0eb40-4b13-45a1-85c0-d53cb464664c"), Name = "آستارا" },
@@ -61,7 +61,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<Gender>(g =>
         {
             g.Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
             g.HasData(
                 new Gender { Id = new Guid("a0980bed-ef44-44ca-b597-311b92918d4e"), Name = "آقایان" },
@@ -73,7 +73,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<GeoType>(gt =>
         {
             gt.Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
             gt.HasData(
                 new GeoType { Id = new Guid("bf5eb862-9c2c-4182-8111-c9908fd64ccc"), Type = "شهری" },
@@ -84,7 +84,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<SportFacilityType>(ft =>
         {
             ft.Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
             ft.HasData(
                 new SportFacilityType { Id = new Guid("ba011bf4-ec24-406f-b495-3510c6e8858a"), Type = "سرپوشیده" },
@@ -95,7 +95,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<SportFacilityOwnership>(fo =>
         {
             fo.Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
             fo.HasData(
                 new SportFacilityOwnership { Id = new Guid("2169ee28-685c-440b-afc4-6ea4e606c8fa"), Name = "دولتی - وزارت ورزش و جوانان" },
@@ -108,7 +108,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<SportFacilityStatus>(fs =>
         {
             fs.Property(e => e.Id)
-            .HasDefaultValue("NEWID");
+            .HasDefaultValueSql("NEWID");
 
             fs.HasData(
                 new SportFacilityStatus { Id = new Guid("e30cb7ae-f7e2-4c3d-a612-f8ccd57f02c7"), Status = "فعال" },
@@ -118,16 +118,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<SportFacility>()
             .Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
         modelBuilder.Entity<Contract>()
             .Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
         modelBuilder.Entity<LicenseType>(lt =>
         {
             lt.Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
             lt.HasData(
                 new LicenseType { Id = new Guid("332bbac6-7c89-47d0-a050-782ea6c1a8f6"), Type = "حقیقی" },
@@ -138,7 +138,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<LicenseOwnership>(lo =>
         {
             lo.Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
 
             lo.HasData(
                 new LicenseOwnership { Id = new Guid("fbb67269-e44a-4f31-a690-e4b676cb0ada"), Name = "تملیکی" },
@@ -148,6 +148,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<License>()
             .Property(e => e.Id)
-            .HasDefaultValue("NEWID()");
+            .HasDefaultValueSql("NEWID()");
     }
 }
