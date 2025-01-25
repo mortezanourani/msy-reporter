@@ -23,12 +23,18 @@ public class SportFacility
     // قابل بهره برداری / بهره برداری شده / غیر قابل بهره برداری
     public virtual string? Status { get; set; }
 
+    // سند دارد یا خیر
+    public bool? hasDocument { get; set; }
+
     public string? Sports { get; set; }
 
     public virtual Gender? UsersGender { get; set; }
 
     // دولتی وزارت ورزش / خصوصی / دولتی سایر ارگان ها
     public virtual SportFacilityOwnership Ownership { get; set; }
+
+    // مالک دولتی سایر ارگان ها
+    public string? GovOwner { get; set; }
 
     public string? Zipcode { get; set; }
 
