@@ -108,7 +108,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<SportFacilityStatus>(fs =>
         {
             fs.Property(e => e.Id)
-            .HasDefaultValueSql("NEWID");
+            .HasDefaultValueSql("NEWID()");
 
             fs.HasData(
                 new SportFacilityStatus { Id = new Guid("e30cb7ae-f7e2-4c3d-a612-f8ccd57f02c7"), Status = "فعال" },
