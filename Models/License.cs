@@ -8,9 +8,9 @@ public class License
 
     public virtual LicenseOwnership Ownership { get; set; }
 
-    public DateOnly StartDate { get; set; }
+    public string? Serial { get; set; }
 
-    public DateOnly ExtensionDate { get; set; }
+    public DateOnly StartDate { get; set; }
 
     public DateOnly ExpireDate { get; set; }
 
