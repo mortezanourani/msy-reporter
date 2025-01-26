@@ -39,7 +39,7 @@ else
 
 @code {
     [SupplyParameterFromQuery]
-    private Guid Id { get; set; }
+    private int Id { get; set; }
 
     [SupplyParameterFromForm]
     private Gender? Gender { get; set; }
@@ -81,7 +81,7 @@ else
         NavigationManager.NavigateTo("/Dashboard/Genders");
     }
 
-    private bool GenderExists(Guid id)
+    private bool GenderExists(int id)
     {
         using var context = DbFactory.CreateDbContext();
         return context.Genders.Any(e => e.Id == id);
