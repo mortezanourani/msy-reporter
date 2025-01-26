@@ -38,7 +38,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .ValueGeneratedOnAdd();
 
             c.HasData(
-                new City { Id = 0, Name = "استان" },
                 new City { Id = 1, Name = "آستارا" },
                 new City { Id = 2, Name = "آستانه اشرفیه" },
                 new City { Id = 3, Name = "املش" },
@@ -55,7 +54,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 new City { Id = 14, Name = "فومن" },
                 new City { Id = 15, Name = "لاهیجان" },
                 new City { Id = 16, Name = "لنگرود" },
-                new City { Id = 17, Name = "ماسال" }
+                new City { Id = 17, Name = "ماسال" },
+                new City { Id = 18, Name = "استان" }
             );
         });
 
