@@ -1,0 +1,47 @@
+﻿@page "/Dashboard/SportFacilities"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Reporter.Models
+@using Reporter.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="/Dashboard/SportFacilities/Create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.SportsFacilities">
+    <PropertyColumn Property="sportfacility => sportfacility.Name" />
+    <PropertyColumn Property="sportfacility => sportfacility.Area" />
+    <PropertyColumn Property="sportfacility => sportfacility.Location" />
+    <PropertyColumn Property="sportfacility => sportfacility.hasDocument" />
+    <PropertyColumn Property="sportfacility => sportfacility.Sports" />
+    <PropertyColumn Property="sportfacility => sportfacility.Owner" />
+    <PropertyColumn Property="sportfacility => sportfacility.Zipcode" />
+    <PropertyColumn Property="sportfacility => sportfacility.Address" />
+    <PropertyColumn Property="sportfacility => sportfacility.TelNumber" />
+    <PropertyColumn Property="sportfacility => sportfacility.LicenseId" />
+    <PropertyColumn Property="sportfacility => sportfacility.ContractId" />
+    <PropertyColumn Property="sportfacility => sportfacility.Edited" />
+
+    <TemplateColumn Context="sportfacility">
+        <a href="@($"/Dashboard/SportFacilities/Edit?Id={sportfacility.Id}")">Edit</a> |
+        <a href="@($"/Dashboard/SportFacilities/Details?Id={sportfacility.Id}")">Details</a> |
+        <a href="@($"/Dashboard/SportFacilities/Delete?Id={sportfacility.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private AppDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

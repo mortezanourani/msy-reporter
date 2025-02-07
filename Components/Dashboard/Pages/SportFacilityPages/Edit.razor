@@ -1,0 +1,144 @@
+﻿@page "/Dashboard/SportFacilities/Edit"
+@using Microsoft.EntityFrameworkCore
+@using Reporter.Models
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>SportFacility</h2>
+<hr />
+@if (SportFacility is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="SportFacility" OnValidSubmit="UpdateSportFacility" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="SportFacility.Id" value="@SportFacility.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="SportFacility.Name" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="area" class="form-label">Area:</label>
+                    <InputNumber id="area" @bind-Value="SportFacility.Area" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.Area" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location:</label>
+                    <InputText id="location" @bind-Value="SportFacility.Location" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.Location" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="hasdocument" class="form-label">hasDocument:</label>
+                    @* <InputCheckbox id="hasdocument" @bind-Value="SportFacility.hasDocument" class="form-check-input" /> *@
+                    <ValidationMessage For="() => SportFacility.hasDocument" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="sports" class="form-label">Sports:</label>
+                    <InputText id="sports" @bind-Value="SportFacility.Sports" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.Sports" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="owner" class="form-label">Owner:</label>
+                    <InputText id="owner" @bind-Value="SportFacility.Owner" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.Owner" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="zipcode" class="form-label">Zipcode:</label>
+                    <InputText id="zipcode" @bind-Value="SportFacility.Zipcode" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.Zipcode" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address:</label>
+                    <InputText id="address" @bind-Value="SportFacility.Address" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.Address" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="telnumber" class="form-label">TelNumber:</label>
+                    <InputText id="telnumber" @bind-Value="SportFacility.TelNumber" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.TelNumber" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="licenseid" class="form-label">LicenseId:</label>
+                    @* <InputText id="licenseid" @bind-Value="SportFacility.LicenseId" class="form-control" /> *@
+                    <ValidationMessage For="() => SportFacility.LicenseId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="contractid" class="form-label">ContractId:</label>
+                    @* <InputText id="contractid" @bind-Value="SportFacility.ContractId" class="form-control" /> *@
+                    <ValidationMessage For="() => SportFacility.ContractId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="edited" class="form-label">Edited:</label>
+                    <InputDate id="edited" @bind-Value="SportFacility.Edited" class="form-control" />
+                    <ValidationMessage For="() => SportFacility.Edited" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/sportfacilities">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private SportFacility? SportFacility { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        SportFacility ??= await context.SportsFacilities.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (SportFacility is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateSportFacility()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(SportFacility!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!SportFacilityExists(SportFacility!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/Dashboard/SportFacilities");
+    }
+
+    private bool SportFacilityExists(Guid id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.SportsFacilities.Any(e => e.Id == id);
+    }
+}
