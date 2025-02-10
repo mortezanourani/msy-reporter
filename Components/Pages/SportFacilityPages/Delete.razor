@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/SportFacilities/Delete"
+﻿@page "/SportFacilities/Delete"
 @using Microsoft.EntityFrameworkCore
 @using Reporter.Models
 @inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
@@ -67,7 +67,7 @@
         </dl>
         <EditForm method="post" Model="sportfacility" OnValidSubmit="DeleteSportFacility" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(sportfacility is null)">Delete</button> |
-            <a href="/Dashboard/SportFacilities">Back to List</a>
+            <a href="/SportFacilities">Back to List</a>
         </EditForm>
     }
 </div>
@@ -94,6 +94,6 @@
         using var context = DbFactory.CreateDbContext();
         context.SportsFacilities.Remove(sportfacility!);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/Dashboard/SportFacilities");
+        NavigationManager.NavigateTo("/SportFacilities");
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/SportFacilities/Create"
+﻿@page "/SportFacilities/Create"
 @using Microsoft.EntityFrameworkCore
 @using Reporter.Models
 @inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
@@ -81,7 +81,7 @@
 </div>
 
 <div>
-    <a href="/Dashboard/SportFacilities">Back to List</a>
+    <a href="/SportFacilities">Back to List</a>
 </div>
 
 @code {
@@ -94,6 +94,6 @@
         using var context = DbFactory.CreateDbContext();
         context.SportsFacilities.Add(SportFacility);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/Dashboard/SportFacilities");
+        NavigationManager.NavigateTo("/SportFacilities");
     }
 }

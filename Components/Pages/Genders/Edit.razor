@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/Genders/Edit"
+﻿@page "/Genders/Edit"
 @using Microsoft.EntityFrameworkCore
 @using Reporter.Models
 @inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
@@ -34,7 +34,7 @@ else
 }
 
 <div>
-    <a href="/Dashboard/Genders">Back to List</a>
+    <a href="/Genders">Back to List</a>
 </div>
 
 @code {
@@ -78,7 +78,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/Dashboard/Genders");
+        NavigationManager.NavigateTo("/Genders");
     }
 
     private bool GenderExists(int id)

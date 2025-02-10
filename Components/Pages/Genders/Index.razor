@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/Genders"
+﻿@page "/Genders"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Reporter.Models
@@ -11,16 +11,16 @@
 <h1>Index</h1>
 
 <p>
-    <a href="/Dashboard/Genders/Create">Create New</a>
+    <a href="/Genders/Create">Create New</a>
 </p>
 
 <QuickGrid Class="table" Items="context.Genders">
     <PropertyColumn Property="gender => gender.Name" />
 
     <TemplateColumn Context="gender">
-        <a href="@($"/Dashboard/Genders/Edit?id={gender.Id}")">Edit</a> |
-        <a href="@($"/Dashboard/Genders/Details?id={gender.Id}")">Details</a> |
-        <a href="@($"/Dashboard/Genders/Delete?id={gender.Id}")">Delete</a>
+        <a href="@($"/Genders/Edit?id={gender.Id}")">Edit</a> |
+        <a href="@($"/Genders/Details?id={gender.Id}")">Details</a> |
+        <a href="@($"/Genders/Delete?id={gender.Id}")">Delete</a>
     </TemplateColumn>
 </QuickGrid>
 

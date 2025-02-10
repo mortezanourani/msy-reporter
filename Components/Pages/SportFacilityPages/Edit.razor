@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/SportFacilities/Edit"
+﻿@page "/SportFacilities/Edit"
 @using Microsoft.EntityFrameworkCore
 @using Reporter.Models
 @inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
@@ -133,7 +133,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/Dashboard/SportFacilities");
+        NavigationManager.NavigateTo("/SportFacilities");
     }
 
     private bool SportFacilityExists(Guid id)

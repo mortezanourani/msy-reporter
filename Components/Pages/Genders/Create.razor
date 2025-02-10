@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/Genders/Create"
+﻿@page "/Genders/Create"
 @using Microsoft.EntityFrameworkCore
 @using Reporter.Models
 @inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
@@ -26,7 +26,7 @@
 </div>
 
 <div>
-    <a href="/Dashboard/Genders">Back to List</a>
+    <a href="/Genders">Back to List</a>
 </div>
 
 @code {
@@ -39,6 +39,6 @@
         using var context = DbFactory.CreateDbContext();
         context.Genders.Add(Gender);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/Dashboard/Genders");
+        NavigationManager.NavigateTo("/Genders");
     }
 }

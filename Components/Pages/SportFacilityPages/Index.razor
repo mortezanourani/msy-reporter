@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/SportFacilities"
+﻿@page "/SportFacilities"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Reporter.Models
@@ -11,7 +11,7 @@
 <h1>Index</h1>
 
 <p>
-    <a href="/Dashboard/SportFacilities/Create">Create New</a>
+    <a href="/SportFacilities/Create">Create New</a>
 </p>
 
 <QuickGrid Class="table" Items="context.SportsFacilities">
@@ -29,9 +29,9 @@
     <PropertyColumn Property="sportfacility => sportfacility.Edited" />
 
     <TemplateColumn Context="sportfacility">
-        <a href="@($"/Dashboard/SportFacilities/Edit?Id={sportfacility.Id}")">Edit</a> |
-        <a href="@($"/Dashboard/SportFacilities/Details?Id={sportfacility.Id}")">Details</a> |
-        <a href="@($"/Dashboard/SportFacilities/Delete?Id={sportfacility.Id}")">Delete</a>
+        <a href="@($"/SportFacilities/Edit?Id={sportfacility.Id}")">Edit</a> |
+        <a href="@($"/SportFacilities/Details?Id={sportfacility.Id}")">Details</a> |
+        <a href="@($"/SportFacilities/Delete?Id={sportfacility.Id}")">Delete</a>
     </TemplateColumn>
 </QuickGrid>
 
