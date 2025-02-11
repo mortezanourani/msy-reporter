@@ -1,8 +1,13 @@
+.main {
+    position: relative;
+}
+
 .side-navbar {
-    min-width: 240px;
-    width: 240px;
+    top: 0;
+    width: 256px;
     height: 100vh;
-    padding: 12px;
+    position: fixed;
+    padding: 80px 0 16px;
     flex-grow: initial;
     flex-shrink: 0;
 }
@@ -10,33 +15,28 @@
     .side-navbar .nav {
         height: 100%;
         padding: 12px;
-        border-radius: 8px;
-        background-color: white;
-        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+        background-image: linear-gradient(-45deg, rgba(0, 160, 255, 0.86), rgb(0, 72, 162));
     }
 
         .side-navbar .nav .nav-item {
-            margin: 2px 0;
             padding: 6px 8px;
-            background-color: rgba(0, 0, 0, .1);
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
+            font: 500 13px 'IRANSans';
         }
 
-            .side-navbar .nav .nav-item a {
-                margin: 0;
-                padding: 0;
-                font-size: 7px;
-            }
-
 .content {
-    margin: 0;
-    padding: 12px;
+    margin-right: 272px;
+    padding: 0 0 12px;
     flex-grow: 1;
     overflow: hidden;
 }
+
+    .content .top-navbar {
+        height: 80px;
+    }
 
 #error-ui {
     background: lightyellow;

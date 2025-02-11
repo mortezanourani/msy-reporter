@@ -1,22 +1,32 @@
 ﻿@inherits LayoutComponentBase
 
-<aside class="side-navbar">
-    <ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-            <NavLink href="/Account/Manage">Account Settings</NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink href="/Genders">Genders</NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink href="/SportFacilities">Sport Facilities</NavLink>
-        </li>
-    </ul>
-</aside>
+<main class="main">
+    <div class="container">
+        <nav class="side-navbar">
+            <ul class="nav nav-pills flex-column card">
+                <li class="nav-item">
+                    <NavLink href="/">پنل کاربری</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/Genders">جنسیت ها</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/SportFacilities">اماکن ورزشی</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/Account/Manage">تنظیمات</NavLink>
+                </li>
+            </ul>
+        </nav>
 
-<article class="content">
-    @Body
-</article>
+        <div class="content">
+            <nav class="top-navbar">
+
+            </nav>
+            @Body
+        </div>
+    </div>
+</main>
 
 <div id="error-ui">
     An unhandled error has occurred.
