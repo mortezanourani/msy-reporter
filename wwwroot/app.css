@@ -10,6 +10,10 @@ body {
     padding-left: 16px;
     padding-right: 16px;
     overflow-x: hidden;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: start;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -47,6 +51,10 @@ body {
     body {
         max-width: 480px;
     }
+}
+
+a {
+    text-decoration: none;
 }
 
 h1:focus {

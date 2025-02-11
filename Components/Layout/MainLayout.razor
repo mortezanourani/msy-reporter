@@ -1,8 +1,24 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<aside class="side-navbar">
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <NavLink href="/Account/Manage">Account Settings</NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink href="/Genders">Genders</NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink href="/SportFacilities">Sport Facilities</NavLink>
+        </li>
+    </ul>
+</aside>
 
-<div id="blazor-error-ui">
+<article class="content">
+    @Body
+</article>
+
+<div id="error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
