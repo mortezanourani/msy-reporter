@@ -28,8 +28,8 @@
         }
 
 .content {
-    margin-right: 272px;
-    padding: 0 0 12px;
+    margin-right: 264px;
+    padding: 0 8px 12px;
     flex-grow: 1;
     overflow: hidden;
 }
