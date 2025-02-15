@@ -28,6 +28,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     public DbSet<License> Licenses { get; set; }
     
+    public DbSet<Federation> Federations { get; set; }
+    
+    public DbSet<SportCourse> Courses { get; set; }
+
+    public DbSet<CourseParticipant> CourseParticipants { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -154,6 +160,71 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<License>()
             .Property(e => e.Id)
+            .HasDefaultValueSql("NEWID()");
+
+        modelBuilder.Entity<Federation>(f =>
+        {
+            f.Property(e => e.Id)
+            .ValueGeneratedOnAdd();
+
+            f.HasData(
+                new Federation { Id = 1, Name = "اتومبیلرانی و موتورسواری" },
+                new Federation { Id = 2, Name = "اسکواش" },
+                new Federation { Id = 3, Name = "اسکی" },
+                new Federation { Id = 4, Name = "اسکیت" },
+                new Federation { Id = 5, Name = "انجمن های ورزش های رزمی" },
+                new Federation { Id = 6, Name = "انجمن‌های ورزشی" },
+                new Federation { Id = 7, Name = "آمادگی جسمانی" },
+                new Federation { Id = 8, Name = "بدمینتون" },
+                new Federation { Id = 9, Name = "بدنسازی و پرورش اندام" },
+                new Federation { Id = 10, Name = "بسکتبال" },
+                new Federation { Id = 11, Name = "بوکس" },
+                new Federation { Id = 12, Name = "بولینگ، بیلیارد و بولس" },
+                new Federation { Id = 13, Name = "پزشکی ورزشی" },
+                new Federation { Id = 14, Name = "تکواندو" },
+                new Federation { Id = 15, Name = "تنیس" },
+                new Federation { Id = 16, Name = "تنیس روی میز" },
+                new Federation { Id = 17, Name = "تیراندازی" },
+                new Federation { Id = 18, Name = "تیراندازی با کمان" },
+                new Federation { Id = 19, Name = "جودو" },
+                new Federation { Id = 20, Name = "چوگان" },
+                new Federation { Id = 21, Name = "دو و میدانی" },
+                new Federation { Id = 22, Name = "دوچرخه سواری" },
+                new Federation { Id = 23, Name = "ژیمناستیک" },
+                new Federation { Id = 24, Name = "سه گانه" },
+                new Federation { Id = 25, Name = "سوارکاری" },
+                new Federation { Id = 26, Name = "شطرنج" },
+                new Federation { Id = 27, Name = "شمشیربازی" },
+                new Federation { Id = 28, Name = "شنا، شیرجه و واترپلو" },
+                new Federation { Id = 29, Name = "فوتبال" },
+                new Federation { Id = 30, Name = "قایقرانی" },
+                new Federation { Id = 31, Name = "کاراته" },
+                new Federation { Id = 32, Name = "کبدی" },
+                new Federation { Id = 33, Name = "کشتی" },
+                new Federation { Id = 34, Name = "کونگ فو و هنرهای رزمی" },
+                new Federation { Id = 35, Name = "کوهنوردی و صعود ورزشی" },
+                new Federation { Id = 36, Name = "گلف" },
+                new Federation { Id = 37, Name = "نجات غریق و غواصی" },
+                new Federation { Id = 38, Name = "هاکی" },
+                new Federation { Id = 39, Name = "هندبال" },
+                new Federation { Id = 40, Name = "والیبال" },
+                new Federation { Id = 41, Name = "ورزش باستانی و پهلوانی" },
+                new Federation { Id = 42, Name = "ورزش روستائی و بازی های بومی" },
+                new Federation { Id = 43, Name = "ورزش های بیماریهای خاص" },
+                new Federation { Id = 44, Name = "ورزش های جانبازان و توانیابان" },
+                new Federation { Id = 45, Name = "ورزش های نابینایان و کم بینایان" },
+                new Federation { Id = 46, Name = "ورزش های ناشنوایان و کم شنوایان" },
+                new Federation { Id = 47, Name = "ورزش های همگانی" },
+                new Federation { Id = 48, Name = "ورزش های دانش‌آموزی" },
+                new Federation { Id = 49, Name = "ورزش های دانشگاهی" },
+                new Federation { Id = 50, Name = "ورزش های کارگری" },
+                new Federation { Id = 51, Name = "وزنه برداری" },
+                new Federation { Id = 52, Name = "ووشو" }
+            );
+        });
+
+        modelBuilder.Entity<SportCourse>()
+            .Property(c => c.Id)
             .HasDefaultValueSql("NEWID()");
     }
 }
