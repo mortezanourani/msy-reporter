@@ -81,7 +81,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        sportfacility = await context.SportsFacilities.FirstOrDefaultAsync(m => m.Id == Id);
+        sportfacility = await context.SportFacilities.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (sportfacility is null)
         {
@@ -92,7 +92,7 @@
     private async Task DeleteSportFacility()
     {
         using var context = DbFactory.CreateDbContext();
-        context.SportsFacilities.Remove(sportfacility!);
+        context.SportFacilities.Remove(sportfacility!);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/SportFacilities");
     }

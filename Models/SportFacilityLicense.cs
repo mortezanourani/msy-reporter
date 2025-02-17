@@ -1,12 +1,12 @@
 ﻿namespace Reporter.Models;
 
-public class License
+public class SportFacilityLicense
 {
     public Guid Id { get; set; }
 
-    public virtual LicenseType Type { get; set; }
+    public int Type { get; set; }
 
-    public virtual LicenseOwnership Ownership { get; set; }
+    public int Ownership { get; set; }
 
     public string? Serial { get; set; }
 

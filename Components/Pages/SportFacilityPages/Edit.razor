@@ -102,7 +102,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        SportFacility ??= await context.SportsFacilities.FirstOrDefaultAsync(m => m.Id == Id);
+        SportFacility ??= await context.SportFacilities.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (SportFacility is null)
         {
@@ -139,6 +139,6 @@ else
     private bool SportFacilityExists(Guid id)
     {
         using var context = DbFactory.CreateDbContext();
-        return context.SportsFacilities.Any(e => e.Id == id);
+        return context.SportFacilities.Any(e => e.Id == id);
     }
 }

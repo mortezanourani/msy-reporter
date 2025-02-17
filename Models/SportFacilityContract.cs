@@ -1,6 +1,6 @@
 ﻿namespace Reporter.Models;
 
-public class Contract
+public class SportFacilityContract
 {
     public Guid Id { get; set; }
 

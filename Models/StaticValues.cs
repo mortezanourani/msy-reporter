@@ -51,20 +51,32 @@ public static class StaticValues
         { 3, "مشترک" }
     };
 
-    public static readonly Dictionary<int, string> CourseTypes = new Dictionary<int, string>
+    public static readonly Dictionary<int, string> M5LicenseTypes = new Dictionary<int, string>
+    {
+        { 1, "حقیقی" },
+        { 2, "حقوقی" }
+    };
+
+    public static readonly Dictionary<int, string> M5LicenseOwnerships = new Dictionary<int, string>
+    {
+        { 1, "تملیکی" },
+        { 2, "استیجاری" }
+    };
+
+    public static readonly Dictionary<int, string> SportCourseTypes = new Dictionary<int, string>
     {
         { 1, "مربیگری" },
         { 2, "داوری" }
     };
 
-    public static readonly Dictionary<int, string> CourseGrades = new Dictionary<int, string>
+    public static readonly Dictionary<int, string> SportCourseGrades = new Dictionary<int, string>
     {
         { 1, "درجه یک" },
         { 2, "درجه دو" },
         { 3, "درجه سه" }
     };
 
-    public static readonly Dictionary<int, string> CourseGenders = new Dictionary<int, string>
+    public static readonly Dictionary<int, string> SportCourseGenders = new Dictionary<int, string>
     {
         { 1, "آقایان" },
         { 2, "بانوان" }

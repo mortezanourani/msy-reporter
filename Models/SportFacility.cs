@@ -8,25 +8,25 @@ public class SportFacility
 
     public string Name { get; set; }
 
-    public virtual SportFacilityType? Type { get; set; }
+    public int Type { get; set; }
 
     public float? Area { get; set; }
 
-    public virtual GeoType? GeoType { get; set; }
+    public int GeoType { get; set; }
 
-    public virtual City City { get; set; }
+    public int City { get; set; }
 
     public string? Location { get; set; }
 
-    public virtual SportFacilityStatus Status { get; set; }
+    public bool Status { get; set; }
 
     public bool? hasDocument { get; set; }
 
     public string? Sports { get; set; }
 
-    public virtual Gender? UsersGender { get; set; }
+    public int UsersGender { get; set; }
 
-    public virtual SportFacilityOwnership Ownership { get; set; }
+    public int Ownership { get; set; }
 
     public string? Owner { get; set; }
 
@@ -42,7 +42,7 @@ public class SportFacility
 
     public DateTime Edited { get; set; }
 
-    public virtual License? License { get; set; }
+    public virtual SportFacilityLicense? License { get; set; }
 
-    public virtual Contract? Contract { get; set; }
+    public virtual SportFacilityContract? Contract { get; set; }
 }

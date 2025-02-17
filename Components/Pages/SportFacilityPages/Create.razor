@@ -92,7 +92,7 @@
     private async Task AddSportFacility()
     {
         using var context = DbFactory.CreateDbContext();
-        context.SportsFacilities.Add(SportFacility);
+        context.SportFacilities.Add(SportFacility);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/SportFacilities");
     }
