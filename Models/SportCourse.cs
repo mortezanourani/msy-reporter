@@ -19,5 +19,5 @@ public class SportCourse
 
     public DateOnly CertificateDate { get; set; }
 
-    public virtual ICollection<CourseParticipant>? Participants { get; set; }
+    public virtual ICollection<SportCourseParticipant>? Participants { get; set; }
 }

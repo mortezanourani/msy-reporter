@@ -2,7 +2,7 @@
 
 namespace Reporter.Models;
 
-public class CourseParticipant
+public class SportCourseParticipant
 {
     [Key]
     public string Id { get; set; }

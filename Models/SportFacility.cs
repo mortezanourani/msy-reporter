@@ -8,25 +8,25 @@ public class SportFacility
 
     public string Name { get; set; }
 
-    public int Type { get; set; }
+    public int? Type { get; set; }
 
     public float? Area { get; set; }
 
-    public int GeoType { get; set; }
+    public int? GeoType { get; set; }
 
     public int City { get; set; }
 
     public string? Location { get; set; }
 
-    public bool Status { get; set; }
+    public bool? Status { get; set; }
 
     public bool? hasDocument { get; set; }
 
     public string? Sports { get; set; }
 
-    public int UsersGender { get; set; }
+    public int? UsersGender { get; set; }
 
-    public int Ownership { get; set; }
+    public int? Ownership { get; set; }
 
     public string? Owner { get; set; }
 

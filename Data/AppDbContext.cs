@@ -16,7 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     
     public DbSet<SportCourse> SportCourses { get; set; }
 
-    public DbSet<CourseParticipant> SportCourseParticipants { get; set; }
+    public DbSet<SportCourseParticipant> SportCourseParticipants { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

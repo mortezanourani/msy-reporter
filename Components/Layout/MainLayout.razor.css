@@ -4,10 +4,10 @@
 
 .side-navbar {
     top: 0;
-    width: 256px;
+    width: 240px;
     height: 100vh;
     position: fixed;
-    padding: 80px 0 16px;
+    padding: 64px 0 16px;
     flex-grow: initial;
     flex-shrink: 0;
 }
@@ -28,14 +28,20 @@
         }
 
 .content {
-    margin-right: 264px;
-    padding: 0 8px 12px;
-    flex-grow: 1;
-    overflow: hidden;
+    position: relative;
+    margin-right: 256px;
+    padding-bottom: 16px;
 }
 
     .content .top-navbar {
-        height: 80px;
+        position: sticky;
+        top: 0px;
+        height: 64px;
+        margin: 0 -12px;
+        padding: 8px 16px 12px;
+        background: var(--main-bg);
+        box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2) !important;
+        z-index: 999;
     }
 
 #error-ui {

@@ -14,26 +14,28 @@
     <a href="/SportFacilities/Create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="context.SportFacilities">
-    <PropertyColumn Property="sportfacility => sportfacility.Name" />
-    <PropertyColumn Property="sportfacility => sportfacility.Area" />
-    <PropertyColumn Property="sportfacility => sportfacility.Location" />
-    <PropertyColumn Property="sportfacility => sportfacility.hasDocument" />
-    <PropertyColumn Property="sportfacility => sportfacility.Sports" />
-    <PropertyColumn Property="sportfacility => sportfacility.Owner" />
-    <PropertyColumn Property="sportfacility => sportfacility.Zipcode" />
-    <PropertyColumn Property="sportfacility => sportfacility.Address" />
-    <PropertyColumn Property="sportfacility => sportfacility.TelNumber" />
-    <PropertyColumn Property="sportfacility => sportfacility.LicenseId" />
-    <PropertyColumn Property="sportfacility => sportfacility.ContractId" />
-    <PropertyColumn Property="sportfacility => sportfacility.Edited" />
+<div class="card" style="overflow-x: hidden;">
+    <QuickGrid Class="table" Items="context.SportFacilities">
+        <PropertyColumn Property="sportfacility => sportfacility.Name" />
+        <PropertyColumn Property="sportfacility => sportfacility.Area" />
+        <PropertyColumn Property="sportfacility => sportfacility.Location" />
+        <PropertyColumn Property="sportfacility => sportfacility.hasDocument" />
+        <PropertyColumn Property="sportfacility => sportfacility.Sports" />
+        <PropertyColumn Property="sportfacility => sportfacility.Owner" />
+        <PropertyColumn Property="sportfacility => sportfacility.Zipcode" />
+        <PropertyColumn Property="sportfacility => sportfacility.Address" />
+        <PropertyColumn Property="sportfacility => sportfacility.TelNumber" />
+        <PropertyColumn Property="sportfacility => sportfacility.LicenseId" />
+        <PropertyColumn Property="sportfacility => sportfacility.ContractId" />
+        <PropertyColumn Property="sportfacility => sportfacility.Edited" />
 
-    <TemplateColumn Context="sportfacility">
-        <a href="@($"/SportFacilities/Edit?Id={sportfacility.Id}")">Edit</a> |
-        <a href="@($"/SportFacilities/Details?Id={sportfacility.Id}")">Details</a> |
-        <a href="@($"/SportFacilities/Delete?Id={sportfacility.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+        <TemplateColumn Context="sportfacility">
+            <a href="@($"/SportFacilities/Edit?Id={sportfacility.Id}")">Edit</a> |
+            <a href="@($"/SportFacilities/Details?Id={sportfacility.Id}")">Details</a> |
+            <a href="@($"/SportFacilities/Delete?Id={sportfacility.Id}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+</div>
 
 @code {
     private AppDbContext context = default!;
