@@ -17,6 +17,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<SportCourse> SportCourses { get; set; }
 
     public DbSet<SportCourseParticipant> SportCourseParticipants { get; set; }
+
+    public DbSet<Champion> Champions { get; set; }
+
+    public DbSet<Championship> Championships { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -101,6 +105,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         });
 
         modelBuilder.Entity<SportCourse>()
+            .Property(c => c.Id)
+            .HasDefaultValueSql("NEWID()");
+
+        modelBuilder.Entity<Champion>()
+            .Property(c => c.Id)
+            .HasDefaultValueSql("NEWID()");
+
+        modelBuilder.Entity<Championship>()
             .Property(c => c.Id)
             .HasDefaultValueSql("NEWID()");
     }

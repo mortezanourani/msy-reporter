@@ -24,6 +24,12 @@ public static class StaticValues
         { 17, "ماسال" }
     };
 
+    public static readonly Dictionary<int, string> Genders = new Dictionary<int, string>
+    {
+        { 1, "آقایان" },
+        { 2, "بانوان" }
+    };
+
     public static readonly Dictionary<int, string> SportFacilityTypes = new Dictionary<int, string>
     {
         { 1, "سرپوشیده" },
@@ -76,9 +82,35 @@ public static class StaticValues
         { 3, "درجه سه" }
     };
 
-    public static readonly Dictionary<int, string> SportCourseGenders = new Dictionary<int, string>
+    public static readonly Dictionary<int, string> TournamentAgeGroup = new Dictionary<int, string>
     {
-        { 1, "آقایان" },
-        { 2, "بانوان" }
+        { 1, "نونهالان" },
+        { 2, "خردسالان" },
+        { 3, "زیر 14 سال" },
+        { 4, "نوجوانان" },
+        { 5, "زیر 23 سال" },
+        { 6, "جوانان" },
+        { 7, "بزرگسالان" },
+        { 8, "پیشکسوتان" },
+    };
+
+    public static readonly Dictionary<int, string> TournamentLevel = new Dictionary<int, string>
+    {
+        { 1, "بین المللی" },
+        { 2, "آسیایی" },
+        { 3, "جهانی" },
+        { 4, "المپیک" },
+        { 5, "المپیک دانشجویان" },
+        { 6, "اوراسیا" },
+        { 7, "کشورهای اسلامی" },
+        { 8, "بازی های آسیایی" },
+        { 9, "ملی" },
+    };
+
+    public static readonly Dictionary<int, string> TournamentMedal = new Dictionary<int, string>
+    {
+        { 1, "طلا" },
+        { 2, "نقره" },
+        { 3, "برنز" }
     };
 }
