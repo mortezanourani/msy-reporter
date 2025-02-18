@@ -15,7 +15,7 @@
 </p>
 
 <div class="card" style="overflow-x: hidden;">
-    <QuickGrid Class="table" Items="context.SportFacilities">
+    <QuickGrid Class="table" Items="context.SportFacilities.OrderByDescending(s => s.Name)">
         <PropertyColumn Property="sportfacility => sportfacility.Name" />
         <PropertyColumn Property="sportfacility => sportfacility.Area" />
         <PropertyColumn Property="sportfacility => sportfacility.Location" />

@@ -1,19 +1,52 @@
 ﻿@page "/"
 
-<h3>Dashboard</h3>
+<div class="container">
+	<div class="card">
+		<div class="card-header">
+			<h6>اماکن ورزشی</h6>
+		</div>
+		<div class="card-body">
+			<p>اماکن دولتی وزارت ورزش: <b>@sportFacilities.Where(sp => sp.Ownership == 1).Count()</b></p>
+			<p>اماکن دولتی سایر ارگان ها: <b>@sportFacilities.Where(sp => sp.Ownership == 2).Count()</b></p>
+			<p>باشگاه های خصوصی - حقیقی: <b>@sportFacilities.Where(sp => sp.Ownership == 3).Count()</b></p>
+			<p>باشگاه های خصوصی - حقوقی: <b>@sportFacilities.Where(sp => sp.Ownership == 4).Count()</b></p>
+		</div>
+	</div>
 
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item">
-        <NavLink href="/Account/Manage">Account Settings</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink href="/Genders">Genders</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink href="/SportFacilities">Sport Facilities</NavLink>
-    </li>
-</ul>
+	<div class="card">
+		<div class="card-header">
+			<h6>دوره های مربیگری</h6>
+		</div>
+		<div class="card-body">
+			<p>تعداد مربیان: <b>@coachesCount</b></p>
+			<p>تعداد داوران: <b>@refereesCount</b></p>
+		</div>
+	</div>
+</div>
 
 @code {
+	private AppDbContext context = default!;
 
+	private DbSet<SportFacility> sportFacilities;
+
+	private int coachesCount;
+	private int refereesCount;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		sportFacilities = context.SportFacilities;
+
+		var sportCourseParticipants = context.SportCourseParticipants
+			.Include(scp => scp.Courses);
+
+		coachesCount = sportCourseParticipants
+			.Where(scp => scp.Courses.Any(sc => sc.Type == 1))
+			.Count();
+
+		refereesCount = sportCourseParticipants
+			.Where(scp => scp.Courses.Any(sc => sc.Type == 2))
+			.Count();
+	}
 }

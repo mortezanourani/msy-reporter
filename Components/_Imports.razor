@@ -12,4 +12,10 @@
 @using Reporter.Components.Shared
 @using Reporter.Components.Account
 
+@using Reporter.Data
+@using Reporter.Models
+
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]

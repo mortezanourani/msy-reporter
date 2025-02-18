@@ -1,23 +1,15 @@
 ﻿.container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -200px -200px;
-    padding: 16px;
-    width: 400px;
-    border-radius: 8px;
-    border: 1px solid #d7d7d7;
-    background-color: whitesmoke;
-    box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 0;
 }
 
-    .container .title {
-        padding: 16px;
-        text-align: center;
-    }
+.container > .card {
+    flex-grow: 1;
+}
 
-.form-floating > label {
-    left: auto;
-    right: 0;
-    transform-origin: 50% 0;
+p {
+    margin: 0;
+    font: 400 12px IRANSans;
 }

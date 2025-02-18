@@ -40,7 +40,7 @@
         margin: 0 -12px;
         padding: 8px 16px 12px;
         background: var(--main-bg);
-        box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2) !important;
+        /*box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2) !important;*/
         z-index: 999;
     }
 
