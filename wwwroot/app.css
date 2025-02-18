@@ -21,6 +21,7 @@ body {
 .card {
     background-color: var(--card-bg);
     box-shadow: var(--card-box-shadow);
+    border: 1px solid #e0e0e0;
     overflow: hidden;
 }
 
