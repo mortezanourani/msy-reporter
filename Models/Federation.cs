@@ -6,7 +6,7 @@ public class Federation
 {
     [Key]
     public Guid Id { get; set; }
-    public virtual City City { get; set; }
+    public virtual City? City { get; set; }
     public string Name { get; set; }
     public string PersianName { get; set; }
     public string? NationalId { get; set; }

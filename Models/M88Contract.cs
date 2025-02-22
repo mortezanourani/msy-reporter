@@ -13,5 +13,5 @@ public class M88Contract
     public string Name { get; set; }
     public string SeenCode { get; set; }
     public string Phone { get; set; }
-    public virtual M5License M5License { get; set; }
+    public virtual M5License? M5License { get; set; }
 }

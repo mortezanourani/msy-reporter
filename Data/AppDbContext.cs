@@ -146,8 +146,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             e.HasData(
                 new FacilityUsersGender { Id = 1, Name = "Men", PersianName = "آقایان" },
-                new FacilityUsersGender { Id = 1, Name = "Women", PersianName = "بانوان" },
-                new FacilityUsersGender { Id = 1, Name = "Mix", PersianName = "مشترک" }
+                new FacilityUsersGender { Id = 2, Name = "Women", PersianName = "بانوان" },
+                new FacilityUsersGender { Id = 3, Name = "Mix", PersianName = "مشترک" }
             );
         });
 
