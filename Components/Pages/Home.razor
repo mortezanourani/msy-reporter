@@ -6,10 +6,7 @@
 			<h6>اماکن ورزشی</h6>
 		</div>
 		<div class="card-body">
-			<p>اماکن دولتی وزارت ورزش: <b>@sportFacilities.Where(sp => sp.Ownership == 1).Count()</b></p>
-			<p>اماکن دولتی سایر ارگان ها: <b>@sportFacilities.Where(sp => sp.Ownership == 2).Count()</b></p>
-			<p>باشگاه های خصوصی - حقیقی: <b>@sportFacilities.Where(sp => sp.Ownership == 3).Count()</b></p>
-			<p>باشگاه های خصوصی - حقوقی: <b>@sportFacilities.Where(sp => sp.Ownership == 4).Count()</b></p>
+			<p>اماکن دولتی وزارت ورزش: <b>@sportFacilities.Count()</b></p>
 		</div>
 	</div>
 
@@ -36,17 +33,16 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		sportFacilities = context.SportFacilities;
+		sportFacilities = context.AthleticFacilities;
 
-		var sportCourseParticipants = context.SportCourseParticipants
-			.Include(scp => scp.Courses);
+		var sportCourseParticipants = context.SportsCourses
+			.Include(scp => scp.Participants)
+			.Select(scp => scp.Participants);
 
-		coachesCount = sportCourseParticipants
-			.Where(scp => scp.Courses.Any(sc => sc.Type == 1))
-			.Count();
+		coachesCount = context.SportsCourses
+			.Include(sc => sc.Participants).Count();
 
-		refereesCount = sportCourseParticipants
-			.Where(scp => scp.Courses.Any(sc => sc.Type == 2))
-			.Count();
+		refereesCount = context.SportsCourses
+			.Include(sc => sc.Participants).Count();
 	}
 }
