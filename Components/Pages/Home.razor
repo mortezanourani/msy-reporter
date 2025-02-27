@@ -1,22 +1,40 @@
 ﻿@page "/"
 
-<div class="container">
-	<div class="card">
-		<div class="card-header">
-			<h6>اماکن ورزشی</h6>
+<div class="content-container">
+	<div class="row mb-3">
+		<div class="col-7">
+			<div class="card">
+				<div class="card-header">
+					<h6>اماکن ورزشی</h6>
+				</div>
+				<div class="card-body">
+					<p>اماکن دولتی وزارت ورزش: <b>@sportFacilities.Count()</b></p>
+				</div>
+			</div>
 		</div>
-		<div class="card-body">
-			<p>اماکن دولتی وزارت ورزش: <b>@sportFacilities.Count()</b></p>
+		<div class="col-5">
+			<div class="card">
+				<div class="card-header">
+					<h6>دوره های مربیگری</h6>
+				</div>
+				<div class="card-body">
+					<p>تعداد مربیان: <b>@coachesCount</b></p>
+					<p>تعداد داوران: <b>@refereesCount</b></p>
+				</div>
+			</div>
 		</div>
 	</div>
-
-	<div class="card">
-		<div class="card-header">
-			<h6>دوره های مربیگری</h6>
-		</div>
-		<div class="card-body">
-			<p>تعداد مربیان: <b>@coachesCount</b></p>
-			<p>تعداد داوران: <b>@refereesCount</b></p>
+	<div class="row mb-3">
+		<div class="col-5">
+			<div class="card">
+				<div class="card-header">
+					<h6>دوره های مربیگری</h6>
+				</div>
+				<div class="card-body">
+					<p>هیات های فعال استانی: <b>@provinceFederationsCount</b></p>
+					<p>هیات های فعال شهرستان ها و بخش ها: <b>@citiesFederationsCount</b></p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -28,6 +46,9 @@
 
 	private int coachesCount;
 	private int refereesCount;
+
+	private int provinceFederationsCount;
+	private int citiesFederationsCount;
 
 	protected override void OnInitialized()
 	{
@@ -44,5 +65,17 @@
 
 		refereesCount = context.SportsCourses
 			.Include(sc => sc.Participants).Count();
+
+		provinceFederationsCount = context.Federations
+			.Include(f => f.FederationPresidents)
+			.Where(f => f.City == null)
+			.Where(f => f.FederationPresidents != null)
+			.Count();
+
+		provinceFederationsCount = context.Federations
+			.Include(f => f.FederationPresidents)
+			.Where(f => f.City != null)
+			.Where(f => f.FederationPresidents != null)
+			.Count();
 	}
 }
