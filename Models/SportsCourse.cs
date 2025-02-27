@@ -1,15 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public class SportsCourse
+public partial class SportsCourse
 {
-    [Key]
     public Guid Id { get; set; }
-    public virtual SportsCourseType Type { get; set; }
-    public virtual Federation Federation { get; set; }
-    public virtual SportsCourseGrade Grade { get; set; }
-    public virtual Gender Gender { get; set; }
-    public string Year { get; set; }
-    public virtual ICollection<CourseParticipant> Participants { get; set; } = new List<CourseParticipant>();
+
+    public bool IsCoaching { get; set; }
+
+    public int GradeId { get; set; }
+
+    public Guid FederationId { get; set; }
+
+    public string Year { get; set; } = null!;
+
+    public virtual Federation Federation { get; set; } = null!;
+
+    public virtual SportsCourseGrade Grade { get; set; } = null!;
+
+    public virtual ICollection<SportsCourseParticipant> Participants { get; set; } = new List<SportsCourseParticipant>();
 }

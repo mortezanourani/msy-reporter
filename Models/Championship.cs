@@ -1,16 +1,33 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public class Championship
+public partial class Championship
 {
-    [Key]
     public Guid Id { get; set; }
-    public virtual Federation Federation { get; set; }
-    public string Sport { get; set; }
-    public TournamentAgeGroup? AgeGroup { get; set; }
-    public TournamentLevel Level { get; set; }
-    public string Host { get; set; }
-    public string Year { get; set; }
-    public ChampionshipMedal Medal { get; set; }
+
+    public Guid FederationId { get; set; }
+
+    public string Sport { get; set; } = null!;
+
+    public int? AgeGroupId { get; set; }
+
+    public int EventLevelId { get; set; }
+
+    public string Host { get; set; } = null!;
+
+    public string Year { get; set; } = null!;
+
+    public int MedalId { get; set; }
+
+    public virtual AgeGroup? AgeGroup { get; set; }
+
+    public virtual EventLevel EventLevel { get; set; } = null!;
+
+    public virtual Federation Federation { get; set; } = null!;
+
+    public virtual Medal Medal { get; set; } = null!;
+
+    public virtual ICollection<Champion> Champions { get; set; } = new List<Champion>();
 }

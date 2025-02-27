@@ -1,20 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public class M5License
+public partial class M5license
 {
-    [Key]
     public Guid Id { get; set; }
-    public virtual AthleticFacility AthleticFicility { get; set; }
-    public virtual M5LicenseType? Type { get; set; }
-    public virtual M5BuildingOwnership? Ownership { get; set; }
+
+    public Guid FacilityId { get; set; }
+
+    public int? LegalTitleId { get; set; }
+
+    public bool? IsOwner { get; set; }
+
     public string? Serial { get; set; }
+
     public DateOnly? StartDate { get; set; }
+
     public DateOnly? ExpireDate { get; set; }
+
     public string? Company { get; set; }
-    public string Name { get; set; }
+
+    public string Name { get; set; } = null!;
+
     public string? SeenCode { get; set; }
+
     public string? Phone { get; set; }
-    public virtual M5LicenseStatus? Status { get; set; }
+
+    public virtual AthleticFacility Facility { get; set; } = null!;
+
+    public virtual LegalTitle? LegalTitle { get; set; }
+
+    public virtual ICollection<M88contract> M88contracts { get; set; } = new List<M88contract>();
 }

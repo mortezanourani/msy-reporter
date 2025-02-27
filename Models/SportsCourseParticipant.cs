@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class Champion
+public partial class SportsCourseParticipant
 {
     public Guid Id { get; set; }
 
@@ -15,11 +15,7 @@ public partial class Champion
 
     public int GenderId { get; set; }
 
-    public int? CityId { get; set; }
-
-    public virtual City? City { get; set; }
-
     public virtual Gender Gender { get; set; } = null!;
 
-    public virtual ICollection<Championship> Championships { get; set; } = new List<Championship>();
+    public virtual ICollection<SportsCourse> Courses { get; set; } = new List<SportsCourse>();
 }

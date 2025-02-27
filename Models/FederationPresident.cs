@@ -1,15 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public class FederationPresident
+public partial class FederationPresident
 {
-    [Key]
     public Guid Id { get; set; }
-    public string Name { get; set; }
-    public string SeedCode { get; set; }
-    public string BirthDate { get; set; }
-    public string Phone { get; set; }
+
+    public Guid? FederationId { get; set; }
+
+    public string Name { get; set; } = null!;
+
+    public string SeedCode { get; set; } = null!;
+
+    public string BirthDate { get; set; } = null!;
+
+    public string? Phone { get; set; }
+
     public string? AppointmentOrder { get; set; }
+
     public string? AppointmentDate { get; set; }
+
+    public virtual Federation? Federation { get; set; }
 }

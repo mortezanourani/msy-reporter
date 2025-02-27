@@ -1,22 +1,45 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public class AthleticFacility
+public partial class AthleticFacility
 {
-    [Key]
     public Guid Id { get; set; }
-    public string Name { get; set; }
-    public virtual FacilityOwnership Ownership { get; set; }
-    public virtual FacilityType? Type { get; set; }
-    public virtual FacilityGeoType? GeoType { get; set; }
-    public virtual City City { get; set; }
+
+    public string Name { get; set; } = null!;
+
+    public int OwnershipId { get; set; }
+
+    public int? TypeId { get; set; }
+
+    public bool? IsRural { get; set; }
+
+    public int CityId { get; set; }
+
     public string? District { get; set; }
-    public float? Area { get; set; }
-    public virtual FacilityStatus? Status { get; set; }
-    public virtual FacilityUsersGender? UsersGender { get; set; }
+
+    public int? Area { get; set; }
+
+    public bool IsActive { get; set; }
+
     public string? Sports { get; set; }
+
     public string? Zipcode { get; set; }
+
     public string? Address { get; set; }
-    public string? TelNumber { get; set; }
+
+    public string? Phone { get; set; }
+
+    public virtual City City { get; set; } = null!;
+
+    public virtual ICollection<M5license> M5licenses { get; set; } = new List<M5license>();
+
+    public virtual ICollection<M88contract> M88contracts { get; set; } = new List<M88contract>();
+
+    public virtual Ownership Ownership { get; set; } = null!;
+
+    public virtual FacilityType? Type { get; set; }
+
+    public virtual ICollection<Gender> Genders { get; set; } = new List<Gender>();
 }

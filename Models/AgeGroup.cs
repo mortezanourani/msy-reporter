@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class FacilityType
+public partial class AgeGroup
 {
     public int Id { get; set; }
 
@@ -13,5 +13,5 @@ public partial class FacilityType
 
     public string PersianName { get; set; } = null!;
 
-    public virtual ICollection<AthleticFacility> AthleticFacilities { get; set; } = new List<AthleticFacility>();
+    public virtual ICollection<Championship> Championships { get; set; } = new List<Championship>();
 }
