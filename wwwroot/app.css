@@ -4,9 +4,9 @@
     --main-color: #5e6e82;
     --card-bg: #fff;
     --card-box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
-
     --sidebar-width: 240px;
     --spacing-x: 12px;
+    --spacing-y: 12px;
 }
 html {
     direction: rtl;
@@ -21,6 +21,29 @@ body {
     color: var(--main-color);
 }
 
+.row {
+    margin-left: calc(-.5 * var(--spacing-x));
+    margin-right: calc(-.5 * var(--spacing-x));
+}
+
+.row > * {
+    padding-left: calc(.5 * var(--spacing-x));
+    padding-right: calc(.5 * var(--spacing-x));
+    margin-bottom: var(--spacing-y);
+}
+    .row > .col1-1 {
+        width: 100%;
+    }
+    .row > .col1-2 {
+        width: 50%;
+    }
+    .row > .col1-3 {
+        width: 33.33333%;
+    }
+    .row > .col2-3 {
+        width: 66.66666%;
+    }
+
 .card {
     height: 100%;
     background-color: var(--card-bg);
@@ -32,12 +55,15 @@ body {
     .card .card-header {
         margin: 0;
         padding: 16px;
-        padding-bottom: 0;
         border: none;
+        background: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
         .card .card-header h6 {
             margin: 0;
-            margin-bottom: 8px;
             display: flex;
             align-items: center;
             font: 600 13px IRANSans;
@@ -52,6 +78,11 @@ body {
         justify-content: flex-end;
         flex: 1 1 auto;
     }
+
+        .card .card-body p {
+            margin: 0;
+            font: 400 12px IRANSans;
+        }
 
 a {
     text-decoration: none;

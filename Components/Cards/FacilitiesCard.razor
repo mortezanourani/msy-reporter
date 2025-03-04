@@ -1,0 +1,25 @@
+﻿<div class="row">
+	<div class="col1-1">
+		<div class="card">
+			<div class="card-header">
+				<h6>اماکن ورزشی</h6>
+			</div>
+			<div class="card-body">
+				<p>اماکن دولتی وزارت ورزش: <b>@sportFacilities.Count()</b></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	private AppDbContext context = default!;
+
+	private DbSet<AthleticFacility> sportFacilities;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		sportFacilities = context.AthleticFacilities;
+	}
+}
