@@ -1,7 +1,33 @@
-﻿.card-body .title {
-    font: 600 12px IRANSans;
+﻿.card.cornered1 {
+    background-image: url('images/card-corner-1.png');
+}
+
+.card.cornered2 {
+    background-image: url('images/card-corner-2.png');
+}
+
+.card.cornered3 {
+    background-image: url('images/card-corner-3.png');
+}
+
+.card.cornered1,
+.card.cornered2,
+.card.cornered3 {
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: left center;
+    background-size: contain;
+}
+
+.card-body .title {
+    font: 600 13px IRANSans;
 }
 
 .card-body h2 {
-    font: 400 32px IRANSans;
+    font-weight: 400;
+}
+
+.card-body b,
+.card-body p {
+    font-size: 12px;
 }

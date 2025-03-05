@@ -2,24 +2,76 @@
 	<div class="col1-3">
 		<div class="card cornered1">
 			<div class="card-body">
-				<h6 class="title">اماکن ورزشی وزارت ورزش و جوانان</h6>
-				<h2>333</h2>
+				<div>
+					<h6 class="title">اماکن ورزشی وزارت ورزش و جوانان</h6>
+					<h2>333</h2>
+				</div>
+				<div class="d-flex justify-content-between">
+					<p>دارای سند:</p>
+					<b>128</b>
+				</div>
+				<div class="d-flex justify-content-between">
+					<p>واگذار شده در ماده 88:</p>
+					<b>116</b>
+				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col1-3">
 		<div class="card cornered2">
 			<div class="card-body">
-				<h6 class="title">اماکن ورزشی سایر ارگان ها</h6>
-				<h2>427</h2>
+				<div>
+					<h6 class="title">اماکن ورزشی سایر ارگان ها</h6>
+					<h2>427</h2>
+				</div>
+				<div class="d-flex justify-content-between">
+					<p>دارای مجوز ماده 5:</p>
+					<b>59</b>
+				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col1-3">
 		<div class="card cornered3">
 			<div class="card-body">
-				<h6 class="title">باشگاه های خصوصی</h6>
-				<h2>1827</h2>
+				<div>
+					<h6 class="title">باشگاه های خصوصی</h6>
+					<h2>1827</h2>
+				</div>
+				<div class="d-flex justify-content-between">
+					<p>حقیقی:</p>
+					<b>1643</b>
+				</div>
+				<div class="d-flex justify-content-between">
+					<p>تملیکی:</p>
+					<b>1263</b>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col1-1">
+		<div class="card">
+			<div class="card-header border-bottom">
+				<h6>اماکن ورزشی به تفکیک شهرستان ها</h6>
+			</div>
+			<div class="card-body">
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 1)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 2)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 3)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 4)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 5)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 6)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 7)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 8)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 9)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 10)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 11)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 12)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 13)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 14)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 15)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 16)" />
+				<CityFacilitiesBar City="@cities.FirstOrDefault(c => c.Id == 17)" />
 			</div>
 		</div>
 	</div>
@@ -104,11 +156,13 @@ conic-gradient(from -90deg, lightblue 0, lightblue 20%, lavender 0, lavender 50%
 	private AppDbContext context = default!;
 
 	private DbSet<AthleticFacility> sportFacilities;
-
+	private IQueryable<City> cities;
 	protected override void OnInitialized()
 	{
 		context = DbFactory.CreateDbContext();
 
 		sportFacilities = context.AthleticFacilities;
+
+		cities = context.Cities.Include(c => c.AthleticFacilities);
 	}
 }
