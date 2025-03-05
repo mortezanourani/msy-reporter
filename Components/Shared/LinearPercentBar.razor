@@ -1,0 +1,32 @@
+﻿<div class="linear-percent-bar @Class">
+	<div class="percent-bar" style="background-image: linear-gradient(90deg, steelblue 0, steelblue @percentValue%, lavender @percentValue%, lavender 100%);">
+		<h6 class="caption">@Caption</h6>
+		<p class="value">@Value</p>
+	</div>
+	<div class="percent">
+		<p class="percent-value">%@percentValue</p>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string Class { get; set; } = string.Empty;
+
+	[Parameter]
+	public string Caption { get; set; } = string.Empty;
+
+	[Parameter]
+	public int Total { get; set; } = 0;
+
+	[Parameter]
+	public int Value { get; set; } = 0;
+
+	private int percentValue { get; set; } = 0;
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+
+		percentValue = (Value * 100) / Total;
+	}
+}

@@ -1,0 +1,39 @@
+﻿.linear-percent-bar {
+    position: relative;
+    width: 100%;
+    height: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+    .linear-percent-bar .percent,
+    .linear-percent-bar .percent-bar {
+        position: relative;
+        padding: 0 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: lavender;
+        border-radius: 4px;
+        flex-grow: 1;
+    }
+
+    .linear-percent-bar .percent {
+        width: 48px;
+        flex-grow: 0;
+        justify-content: center;
+        color: steelblue;
+    }
+
+    .linear-percent-bar .percent-bar .caption {
+        z-index: 1;
+        color: dimgray;
+        margin: auto 0;
+        font: 500 12px IRANSans;
+    }
+
+    .linear-percent-bar .percent-bar .value {
+        color: white;
+    }

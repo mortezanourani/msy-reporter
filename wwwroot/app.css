@@ -43,6 +43,18 @@ body {
     .row > .col2-3 {
         width: 66.66666%;
     }
+    .row > .col1-5 {
+        width: 20%;
+    }
+    .row > .col2-5 {
+        width: 40%;
+    }
+    .row > .col3-5 {
+        width: 60%;
+    }
+    .row > .col4-5 {
+        width: 80%;
+    }
 
 .card {
     height: 100%;
@@ -51,6 +63,27 @@ body {
     border: none;
     overflow: hidden;
 }
+
+    .card.cornered1 {
+        background-image: url('images/card-corner-1.png');
+    }
+
+    .card.cornered2 {
+        background-image: url('images/card-corner-2.png');
+    }
+
+    .card.cornered3 {
+        background-image: url('images/card-corner-3.png');
+    }
+
+    .card.cornered1,
+    .card.cornered2,
+    .card.cornered3 {
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        background-position: left center;
+        background-size: contain;
+    }
 
     .card .card-header {
         margin: 0;
@@ -66,7 +99,7 @@ body {
             margin: 0;
             display: flex;
             align-items: center;
-            font: 600 13px IRANSans;
+            font: 500 13px IRANSans;
             color: #333;
         }
 
