@@ -52,6 +52,27 @@
 	<div class="col1-1">
 		<div class="card">
 			<div class="card-header border-bottom">
+				<h6>اماکن ورزشی شهرستان</h6>
+			</div>
+			<div class="card-body">
+				<CityFacilitiesBar City="@City" />
+			</div>
+		</div>
+	</div>
+	@*
+	<div class="col1-2">
+		<div class="card">
+			<div class="card-header border-bottom">
+				<h6>اماکن ورزشی شهرستان</h6>
+			</div>
+			<div class="card-body">
+				<RadialPercentBar />
+			</div>
+		</div>
+	</div>
+	<div class="col1-1">
+		<div class="card">
+			<div class="card-header border-bottom">
 				<h6>اماکن ورزشی به تفکیک شهرستان ها</h6>
 			</div>
 			<div class="card-body">
@@ -150,6 +171,7 @@ conic-gradient(from -90deg, lightblue 0, lightblue 20%, lavender 0, lavender 50%
 
 		</div>
 	</div>
+	*@
 </div>
 
 @code {
@@ -157,6 +179,8 @@ conic-gradient(from -90deg, lightblue 0, lightblue 20%, lavender 0, lavender 50%
 
 	private DbSet<AthleticFacility> sportFacilities;
 	private IQueryable<City> cities;
+	private City? City { get; set; }
+
 	protected override void OnInitialized()
 	{
 		context = DbFactory.CreateDbContext();
@@ -164,5 +188,6 @@ conic-gradient(from -90deg, lightblue 0, lightblue 20%, lavender 0, lavender 50%
 		sportFacilities = context.AthleticFacilities;
 
 		cities = context.Cities.Include(c => c.AthleticFacilities);
+		City = context.Cities.Include(c => c.AthleticFacilities).FirstOrDefault(c => c.Id == 1);
 	}
 }

@@ -1,23 +1,18 @@
 ﻿<div class="city-facilities-bar">
-    <div class="facilities-counts">
-        <div class="msy-facilities">
-            <h6>اماکن ورزشی وزارت ورزش و جوانان</h6>
-            <p>@msyFacilities</p>
-            <p>@msyFacilitiesPercent</p>
-        </div>
-        <div class="gov-facilities">
-            <h6>اماکن ورزشی سایر ارگان ها</h6>
-            <p>@msyFacilities</p>
-            <p>@msyFacilitiesPercent</p>
-        </div>
-        <div class="private-facilities">
-            <h6>باشگاه های خصوصی</h6>
-            <p>@msyFacilities</p>
-            <p>@msyFacilitiesPercent</p>
-        </div>
+    <div class="city-name">
+        <h6 class="name">@City?.PersianName</h6>
+        <p class="total">@totalFacilities</p>
     </div>
-    <div class="percent-bar" style="background-image: conic-gradient(#2c7be5 0%, #2c7be5 @msyFacilitiesPercent%, #94bcf1 0%, #94bcf1 @(100 - privateFacilitiesPercent)%);">
-        <h4>@totalFacilities</h4>
+    <div class="bar" style="background-image: linear-gradient(-90deg, #2c7be5 0%, #2c7be5 @msyFacilitiesPercent%, transparent @msyFacilitiesPercent%), linear-gradient(-90deg, #94bcf1 0%, #94bcf1 @(100 - privateFacilitiesPercent)%, transparent @(100 - privateFacilitiesPercent)%);">
+        <div style="width: @msyFacilitiesPercent%">
+            <p class="msy">@msyFacilities</p>
+        </div>
+        <div style="width: @govFacilitiesPercent%">
+            <p class="gov">@govFacilities</p>
+        </div>
+        <div style="width: @privateFacilitiesPercent%">
+            <p class="private">@privateFacilities</p>
+        </div>
     </div>
 </div>
 
