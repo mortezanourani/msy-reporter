@@ -4,15 +4,15 @@
 			<div class="card-body">
 				<div>
 					<h6 class="title">اماکن ورزشی وزارت ورزش و جوانان</h6>
-					<h2>333</h2>
+					<h2>@msyFacilitiesCount</h2>
 				</div>
 				<div class="d-flex justify-content-between">
 					<p>دارای سند:</p>
-					<b>128</b>
+					<b>@contractedMsyFacilitiesCount</b>
 				</div>
 				<div class="d-flex justify-content-between">
 					<p>واگذار شده در ماده 88:</p>
-					<b>116</b>
+					<b>@contractedMsyFacilitiesCount</b>
 				</div>
 			</div>
 		</div>
@@ -22,11 +22,11 @@
 			<div class="card-body">
 				<div>
 					<h6 class="title">اماکن ورزشی سایر ارگان ها</h6>
-					<h2>427</h2>
+					<h2>@govFacilitiesCount</h2>
 				</div>
 				<div class="d-flex justify-content-between">
 					<p>دارای مجوز ماده 5:</p>
-					<b>59</b>
+					<b>@licensedGovFacilitiesCount</b>
 				</div>
 			</div>
 		</div>
@@ -36,15 +36,15 @@
 			<div class="card-body">
 				<div>
 					<h6 class="title">باشگاه های خصوصی</h6>
-					<h2>1827</h2>
+					<h2>@privateFacilitiesCount</h2>
 				</div>
 				<div class="d-flex justify-content-between">
 					<p>حقیقی:</p>
-					<b>1643</b>
+					<b>@beneficalPrivateFacilitiesCount</b>
 				</div>
 				<div class="d-flex justify-content-between">
 					<p>تملیکی:</p>
-					<b>1263</b>
+					<b>@ownedPrivateFacilitiesCount</b>
 				</div>
 			</div>
 		</div>
@@ -56,13 +56,51 @@
 
 	private DbSet<AthleticFacility>? sportFacilities;
 
-	private IQueryable<City> cities { get; set; }
+	private int msyFacilitiesCount { get; set; } = 0;
+	private int documentedMsyFacilitiesCount { get; set; } = 0;
+	private int contractedMsyFacilitiesCount { get; set; } = 0;
+
+	private int govFacilitiesCount { get; set; } = 0;
+	private int licensedGovFacilitiesCount { get; set; } = 0;
+
+	private int privateFacilitiesCount { get; set; } = 0;
+	private int beneficalPrivateFacilitiesCount { get; set; } = 0;
+	private int ownedPrivateFacilitiesCount { get; set; } = 0;
+
 
 	protected override void OnInitialized()
 	{
 		context = DbFactory.CreateDbContext();
 
 		sportFacilities = context.AthleticFacilities;
-		cities = context.Cities.Include(c => c.AthleticFacilities);
+
+		var msyFacilities = sportFacilities.Where(m => m.OwnershipId == 1);
+		msyFacilitiesCount = msyFacilities.Count();
+		documentedMsyFacilitiesCount = msyFacilities
+			.Where(m => m.M88contracts
+				.Where(m => m.ExpireDate >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
+			.Count();
+		contractedMsyFacilitiesCount = msyFacilities
+			.Where(m => m.M88contracts
+				.Where(m => m.ExpireDate >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
+			.Count();
+
+		var govFacilities = sportFacilities.Where(m => m.OwnershipId == 2);
+		govFacilitiesCount = govFacilities.Count();
+		licensedGovFacilitiesCount = govFacilities
+			.Where(m => m.M5licenses
+				.Where(m => m.ExpireDate >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
+			.Count();
+
+		var privateFacilities = sportFacilities.Where(m => m.OwnershipId == 3 || m.OwnershipId == 4);
+		privateFacilitiesCount = privateFacilities.Count();
+		beneficalPrivateFacilitiesCount = privateFacilities
+			.Where(m => m.M5licenses
+				.Where(m => m.LegalTitleId == 1).Count() > 0)
+			.Count();
+		ownedPrivateFacilitiesCount = privateFacilities
+			.Where(m => m.M5licenses
+				.Where(m => m.IsOwner == true).Count() > 0)
+			.Count();
 	}
 }
