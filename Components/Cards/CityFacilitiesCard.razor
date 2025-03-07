@@ -1,0 +1,115 @@
+﻿<div class="row">
+    <div class="col1-1">
+        <div class="card city-facilities-card">
+            <div class="card-header border-bottom">
+                <h6>اماکن ورزشی شهرستان</h6>
+                <InputSelect  class="cities-select" @bind-Value="cityId" @onclick="SelectCity">
+                    @foreach (City city in cities!)
+                    {
+                        <option value="@city.Id">@city.PersianName</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="card-body">
+                <div class="city-facilities-bar">
+                    <div class="facilities-counts">
+                        <div class="msy-facilities">
+                            <h6>اماکن ورزشی وزارت ورزش و جوانان</h6>
+                            <p>@msyFacilities</p>
+                            <p>%@msyFacilitiesPercent</p>
+                        </div>
+                        <div class="gov-facilities">
+                            <h6>اماکن ورزشی سایر ارگان ها</h6>
+                            <p>@govFacilities</p>
+                            <p>%@govFacilitiesPercent</p>
+                        </div>
+                        <div class="private-facilities">
+                            <h6>باشگاه های خصوصی</h6>
+                            <p>@privateFacilities</p>
+                            <p>%@privateFacilitiesPercent</p>
+                        </div>
+                    </div>
+                    <div class="percent-bar-wrapper">
+                        <div class="percent-bar"
+                        style="background-image:
+radial-gradient(white 49%, transparent 50%, transparent 75%, white 76%),
+conic-gradient(transparent 0deg, #2c7be5 1deg, #2c7be5 @(msyFacilitiesDeg-1)deg, transparent @(msyFacilitiesDeg)deg),
+conic-gradient(transparent @(msyFacilitiesDeg)deg, #95bdf2 @(msyFacilitiesDeg+1)deg, #95bdf2 @(msyFacilitiesDeg+govFacilitiesDeg-1)deg, transparent @(msyFacilitiesDeg+govFacilitiesDeg)deg ),
+conic-gradient(transparent @(msyFacilitiesDeg+govFacilitiesDeg)deg, #27bffd @(msyFacilitiesDeg+govFacilitiesDeg+1)deg, #27bffd 359deg, transparent 360deg);">
+                            <h4>@totalFacilities</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* <style>
+    .city-facilities-card .card-header .cities-select {
+        width: 128px;
+        font: 400 13px IRANSans;
+    }
+</style> *@
+
+@code {
+    private AppDbContext context = default!;
+
+    private IQueryable<City>? cities;
+
+    private int cityId { get; set; } = 1;
+    private City? city { get; set; }
+
+    private int msyFacilities { get; set; } = 0;
+    private int msyFacilitiesPercent { get; set; } = 0;
+    private int msyFacilitiesDeg { get; set; } = 0;
+
+    private int govFacilities { get; set; } = 0;
+    private int govFacilitiesPercent { get; set; } = 0;
+    private int govFacilitiesDeg { get; set; } = 0;
+
+    private int privateFacilities { get; set; } = 0;
+    private int privateFacilitiesPercent { get; set; } = 0;
+    private int privateFacilitiesDeg { get; set; } = 0;
+
+    private int totalFacilities { get; set; } = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        context = DbFactory.CreateDbContext();
+
+        cities = context.Cities;
+
+        SelectCity();
+    }
+
+    private void ResetPercents()
+    {
+        msyFacilitiesPercent = 0;
+        govFacilitiesPercent = 0;
+        privateFacilitiesPercent = 0;
+    }
+
+    private void SelectCity()
+    {
+        city = cities?.Include(c => c.AthleticFacilities).FirstOrDefault(c => c.Id == cityId);
+
+        msyFacilities = city.AthleticFacilities.Where(m => m.OwnershipId == 1).Count();
+        govFacilities = city.AthleticFacilities.Where(m => m.OwnershipId == 2).Count();
+        privateFacilities = city.AthleticFacilities.Where(m => { return m.OwnershipId == 3 || m.OwnershipId == 4; }).Count();
+        totalFacilities = msyFacilities + govFacilities + privateFacilities;
+
+        ResetPercents();
+        if (totalFacilities != 0)
+        {
+            msyFacilitiesPercent = msyFacilities * 100 / totalFacilities;
+            govFacilitiesPercent = govFacilities * 100 / totalFacilities;
+            privateFacilitiesPercent = privateFacilities * 100 / totalFacilities;
+        }
+
+        msyFacilitiesDeg = msyFacilitiesPercent * 360 / 100;
+        govFacilitiesDeg = msyFacilitiesDeg + (govFacilitiesPercent * 360 / 100);
+        privateFacilitiesDeg = privateFacilitiesPercent * 360;
+    }
+}

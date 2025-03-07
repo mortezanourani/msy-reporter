@@ -28,6 +28,15 @@
             font: 500 13px 'IRANSans';
         }
 
+            ::deep.side-navbar .nav .nav-item a {
+                color: lightgray;
+            }
+
+                ::deep.side-navbar .nav .nav-item a:hover,
+                ::deep.side-navbar .nav .nav-item a.active {
+                    color: white;
+                }
+
 .content {
     position: relative;
     margin-right: calc(var(--sidebar-width) + var(--spacing-x));

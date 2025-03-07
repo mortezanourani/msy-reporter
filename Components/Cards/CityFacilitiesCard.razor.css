@@ -1,0 +1,137 @@
+﻿::deep.city-facilities-card .card-header .cities-select {
+    width: 150px;
+    font: 400 13px IRANSans;
+    outline: none;
+    border: 1px solid lightgray;
+    padding: 3px;
+    border-radius: 6px;
+}
+
+.city-facilities-card .city-facilities-bar {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: 16px;
+}
+
+    .city-facilities-card .city-facilities-bar .facilities-counts {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+        margin: 8px auto;
+    }
+
+        .city-facilities-card .city-facilities-bar .facilities-counts > div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25%;
+            padding: 16px 0;
+        }
+            .city-facilities-card .city-facilities-bar .facilities-counts > div:has(+div) {
+                border-bottom: 1px solid #d8e2ef;
+            }
+
+        .city-facilities-card .city-facilities-bar .facilities-counts > div p,
+        .city-facilities-card .city-facilities-bar .facilities-counts > div h6 {
+            font-size: 13px;
+            margin: 0;
+        }
+
+            .city-facilities-card .city-facilities-bar .facilities-counts > div h6 {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                font-weight: 400;
+                flex-grow: 1;
+            }
+
+                .city-facilities-card .city-facilities-bar .facilities-counts > div h6:before {
+                    display: inline-block;
+                    width: 12px;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+                    content: "";
+                }
+
+            .city-facilities-card .city-facilities-bar .facilities-counts > div.msy-facilities h6:before {
+                background: #2c7be5;
+            }
+
+            .city-facilities-card .city-facilities-bar .facilities-counts > div.gov-facilities h6:before {
+                background: #95bdf2;
+            }
+
+            .city-facilities-card .city-facilities-bar .facilities-counts > div.private-facilities h6:before {
+                background: #27bffd;
+            }
+
+    .city-facilities-card .city-facilities-bar .percent-bar-wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: stretch;
+        flex: 1 1 auto;
+        height: 200px;
+    }
+
+        .city-facilities-card .city-facilities-bar .percent-bar-wrapper .percent-bar {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            aspect-ratio: 1;
+            border-radius: 50%;
+        }
+
+            .city-facilities-card .city-facilities-bar .percent-bar-wrapper .percent-bar h4 {
+                margin: 0;
+            }
+
+
+
+
+
+    .city-facilities-card .city-facilities-bar .bar {
+        position: relative;
+        border-radius: 4px 0 0 4px;
+        overflow: hidden;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-items: stretch;
+        background-color: #c0d8f7;
+    }
+
+        .city-facilities-card .city-facilities-bar .bar > div {
+            position: relative;
+            border-radius: 4px;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: flex-end;
+            align-items: stretch;
+        }
+
+            .city-facilities-card .city-facilities-bar .bar > div p {
+                margin: auto;
+                font: 500 12px IRANSans;
+            }
+
+                .city-facilities-card .city-facilities-bar .bar > div p.msy {
+                    color: white;
+                }
+                .city-facilities-card .city-facilities-bar .bar > div p.gov,
+                .city-facilities-card .city-facilities-bar .bar > div p.private {
+                    color: royalblue;
+                }
+
+    .city-facilities-card .city-facilities-bar + .city-facilities-card .city-facilities-bar {
+        margin-top: 8px;
+    }
