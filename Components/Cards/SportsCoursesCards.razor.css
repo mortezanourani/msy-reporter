@@ -1,0 +1,112 @@
+﻿.coaches-card,
+.referees-card {
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: left center;
+    background-size: contain;
+}
+
+.coaches-card {
+    background-image: url('/images/card-corner-2.png')
+}
+
+    .coaches-card .total {
+        font-weight: 400;
+        color: #f5803e;
+    }
+
+.referees-card {
+    background-image: url('/images/card-corner-1.png')
+}
+
+    .referees-card .total {
+        font-weight: 400;
+        color: #1970e2;
+    }
+
+    .coaches-card .genders-category,
+    .referees-card .genders-category {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+    }
+
+        .coaches-card .genders-category p,
+        .referees-card .genders-category p {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            height: 30px;
+            padding: 8px 0;
+        }
+
+            .coaches-card .genders-category p + p,
+            .referees-card .genders-category p + p {
+                border-top: 1px solid lightblue;
+                padding-bottom: 0px;
+            }
+
+.total-value {
+    margin-bottom: 12px;
+}
+
+.couple-value-bar {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: 3px;
+    height: 24px;
+    border-radius: 16px;
+}
+
+    .couple-value-bar > div {
+        position: relative;
+        flex: 1 1 auto;
+        width: 100%;
+        background-color: #1970e2;
+        border-radius: 16px 0 0 16px;
+        text-align: center;
+    }
+
+        .couple-value-bar > div:first-child {
+            background-color: #f5803e;
+            border-radius: 0 16px 16px 0;
+        }
+
+        .couple-value-bar > div > span {
+            color: #fff;
+            font: 400 11px IRANSans;
+        }
+
+.captions {
+    gap: 32px;
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+}
+
+    .captions span {
+        display: flex;
+        align-items: center;
+        position: relative;
+        font: 400 13px IRANSans;
+        gap: 4px;
+    }
+
+        .captions span:before {
+            display: inline-block;
+            width: 12px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            content: "";
+            background-color: #1970e2;
+        }
+
+        .captions span:first-child:before {
+            background-color: #f5803e;
+        }

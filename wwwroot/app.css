@@ -55,6 +55,9 @@ body {
     .row > .col4-5 {
         width: 80%;
     }
+    .row > .col3-10 {
+        width: 30%;
+    }
 
 .card {
     height: 100%;
