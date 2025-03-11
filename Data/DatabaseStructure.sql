@@ -93,7 +93,9 @@ insert into [EventLevels]
 	('Winter Olympic', 'المپیک زمستانی'),
 	('Summer Olympic', 'المپیک تابستانی'),
 	('Universiade', 'المپیک دانشجویان'),
-	('International Beach', 'ساحلی بین المللی');
+	('Beach', 'ساحلی'),
+	('International Beach', 'ساحلی بین المللی'),
+	('International Para Beach', 'پارا ساحلی بین المللی');
 
 
 
@@ -251,9 +253,9 @@ insert into [SportsCourseGrades]
 	('B', 'درجه دو'),
 	('A', 'درجه یک'),
 	('National', 'ملی'),
-	('International-C', 'درجه سه بین المللی'),
-	('International-B', 'درجه دو بین المللی'),
-	('International-A', 'درجه یک بین المللی'),
+	('International-C', 'بین المللی سطح سه'),
+	('International-B', 'بین المللی سطح دو'),
+	('International-A', 'بین المللی سطح یک '),
 	('Asia-D', 'D آسیا'),
 	('Asia-C', 'C آسیا');
 
