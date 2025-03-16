@@ -64,6 +64,7 @@ insert into [Cities]
 drop table if exists [EventLevels]
 create table [EventLevels] (
 	[Id] int identity(1,1) not null,
+	[IsInternational] bit not null,
 	[Name] nvarchar(256) not null,
 	[NormalizedName] as upper([Name]),
 	[PersianName] nvarchar(256) not null,
@@ -71,31 +72,29 @@ create table [EventLevels] (
 	constraint [IX_EventLevels_Name] unique ([NormalizedName])
 );
 insert into [EventLevels]
-	([Name], [PersianName])
+	([IsInternational], [Name], [PersianName])
 	values
-	('Province', 'استانی'),
-	('National', 'ملی'),
-	('Para National', 'پارا ملی'),
-	('National Olympiad', 'المپیاد استعدادهای برتر-کشوری'),
-	('International Olympiad', 'المپیاد استعدادهای برتر-فراملی'),
-	('International', 'بین‌ المللی'),
-	('Para International', 'پارا بین‌ المللی'),
-	('Asian', 'آسیایی'),
-	('Para Asian', 'پارا آسیایی'),
-	('Eurasian', 'اوراسیا'),
-	('World', 'جهانی'),
-	('Para World', 'پارا جهانی'),
-	('Asian Games', 'بازی های آسیایی'),
-	('Asian Para Games', 'پارا بازی های آسیایی'),
-	('Islamic Solidarity', 'کشورهای اسلامی'),
-	('Olympic', 'المپیک'),
-	('Paralympic', 'پارا المپیک'),
-	('Winter Olympic', 'المپیک زمستانی'),
-	('Summer Olympic', 'المپیک تابستانی'),
-	('Universiade', 'المپیک دانشجویان'),
-	('Beach', 'ساحلی'),
-	('International Beach', 'ساحلی بین المللی'),
-	('International Para Beach', 'پارا ساحلی بین المللی');
+	(0, 'Province', 'استانی'),
+	(0, 'National', 'ملی'),
+	(0, 'Para National', 'پارا ملی'),
+	(0, 'National Olympiad', 'المپیاد استعدادهای برتر-کشوری'),
+	(1, 'International Olympiad', 'المپیاد استعدادهای برتر-فراملی'),
+	(1, 'International', 'بین‌ المللی'),
+	(1, 'Para International', 'پارا بین‌ المللی'),
+	(1, 'Asian', 'آسیایی'),
+	(1, 'Para Asian', 'پارا آسیایی'),
+	(1, 'Eurasian', 'اوراسیا'),
+	(1, 'World', 'جهانی'),
+	(1, 'Para World', 'پارا جهانی'),
+	(1, 'Asian Games', 'بازی های آسیایی'),
+	(1, 'Asian Para Games', 'پارا بازی های آسیایی'),
+	(1, 'Islamic Solidarity', 'کشورهای اسلامی'),
+	(1, 'Olympic', 'المپیک'),
+	(1, 'Paralympic', 'پارا المپیک'),
+	(1, 'Winter Olympic', 'المپیک زمستانی'),
+	(1, 'Summer Olympic', 'المپیک تابستانی'),
+	(1, 'Universiade', 'المپیک دانشجویان'),
+	(1, 'International Beach', 'ساحلی بین المللی');
 
 
 
@@ -152,6 +151,24 @@ insert into [Genders]
 	values
 	('Male', 'آقا'),
 	('Female', 'خانم');
+
+
+
+drop table if exists [InviteeRoles];
+create table [InviteeRoles] (
+	[Id] int identity(1,1) not null,
+	[Role] nvarchar(256) not null,
+	[NormalizedRole] as upper([Role]),
+	[PersianTitle] nvarchar(max) not null,
+	constraint [PK_InviteeRoles] primary key ([Id]),
+	constraint [IX_InviteeRoles] unique ([NormalizedRole])
+);
+
+insert into [InviteeRoles]
+	([Role], [PersianTitle])
+	values
+	('Player', 'بازیکن'),
+	('Coach', 'مربی');
 
 
 
@@ -254,9 +271,9 @@ insert into [SportsCourseGrades]
 	('B', 'درجه دو'),
 	('A', 'درجه یک'),
 	('National', 'ملی'),
-	('International-C', 'بین المللی سطح سه'),
-	('International-B', 'بین المللی سطح دو'),
-	('International-A', 'بین المللی سطح یک '),
+	('International-C', 'درجه سه بین المللی'),
+	('International-B', 'درجه دو بین المللی'),
+	('International-A', 'درجه یک بین المللی'),
 	('Asia-D', 'D آسیا'),
 	('Asia-C', 'C آسیا');
 
@@ -478,12 +495,37 @@ create table [Records] (
 	[Id] uniqueidentifier default newid() not null,
 	[FederationId] uniqueidentifier not null,
 	[Sport] nvarchar(max) not null,
+	[AgeGroupId] int null,
 	[OldRecord] nvarchar(max) not null,
 	[Name] nvarchar(max) not null,
 	[Date] date not null,
 	[CityId] int not null,
 	[Location] nvarchar(max) null,
-	[Current] nvarchar(max) not null
+	[Current] nvarchar(max) not null,
+	constraint [PK_Records] primary key ([Id]),
+	constraint [FK_Records_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+	constraint [FK_Records_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
+	constraint [FK_Records_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
+);
+
+
+
+
+drop table if exists [NationalTeamInvitees];
+create table [NationalTeamInvitees] (
+	[Id] uniqueidentifier default newid() not null,
+	[RoleId] int not null,
+	[Name] nvarchar(256) not null,
+	[GenderId] int not null,
+	[FederationId] uniqueidentifier not null,
+	[AgeGroupId] int null,
+	[Year] int not null,
+	[IsAccepted] bit not null, -- عضو تیم ملی
+	constraint [PK_NationalTeamInvitees] primary key ([Id]),
+	constraint [FK_NationalTeamInvitees_InviteeRoles_RoleId] foreign key ([RoleId]) references [InviteeRoles]([Id]),
+	constraint [FK_NationalTeamInvitees_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id]),
+	constraint [FK_NationalTeamInvitees_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+	constraint [FK_NationalTeamInvitees_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id])
 );
 
 
@@ -513,3 +555,10 @@ create table [ProjectUserGeneders] (
 	constraint [FK_ProjectUserGenders_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id]),
 	constraint [FK_ProjectUserGenders_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
 );
+
+
+
+
+-- جدول برای پروژه های عمرانی
+-- جدول برای تغییر پیشرفت فیزیکی
+-- جدول برای ردیف های بودجه تعریف شده در هر سال برای پروژه
