@@ -114,6 +114,7 @@ insert into [FacilityTypes]
 	values
 	('Hall', 'سرپوشیده'),
 	('Land', 'روباز'),
+	('Complex', 'مجموعه'),
 	('Centre', 'دفتر باشگاه');
 
 
@@ -487,3 +488,28 @@ create table [Records] (
 
 
 
+drop table if exists [ConstructionProjects];
+create table [ConstructionProjects] (
+	[Id] uniqueidentifier default newid() not null,
+	[Title] nvarchar(256) not null,
+	[CityId] int not null,
+	[IsRural] bit null,
+	[IsRenovation] bit not null,
+	[TypeId] int not null,
+	[StartYear] int not null,
+	[FinishYear] int null,
+	[Area] int not null,
+	[SportArea] int not null,
+	constraint [PK_ConstructionProjects] primary key ([Id]),
+	constraint [FK_ConstructionProjects_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
+	constraint [FK_ConstructionProjects_FacilityTypes_TypeId] foreign key ([TypeId]) references [FacilityTypes]([Id])
+);
+
+drop table if exists [ProjectUserGenders];
+create table [ProjectUserGeneders] (
+	[ProjectId] uniqueidentifier not null,
+	[GenderId] int not null,
+	constraint [PK_ProjectUserGenders] primary key ([ProjectId], [GenderId]),
+	constraint [FK_ProjectUserGenders_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id]),
+	constraint [FK_ProjectUserGenders_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
+);
