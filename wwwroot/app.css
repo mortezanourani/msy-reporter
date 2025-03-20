@@ -1,6 +1,7 @@
 @import 'fontiran.css';
 :root {
-    --main-bg: #edf2f9;
+    /*--main-bg: #edf2f9;*/
+    --main-bg: #DFF3E4;
     --main-color: #5e6e82;
     --card-bg: #fff;
     --card-box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
@@ -65,6 +66,7 @@ body {
     box-shadow: var(--card-box-shadow);
     border: none;
     overflow: hidden;
+    border-radius: 8px;
 }
 
     .card .card-header {

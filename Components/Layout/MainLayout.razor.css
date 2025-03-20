@@ -15,24 +15,45 @@
 
     .side-navbar .nav {
         height: 100%;
-        padding: 12px;
-        background-image: linear-gradient(-45deg, rgba(0, 160, 255, 0.86), rgb(0, 72, 162));
+        padding: 0px;
+        padding-left: var(--spacing-x);
+        gap: 16px;
+        background: transparent;
+        box-shadow: none;
+        /*background-image: linear-gradient(-45deg, rgba(0, 160, 255, 0.86), rgb(0, 72, 162));*/
     }
 
         .side-navbar .nav .nav-item {
-            padding: 6px 8px;
+            padding: 8px;
+            border-radius: 8px;
             display: flex;
+            gap: 8px;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
             font: 500 13px 'IRANSans';
         }
 
-            ::deep.side-navbar .nav .nav-item a {
-                color: lightgray;
+            .side-navbar .nav .nav-item img {
+                width: 24px;
+                aspect-ratio: 1;
             }
 
-                ::deep.side-navbar .nav .nav-item a:hover,
+                ::deep.side-navbar .nav .nav-item a {
+                    color: #0fa9ff;
+                }
+
+                .side-navbar .nav .nav-item:hover,
+                .side-navbar .nav .nav-item:has(a.active) {
+                    background-color: #0fa9ff;
+                }
+
+                    .side-navbar .nav .nav-item:hover img,
+                    .side-navbar .nav .nav-item:has(a.active) img {
+                        filter: invert(33%) brightness(1000%);
+                    }
+
+                ::deep.side-navbar .nav .nav-item:hover a,
                 ::deep.side-navbar .nav .nav-item a.active {
                     color: white;
                 }
@@ -59,25 +80,38 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
+            gap: var(--spacing-x);
         }
 
-            .content .top-navbar .wrapper input {
-                outline: none;
-                width: 256px;
-                height: 36px;
-                padding: 4px 16px;
-                border-radius: 18px;
-                border: 1px solid lightgrey;
-                font: 300 12px IRANSans;
-                transition: all ease 250ms;
+            .content .top-navbar .wrapper .tn-search {
+                flex-grow: 1;
+                position: relative;
             }
 
-                .content .top-navbar .wrapper input:focus {
-                    border: 1px solid lightblue;
+                .content .top-navbar .wrapper .tn-search input {
+                    outline: none;
+                    width: 100%;
+                    height: 36px;
+                    padding: 4px 0;
+                    padding-right: 36px;
+                    background: transparent;
+                    border-radius: 8px;
+                    border: 1px solid transparent;
+                    font: 300 12px IRANSans;
+                    transition: all ease 250ms;
+                    background-image: url('/icons/search.svg');
+                    background-repeat: no-repeat;
+                    background-position: center right 6px;
                 }
+
+                    .content .top-navbar .wrapper .tn-search input:focus {
+                        border: 1px solid lightblue;
+                        background-color: white;
+                    }
 
             .content .top-navbar .wrapper .nav {
                 gap: 8px;
+                padding: 0;
             }
 
                 .content .top-navbar .wrapper .nav .btn-signout {
