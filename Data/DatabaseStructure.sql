@@ -17,9 +17,9 @@ begin
 end;
 
 -- Basic Tables ------------------------------------------------------------------------------------
-if exists (
-	select 1 from sys.objects
-		where name = '[AgeGroups]' and type = 'U'
+if not exists (
+	select * from sys.objects
+		where name = 'AgeGroups' and type = 'U'
 )
 begin
 	create table [AgeGroups] (
@@ -44,9 +44,9 @@ begin
 		('Veterans', 'پیشکسوتان');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Cities]' and type = 'U'
+		where name = 'Cities' and type = 'U'
 )
 begin
 	create table [Cities] (
@@ -80,9 +80,9 @@ begin
 		('Masal', 'ماسال');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[EventLevels]' and type = 'U'
+		where name = 'EventLevels' and type = 'U'
 )
 begin
 	create table [EventLevels] (
@@ -121,9 +121,9 @@ begin
 		(1, 'International Beach', 'ساحلی بین المللی');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[FacilityTypes]' and type = 'U'
+		where name = 'FacilityTypes' and type = 'U'
 )
 begin
 	create table [FacilityTypes] (
@@ -144,9 +144,9 @@ begin
 		('Centre', 'دفتر باشگاه');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Federations]' and type = 'U'
+		where name = 'Federations' and type = 'U'
 )
 begin
 	create table [Federations] (
@@ -165,9 +165,9 @@ begin
 	 );
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Genders]' and type = 'U'
+		where name = 'Genders' and type = 'U'
 )
 begin
 	create table [Genders] (
@@ -186,9 +186,9 @@ begin
 		('Female', 'خانم');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[InviteeRoles]' and type = 'U'
+		where name = 'InviteeRoles' and type = 'U'
 )
 begin
 	create table [InviteeRoles] (
@@ -207,9 +207,9 @@ begin
 		('Coach', 'مربی');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[LegalTitles]' and type = 'U'
+		where name = 'LegalTitles' and type = 'U'
 )
 begin
 	create table [LegalTitles] (
@@ -228,9 +228,9 @@ begin
 		('Legal', 'حقوقی');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Medals]' and type = 'U'
+		where name = 'Medals' and type = 'U'
 )
 begin
 	create table [Medals] (
@@ -254,9 +254,9 @@ begin
 		(0, 'Bronze', 'برنز تیمی');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[MeetingTypes]' and type = 'U'
+		where name = 'MeetingTypes' and type = 'U'
 )
 begin
 	create table [MeetingTypes] (
@@ -277,9 +277,9 @@ begin
 		('ExtraOrdinary', 'جلسه فوق العاده', 1);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Ownerships]' and type = 'U'
+		where name = 'Ownerships' and type = 'U'
 )
 begin
 	create table [Ownerships] (
@@ -301,9 +301,9 @@ begin
 		(0, 'PrivateCorporate', 'باشگاه خصوصی - حقوقی');
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[SportsCourseGrades]' and type = 'U'
+		where name = 'SportsCourseGrades' and type = 'U'
 )
 begin
 	create table [SportsCourseGrades] (
@@ -330,9 +330,9 @@ begin
 end;
 
 -- Main Tables -------------------------------------------------------------------------------------
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[FederationPresidents]' and type = 'U'
+		where name = 'FederationPresidents' and type = 'U'
 )
 begin
 	create table [FederationPresidents] (
@@ -352,9 +352,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[FederationMeetings]' and type = 'U'
+		where name = 'FederationMeetings' and type = 'U'
 )
 begin
 	create table [FederationMeetings] (
@@ -372,9 +372,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[MeetingVotes]' and type = 'U'
+		where name = 'MeetingVotes' and type = 'U'
 )
 begin
 	create table [MeetingVotes] (
@@ -386,9 +386,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[AthleticFacilities]' and type = 'U'
+		where name = 'AthleticFacilities' and type = 'U'
 )
 begin
 	create table [AthleticFacilities] (
@@ -412,9 +412,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[FacilityUserGeneders]' and type = 'U'
+		where name = 'FacilityUserGeneders' and type = 'U'
 )
 begin
 	create table [FacilityUserGeneders] (
@@ -426,9 +426,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[M5Licenses]' and type = 'U'
+		where name = 'M5Licenses' and type = 'U'
 )
 begin
 	create table [M5Licenses] (
@@ -450,9 +450,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[M88Contracts]' and type = 'U'
+		where name = 'M88Contracts' and type = 'U'
 )
 begin
 	create table [M88Contracts] (
@@ -472,9 +472,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Champions]' and type = 'U'
+		where name = 'Champions' and type = 'U'
 )
 begin
 	create table [Champions] (
@@ -491,9 +491,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Championships]' and type = 'U'
+		where name = 'Championships' and type = 'U'
 )
 begin
 	create table [Championships] (
@@ -513,9 +513,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[ChampionChampionships]' and type = 'U'
+		where name = 'ChampionChampionships' and type = 'U'
 )
 begin
 	create table [ChampionChampionships] (
@@ -527,9 +527,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[SportsCourses]' and type = 'U'
+		where name = 'SportsCourses' and type = 'U'
 )
 begin
 	create table [SportsCourses] (
@@ -544,9 +544,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[SportsCourseParticipants]' and type = 'U'
+		where name = 'SportsCourseParticipants' and type = 'U'
 )
 begin
 	create table [SportsCourseParticipants] (
@@ -561,9 +561,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[SportsCourseCourseParticipants]' and type = 'U'
+		where name = 'SportsCourseCourseParticipants' and type = 'U'
 )
 begin
 	create table [SportsCourseCourseParticipants] (
@@ -575,9 +575,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Insurances]' and type = 'U'
+		where name = 'Insurances' and type = 'U'
 )
 begin
 	create table [Insurances] (
@@ -596,9 +596,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[Records]' and type = 'U'
+		where name = 'Records' and type = 'U'
 )
 begin
 	create table [Records] (
@@ -619,9 +619,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[NationalTeamInvitees]' and type = 'U'
+		where name = 'NationalTeamInvitees' and type = 'U'
 )
 begin
 	create table [NationalTeamInvitees] (
@@ -641,9 +641,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[ConstructionProjects]' and type = 'U'
+		where name = 'ConstructionProjects' and type = 'U'
 )
 begin
 	create table [ConstructionProjects] (
@@ -663,9 +663,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[ProjectUserGeneders]' and type = 'U'
+		where name = 'ProjectUserGeneders' and type = 'U'
 )
 begin
 	create table [ProjectUserGeneders] (
@@ -677,9 +677,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[ProjectCompletionProgress]' and type = 'U'
+		where name = 'ProjectCompletionProgress' and type = 'U'
 )
 begin
 	create table [ProjectCompletionProgress] (
@@ -692,9 +692,9 @@ begin
 	);
 end;
 
-if exists (
+if not exists (
 	select * from sys.objects
-		where name = '[ProjectBudgets]' and type = 'U'
+		where name = 'ProjectBudgets' and type = 'U'
 )
 begin
 	create table [ProjectBudgets] (
@@ -707,7 +707,7 @@ begin
 		[ContractorUnpaid] int default 0 null,
 		[CompletionBudget] int default 0 null,
 		[Percentage] int not null,
-		constraint [PK_ProjectCompletionProgress] primary key ([ProjectId], [Percentage]),
-		constraint [FK_ProjectCompletionProgress_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id])
+		constraint [PK_ProjectBudgets] primary key ([ProjectId], [Year]),
+		constraint [FK_ProjectBudgets_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id])
 	);
 end;
