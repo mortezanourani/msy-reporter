@@ -7,6 +7,8 @@ public partial class EventLevel
 {
     public int Id { get; set; }
 
+    public bool IsInternational { get; set; }
+
     public string Name { get; set; } = null!;
 
     public string? NormalizedName { get; set; }

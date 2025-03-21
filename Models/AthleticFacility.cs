@@ -25,7 +25,7 @@ public partial class AthleticFacility
 
     public string? Sports { get; set; }
 
-    public string? Zipcode { get; set; }
+    public string? ZipCode { get; set; }
 
     public string? Address { get; set; }
 

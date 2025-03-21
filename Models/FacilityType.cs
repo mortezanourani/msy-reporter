@@ -14,4 +14,6 @@ public partial class FacilityType
     public string PersianName { get; set; } = null!;
 
     public virtual ICollection<AthleticFacility> AthleticFacilities { get; set; } = new List<AthleticFacility>();
+
+    public virtual ICollection<ConstructionProject> ConstructionProjects { get; set; } = new List<ConstructionProject>();
 }

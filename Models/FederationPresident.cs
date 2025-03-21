@@ -7,7 +7,7 @@ public partial class FederationPresident
 {
     public Guid Id { get; set; }
 
-    public Guid? FederationId { get; set; }
+    public Guid FederationId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -17,9 +17,15 @@ public partial class FederationPresident
 
     public string? Phone { get; set; }
 
+    public string? EducationalQualification { get; set; }
+
+    public string? EducationalMajor { get; set; }
+
     public string? AppointmentOrder { get; set; }
 
     public string? AppointmentDate { get; set; }
 
-    public virtual Federation? Federation { get; set; }
+    public bool IsPresident { get; set; }
+
+    public virtual Federation Federation { get; set; } = null!;
 }

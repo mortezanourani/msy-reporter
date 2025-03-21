@@ -17,5 +17,11 @@ public partial class City
 
     public virtual ICollection<Champion> Champions { get; set; } = new List<Champion>();
 
+    public virtual ICollection<ConstructionProject> ConstructionProjects { get; set; } = new List<ConstructionProject>();
+
     public virtual ICollection<Federation> Federations { get; set; } = new List<Federation>();
+
+    public virtual ICollection<Insurance> Insurances { get; set; } = new List<Insurance>();
+
+    public virtual ICollection<Record> Records { get; set; } = new List<Record>();
 }
