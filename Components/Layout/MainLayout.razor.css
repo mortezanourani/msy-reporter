@@ -24,38 +24,37 @@
     }
 
         .side-navbar .nav .nav-item {
-            padding: 8px;
             border-radius: 8px;
-            display: flex;
-            gap: 8px;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
-            font: 500 13px 'IRANSans';
         }
 
-            .side-navbar .nav .nav-item img {
-                width: 24px;
-                aspect-ratio: 1;
-            }
-
                 ::deep.side-navbar .nav .nav-item a {
-                    color: #0fa9ff;
+                    padding: 8px;
+                    border-radius: 8px;
+                    display: flex;
+                    gap: 8px;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    font: 600 13px 'IRANSans';
+                    color: #1970e2;
                 }
 
+                    .side-navbar .nav .nav-item a img {
+                        width: 24px;
+                        aspect-ratio: 1;
+                    }
+                
                 .side-navbar .nav .nav-item:hover,
                 .side-navbar .nav .nav-item:has(a.active) {
-                    background-color: #0fa9ff;
+                    background-color: #1970e2;
                 }
 
-                    .side-navbar .nav .nav-item:hover img,
-                    .side-navbar .nav .nav-item:has(a.active) img {
-                        filter: invert(33%) brightness(1000%);
-                    }
+                ::deep.side-navbar .nav .nav-item:hover a {
+                    filter: invert(33%) brightness(175%);
+                }
 
-                ::deep.side-navbar .nav .nav-item:hover a,
                 ::deep.side-navbar .nav .nav-item a.active {
-                    color: white;
+                    filter: invert(33%) brightness(1000%);
                 }
 
 .content {
@@ -69,8 +68,8 @@
         top: 0px;
         background: var(--main-bg);
         margin: 0 calc(var(--spacing-x) * -1);
-        /*box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.2) !important;*/
         z-index: 999;
+        overflow-x: clip;
     }
 
         .content .top-navbar .wrapper {
@@ -81,6 +80,11 @@
             justify-content: space-between;
             align-items: center;
             gap: var(--spacing-x);
+            transition: all linear 100ms;
+        }
+
+        .content .top-navbar.scrolled .wrapper {
+            box-shadow: 0 0.5rem 0.5rem -0.35rem rgba(0, 0, 0, 0.2) !important;
         }
 
             .content .top-navbar .wrapper .tn-search {

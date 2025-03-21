@@ -1,0 +1,84 @@
+﻿@page "/constructionprojects/create"
+@using Microsoft.EntityFrameworkCore
+@using Reporter.Models
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>ConstructionProject</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="ConstructionProject" OnValidSubmit="AddConstructionProject" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="ConstructionProject.Title" class="form-control" /> 
+                <ValidationMessage For="() => ConstructionProject.Title" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="cityid" class="form-label">CityId:</label> 
+                <InputNumber id="cityid" @bind-Value="ConstructionProject.CityId" class="form-control" /> 
+                <ValidationMessage For="() => ConstructionProject.CityId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="isrural" class="form-label">IsRural:</label> 
+                @* <InputCheckbox id="isrural" @bind-Value="ConstructionProject.IsRural?" class="form-check-input" />  *@
+                <ValidationMessage For="() => ConstructionProject.IsRural" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="isrenovation" class="form-label">IsRenovation:</label> 
+                <InputCheckbox id="isrenovation" @bind-Value="ConstructionProject.IsRenovation" class="form-check-input" /> 
+                <ValidationMessage For="() => ConstructionProject.IsRenovation" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="typeid" class="form-label">TypeId:</label> 
+                <InputNumber id="typeid" @bind-Value="ConstructionProject.TypeId" class="form-control" /> 
+                <ValidationMessage For="() => ConstructionProject.TypeId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="startyear" class="form-label">StartYear:</label> 
+                <InputNumber id="startyear" @bind-Value="ConstructionProject.StartYear" class="form-control" /> 
+                <ValidationMessage For="() => ConstructionProject.StartYear" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="finishyear" class="form-label">FinishYear:</label> 
+                <InputNumber id="finishyear" @bind-Value="ConstructionProject.FinishYear" class="form-control" /> 
+                <ValidationMessage For="() => ConstructionProject.FinishYear" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="area" class="form-label">Area:</label> 
+                <InputNumber id="area" @bind-Value="ConstructionProject.Area" class="form-control" /> 
+                <ValidationMessage For="() => ConstructionProject.Area" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="sportarea" class="form-label">SportArea:</label> 
+                <InputNumber id="sportarea" @bind-Value="ConstructionProject.SportArea" class="form-control" /> 
+                <ValidationMessage For="() => ConstructionProject.SportArea" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/constructionprojects">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private ConstructionProject ConstructionProject { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddConstructionProject()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.ConstructionProjects.Add(ConstructionProject);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/constructionprojects");
+    }
+}

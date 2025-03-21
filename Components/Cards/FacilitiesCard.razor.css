@@ -18,16 +18,3 @@
     background-position: left center;
     background-size: contain;
 }
-
-.card-body .title {
-    font: 600 13px IRANSans;
-}
-
-.card-body h2 {
-    font-weight: 400;
-}
-
-.card-body b,
-.card-body p {
-    font-size: 12px;
-}

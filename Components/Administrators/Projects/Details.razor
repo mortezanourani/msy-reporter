@@ -1,0 +1,62 @@
+﻿@page "/constructionprojects/details"
+@using Microsoft.EntityFrameworkCore
+@using Reporter.Models
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>ConstructionProject</h2>
+    <hr />
+    @if (constructionproject is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@constructionproject.Title</dd>
+            <dt class="col-sm-2">CityId</dt>
+            <dd class="col-sm-10">@constructionproject.CityId</dd>
+            <dt class="col-sm-2">IsRural</dt>
+            <dd class="col-sm-10">@constructionproject.IsRural</dd>
+            <dt class="col-sm-2">IsRenovation</dt>
+            <dd class="col-sm-10">@constructionproject.IsRenovation</dd>
+            <dt class="col-sm-2">TypeId</dt>
+            <dd class="col-sm-10">@constructionproject.TypeId</dd>
+            <dt class="col-sm-2">StartYear</dt>
+            <dd class="col-sm-10">@constructionproject.StartYear</dd>
+            <dt class="col-sm-2">FinishYear</dt>
+            <dd class="col-sm-10">@constructionproject.FinishYear</dd>
+            <dt class="col-sm-2">Area</dt>
+            <dd class="col-sm-10">@constructionproject.Area</dd>
+            <dt class="col-sm-2">SportArea</dt>
+            <dd class="col-sm-10">@constructionproject.SportArea</dd>
+        </dl>
+        <div>
+            <a href="@($"/constructionprojects/edit?id={constructionproject.Id}")">Edit</a> |
+            <a href="@($"/constructionprojects")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private ConstructionProject? constructionproject;
+
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        constructionproject = await context.ConstructionProjects.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (constructionproject is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

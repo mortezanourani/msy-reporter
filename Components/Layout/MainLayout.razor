@@ -1,30 +1,39 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
 
 <main class="main">
     <div class="container">
         <nav class="side-navbar">
             <ul class="nav nav-pills flex-column card">
                 <li class="nav-item">
-                    <img src="/icons/dashboard.svg" />
-                    <NavLink href="/">پنل کاربری</NavLink>
+                    <NavLink href="/#">
+                        <img src="/icons/dashboard.svg" />
+                        پنل کاربری
+                    </NavLink>
                 </li>
                 <li class="nav-item">
-                    <img src="/icons/projects.svg" />
-                    <NavLink href="/Projects">پروژه های عمرانی</NavLink>
+                    <NavLink href="/Projects">
+                        <img src="/icons/projects.svg" />
+                        پروژه های عمرانی
+                    </NavLink>
                 </li>
                 <li class="nav-item">
-                    <img src="/icons/facilities.svg" />
-                    <NavLink href="/SportFacilities">اماکن ورزشی</NavLink>
+                    <NavLink href="/SportFacilities">
+                        <img src="/icons/facilities.svg" />
+                        اماکن ورزشی
+                    </NavLink>
                 </li>
                 <li class="nav-item">
-                    <img src="/icons/genders.svg" />
-                    <NavLink href="/Genders">جنسیت ها</NavLink>
+                    <NavLink href="/Genders">
+                        <img src="/icons/genders.svg" />
+                        جنسیت ها
+                    </NavLink>
                 </li>
             </ul>
         </nav>
 
         <div class="content">
-            <nav class="top-navbar">
+            <nav class="top-navbar @scrolledClass">
                 <div class="wrapper">
                     <form class="tn-search">
                         <input type="text" name="search" placeholder="جستجو..." />
@@ -53,3 +62,40 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+<script>
+    window.scrollHelper = {
+    onScroll: function (dotNetHelper) {
+    window.addEventListener('scroll', () => {
+    dotNetHelper.invokeMethodAsync('OnScroll', window.scrollY);
+    });
+    }
+    };
+</script>
+
+@code {
+    private string? scrolledClass;
+
+    private DotNetObjectReference<MainLayout>? dotNetHelper;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            dotNetHelper = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("scrollHelper.onScroll", dotNetHelper);
+        }
+    }
+
+    [JSInvokable]
+    public void OnScroll(int position)
+    {
+        scrolledClass = (position > 0) ? "scrolled" : string.Empty;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        dotNetHelper?.Dispose();
+    }
+}

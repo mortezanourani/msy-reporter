@@ -1,0 +1,87 @@
+﻿@page "/constructionprojects/delete"
+@using Microsoft.EntityFrameworkCore
+@using Reporter.Models
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>ConstructionProject</h2>
+    <hr />
+    @if (constructionproject is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@constructionproject.Title</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CityId</dt>
+            <dd class="col-sm-10">@constructionproject.CityId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">IsRural</dt>
+            <dd class="col-sm-10">@constructionproject.IsRural</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">IsRenovation</dt>
+            <dd class="col-sm-10">@constructionproject.IsRenovation</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">TypeId</dt>
+            <dd class="col-sm-10">@constructionproject.TypeId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">StartYear</dt>
+            <dd class="col-sm-10">@constructionproject.StartYear</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">FinishYear</dt>
+            <dd class="col-sm-10">@constructionproject.FinishYear</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Area</dt>
+            <dd class="col-sm-10">@constructionproject.Area</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">SportArea</dt>
+            <dd class="col-sm-10">@constructionproject.SportArea</dd>
+        </dl>
+        <EditForm method="post" Model="constructionproject" OnValidSubmit="DeleteConstructionProject" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(constructionproject is null)">Delete</button> |
+            <a href="/constructionprojects">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private ConstructionProject? constructionproject;
+
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        constructionproject = await context.ConstructionProjects.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (constructionproject is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteConstructionProject()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.ConstructionProjects.Remove(constructionproject!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/constructionprojects");
+    }
+}

@@ -1,14 +1,19 @@
 @import 'fontiran.css';
 :root {
     /*--main-bg: #edf2f9;*/
-    --main-bg: #DFF3E4;
+    --main-bg: #dff3e4;
     --main-color: #5e6e82;
+    --title-color: #444;
     --card-bg: #fff;
+    --card-color-bg: linear-gradient(-45deg, #014ba7, #0183d0);
     --card-box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
     --sidebar-width: 240px;
     --spacing-x: 12px;
     --spacing-y: 12px;
+    --card-padding-x: 16px;
+    --card-padding-y: 12px;
 }
+
 html {
     direction: rtl;
 }
@@ -69,9 +74,15 @@ body {
     border-radius: 8px;
 }
 
-    .card .card-header {
+    .card.color-card {
+        background-image: var(--card-color-bg);
+        min-height: 256px;
+    }
+
+    .card .card-header,
+    .card .card-footer {
         margin: 0;
-        padding: 16px;
+        padding: var(--card-padding-y) var(--card-padding-x);
         border: none;
         background: none;
         display: flex;
@@ -79,26 +90,74 @@ body {
         justify-content: space-between;
         align-items: center;
     }
+
         .card .card-header h6 {
             margin: 0;
             display: flex;
             align-items: center;
-            font: 600 13px IRANSans;
+            font: 500 13px IRANSans;
             color: #333;
+        }
+
+        .card.color-card .card-header h6 {
+            font: 500 13px IRANSans;
+            color: #fff;
+        }
+
+    .card .card-header select,
+    .card .card-footer select {
+        width: 150px;
+        font: 400 13px IRANSans;
+        outline: none;
+        border: 1px solid lightgray;
+        padding: 3px;
+        border-radius: 6px;
+    }
+
+    .card .card-header a,
+    .card .card-footer a {
+        font: 400 13px IRANSans;
+    }
+
+        .card .card-footer a:after {
+            position: relative;
+            content: "";
+            margin: 8px 4px 0 0;
+            border-radius: 2px;
+            border: 2px solid dodgerblue;
+            border-top: none;
+            border-right: none;
+            width: 8px;
+            aspect-ratio: 1;
+            transform: rotate(45deg);
+            display: inline-block;
         }
 
     .card .card-body {
         margin: 0;
-        padding: 16px;
+        padding: var(--card-padding-y) var(--card-padding-x);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         flex: 1 1 auto;
     }
 
+        .card .card-body .title {
+            font: 500 13px IRANSans;
+        }
+
+        .card .card-body h2 {
+            font-weight: 400;
+        }
+
+        .card .card-body b,
         .card .card-body p {
             margin: 0;
             font: 400 12px IRANSans;
+        }
+
+        .card .card-body b {
+            font-weight: 600;
         }
 
 a {
@@ -110,6 +169,11 @@ a {
 
 h1:focus {
     outline: none;
+}
+
+.page-title {
+    font: 400 32px IRANSans;
+    color: var(--title-color);
 }
 
 .valid.modified:not([type=checkbox]) {

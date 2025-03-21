@@ -1,0 +1,129 @@
+﻿@page "/constructionprojects/edit"
+@using Microsoft.EntityFrameworkCore
+@using Reporter.Models
+@inject IDbContextFactory<Reporter.Data.AppDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>ConstructionProject</h2>
+<hr />
+@if (ConstructionProject is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="ConstructionProject" OnValidSubmit="UpdateConstructionProject" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="ConstructionProject.Id" value="@ConstructionProject.Id" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <InputText id="title" @bind-Value="ConstructionProject.Title" class="form-control" />
+                    <ValidationMessage For="() => ConstructionProject.Title" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="cityid" class="form-label">CityId:</label>
+                    <InputNumber id="cityid" @bind-Value="ConstructionProject.CityId" class="form-control" />
+                    <ValidationMessage For="() => ConstructionProject.CityId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="isrural" class="form-label">IsRural:</label>
+                    @* <InputCheckbox id="isrural" @bind-Value="ConstructionProject.IsRural" class="form-check-input" /> *@
+                    <ValidationMessage For="() => ConstructionProject.IsRural" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="isrenovation" class="form-label">IsRenovation:</label>
+                    <InputCheckbox id="isrenovation" @bind-Value="ConstructionProject.IsRenovation" class="form-check-input" />
+                    <ValidationMessage For="() => ConstructionProject.IsRenovation" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="typeid" class="form-label">TypeId:</label>
+                    <InputNumber id="typeid" @bind-Value="ConstructionProject.TypeId" class="form-control" />
+                    <ValidationMessage For="() => ConstructionProject.TypeId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="startyear" class="form-label">StartYear:</label>
+                    <InputNumber id="startyear" @bind-Value="ConstructionProject.StartYear" class="form-control" />
+                    <ValidationMessage For="() => ConstructionProject.StartYear" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="finishyear" class="form-label">FinishYear:</label>
+                    <InputNumber id="finishyear" @bind-Value="ConstructionProject.FinishYear" class="form-control" />
+                    <ValidationMessage For="() => ConstructionProject.FinishYear" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="area" class="form-label">Area:</label>
+                    <InputNumber id="area" @bind-Value="ConstructionProject.Area" class="form-control" />
+                    <ValidationMessage For="() => ConstructionProject.Area" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="sportarea" class="form-label">SportArea:</label>
+                    <InputNumber id="sportarea" @bind-Value="ConstructionProject.SportArea" class="form-control" />
+                    <ValidationMessage For="() => ConstructionProject.SportArea" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/constructionprojects">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private ConstructionProject? ConstructionProject { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        ConstructionProject ??= await context.ConstructionProjects.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (ConstructionProject is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateConstructionProject()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(ConstructionProject!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ConstructionProjectExists(ConstructionProject!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/constructionprojects");
+    }
+
+    private bool ConstructionProjectExists(Guid id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.ConstructionProjects.Any(e => e.Id == id);
+    }
+}

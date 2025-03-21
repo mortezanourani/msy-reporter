@@ -1,0 +1,72 @@
+﻿@page "/Projects"
+@implements IAsyncDisposable
+
+<PageTitle>Construction Projects</PageTitle>
+
+<h2 class="page-title mb-4">پروژه های عمرانی</h2>
+
+<div class="row">
+    <div class="col1-1">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="title">آمار مقایسه ای پروژه های عمرانی</h6>
+            </div>
+            <div class="card-body">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col1-2">
+        <div class="card color-card">
+            <div class="card-header">
+                <h6 class="title">پروژه های بالای 70 درصد پیشرفت فیزیکی</h6>
+            </div>
+            <div class="card-body">
+            </div>
+        </div>
+    </div>
+    <div class="col1-2">
+        <div class="card">
+            <div class="card-header border-bottom">
+                <h6 class="title">پروژه های سال جاری شهرستان</h6>
+            </div>
+            <div class="card-body">
+            </div>
+            <div class="card-footer">
+                <InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
+                    @foreach (City city in cities!)
+                    {
+                        <option value="@city.Id">@city.PersianName</option>
+                    }
+                </InputSelect>
+                <NavLink href="/Projects/List">پروژه های سال جاری</NavLink>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private AppDbContext context = default!;
+
+    private IQueryable<City>? cities;
+
+    private int cityId { get; set; } = 1;
+    private City? city { get; set; }
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+       
+        cities = context.Cities;
+
+        SelectCity();
+    }
+
+    private void SelectCity()
+    {
+        city = cities?.Include(c => c.AthleticFacilities).FirstOrDefault(c => c.Id == cityId);
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
