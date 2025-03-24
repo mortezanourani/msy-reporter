@@ -1,0 +1,71 @@
+﻿
+<div class="card color-card">
+    <div class="card-header">
+        <h6 class="title">پروژه های بالای 70 درصد پیشرفت فیزیکی</h6>
+    </div>
+    <div class="card-body">
+        <div class="count-bars">
+            @foreach(string percent in percents)
+            {
+                <span class="count-bar" style="height: @percent%;" @onmouseover="() => UpdateProject(percent)"></span>
+            }
+
+            @foreach (ConstructionProject project in projects)
+            {
+                <span class="count-bar" style="height: @countBarHeight%;"></span>
+            }
+        </div>
+        <div class="card-footer project-info">
+            <div>
+                <h6 class="project-title">پروژه @projectTitle</h6>
+                <p class="project-city">شهرستان @projectCity</p>
+            </div>
+            <div>
+                <p class="project-start">تاریخ شروع پروژه: <b>@projectStart</b></p>
+                <p class="project-progress">درصد پیشرفت فیزیکی: <b>%@projectProgress</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private AppDbContext context = default!;
+
+    private ICollection<ConstructionProject> projects;
+    private int countBarHeight = 0;
+    private string projectTitle = string.Empty;
+    private string projectCity = string.Empty;
+    private string projectStart = string.Empty;
+    private string projectProgress = string.Empty;
+
+    private List<string> percents = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        context = DbFactory.CreateDbContext();
+
+        projects = context.ConstructionProjects
+            .Where(m => m.ProjectCompletionProgresses
+                .Where(m => m.Percentage >= 70).Count() > 0)
+            .ToList();
+
+        Random random = new Random();
+        for (int i = 0; i <= 18; i++)
+        {
+
+            percents.Add(random.Next(70, 100).ToString());
+        }
+
+        UpdateProject("70");
+    }
+
+    private void UpdateProject(string percent)
+    {
+        projectTitle = "استادیوم وحدت";
+        projectCity = "آستارا";
+        projectStart = "1398";
+        projectProgress = percent;
+    }
+}

@@ -1,0 +1,101 @@
+﻿<div class="card city-projects-card">
+    <div class="card-header border-bottom">
+        <h6 class="title">پروژه های سال جاری</h6>
+        <InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
+            @foreach (City city in cities!)
+            {
+                <option value="@city.Id">@city.PersianName</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="card-body">
+        <div class="projects-list">
+            @foreach(ConstructionProject project in projects!)
+            {
+                string title = project.Title;
+
+                string progressPercent = project.ProjectCompletionProgresses
+                    .Max(m => m.Percentage)
+                    .ToString();
+
+                <a class="projects-item" href="/Project/@project.Id">
+                    <p>@title</p>
+                    <p>%@progressPercent</p>
+                </a>
+            }
+        </div>
+    </div>
+    <div class="card-footer pt-0">
+        <NavLink href="/Projects/List">تمامی پروژه های سال جاری @city!.PersianName</NavLink>
+    </div>
+</div>
+
+@code {
+    private AppDbContext context = default!;
+
+    private IQueryable<City>? cities;
+    private int cityId { get; set; } = 1;
+    private City? city { get; set; }
+
+    private ICollection<ConstructionProject>? projects;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        context = DbFactory.CreateDbContext();
+
+        cities = context.Cities;
+
+        SelectCity();
+
+        projects = context.ConstructionProjects
+            .Where(m => m.City == city)
+            .Where(m => m.ProjectBudgets
+                .Where(m => m.Year == 1403)
+                .Count() != 0)
+            .ToList();
+
+        var id = Guid.NewGuid();
+        var projectProgress1 = new List<ProjectCompletionProgress>();
+        projectProgress1.Add(new ProjectCompletionProgress
+            {
+                ProjectId = id,
+                Percentage = 80
+            });
+
+        projects.Add(new ConstructionProject
+            {
+                Id = id,
+                Title = "استادیوم وحدت",
+                ProjectCompletionProgresses = projectProgress1
+            });
+
+        var projectProgress2 = new List<ProjectCompletionProgress>();
+        projectProgress2.Add(new ProjectCompletionProgress
+            {
+                ProjectId = id,
+                Percentage = 10
+            });
+        projectProgress2.Add(new ProjectCompletionProgress
+            {
+                ProjectId = id,
+                Percentage = 30
+            });
+
+        projects.Add(new ConstructionProject
+            {
+                Id = id,
+                Title = "زمین چمن مصنوعی عنبران",
+                ProjectCompletionProgresses = projectProgress2,
+            });
+    }
+
+    private void SelectCity()
+    {
+        city = cities?
+            .Include(c => c.AthleticFacilities)
+            .FirstOrDefault(c => c.Id == cityId);
+
+    }
+}

@@ -7,7 +7,7 @@
     --black-color: #36382e;
 
     --card-bg: whitesmoke;
-    --card-color-bg: linear-gradient(-45deg, var(--primary-color), var(--dark-color));
+    --card-color-bg: linear-gradient(-45deg, var(--dark-color), var(--primary-color));
     --card-box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 1px 2px 4px 0 rgba(0, 0, 0, 0.2);
 
     --sidebar-width: 240px;
@@ -136,6 +136,11 @@ body {
             display: inline-block;
         }
 
+    .card.color-card .card-footer p {
+        font: 300 13px IRANSans;
+        color: #fff;
+    }
+
     .card .card-body {
         margin: 0;
         padding: var(--card-padding-y) var(--card-padding-x);
@@ -161,6 +166,10 @@ body {
 
         .card .card-body b {
             font-weight: 600;
+        }
+
+        .card.color-card .card-body * {
+            color: #fff;
         }
 
 a {

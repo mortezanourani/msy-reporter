@@ -17,32 +17,11 @@
     </div>
 </div>
 <div class="row">
-    <div class="col1-2">
-        <div class="card color-card">
-            <div class="card-header">
-                <h6 class="title">پروژه های بالای 70 درصد پیشرفت فیزیکی</h6>
-            </div>
-            <div class="card-body">
-            </div>
-        </div>
+    <div class="col3-5">
+        <Projects70Card />
     </div>
-    <div class="col1-2">
-        <div class="card">
-            <div class="card-header border-bottom">
-                <h6 class="title">پروژه های سال جاری شهرستان</h6>
-            </div>
-            <div class="card-body">
-            </div>
-            <div class="card-footer">
-                <InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
-                    @foreach (City city in cities!)
-                    {
-                        <option value="@city.Id">@city.PersianName</option>
-                    }
-                </InputSelect>
-                <NavLink href="/Projects/List">پروژه های سال جاری</NavLink>
-            </div>
-        </div>
+    <div class="col2-5">
+        <CityProjectsCard />
     </div>
 </div>
 

@@ -1,0 +1,29 @@
+﻿.city-projects-card {
+
+}
+
+    .city-projects-card .projects-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+
+        .city-projects-card .projects-list .projects-item {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(.5 * var(--spacing-y)) 0;
+            gap: 4px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+            .city-projects-card .projects-list .projects-item:last-child {
+                border-bottom: none;
+            }
+
+    .city-projects-card .card-footer {
+        justify-content: center;
+    }
