@@ -61,13 +61,12 @@
 .content {
     position: relative;
     margin-right: calc(var(--sidebar-width) + var(--spacing-x));
-    padding-bottom: 16px;
 }
 
     .content .top-navbar {
         position: sticky;
         top: 0px;
-        background: var(--main-bg);
+        background: var(--light-color);
         margin: 0 calc(var(--spacing-x) * -1);
         z-index: 999;
         overflow-x: clip;
@@ -119,25 +118,24 @@
                 padding: 0;
             }
 
-                .content .top-navbar .wrapper .nav .btn-signout {
+                .content .top-navbar .wrapper .nav .btn-signout,
+                .content .top-navbar .wrapper .nav .btn-settings {
                     padding: 4px;
                     width: 36px;
                     height: 36px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    /*border: 1px solid #aaa;*/
-                    border-radius: 50%;
                 }
 
-                .content .top-navbar .wrapper .nav .btn-settings {
-                    padding: 0px;
-                    width: 36px;
-                    height: 36px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                .content .top-navbar .wrapper .nav .btn-signout {
+                    color: #ff4040;
                 }
+
+                    .content .top-navbar .wrapper .nav .btn-signout span,
+                    .content .top-navbar .wrapper .nav .btn-settings span {
+                        font-size: 30px;
+                    }
 
 #error-ui {
     background: lightyellow;

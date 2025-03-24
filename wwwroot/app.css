@@ -4,7 +4,7 @@
     --secondary-color: #ff8e2b;
     --light-color: #deebf8;
     --dark-color: #0d2137;
-    --black-color: #262b32;
+    --black-color: #36382e;
 
     --card-bg: whitesmoke;
     --card-color-bg: linear-gradient(-45deg, var(--primary-color), var(--dark-color));
@@ -79,7 +79,6 @@ body {
 
     .card.color-card {
         background-image: var(--card-color-bg);
-        min-height: 256px;
     }
 
     .card .card-header,

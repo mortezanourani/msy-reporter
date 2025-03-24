@@ -51,7 +51,7 @@
                 }
 
             .city-facilities-card .city-facilities-bar .facilities-counts > div.msy-facilities h6:before {
-                background: #2c7be5;
+                background: var(--primary-color);
             }
 
             .city-facilities-card .city-facilities-bar .facilities-counts > div.gov-facilities h6:before {
@@ -59,7 +59,7 @@
             }
 
             .city-facilities-card .city-facilities-bar .facilities-counts > div.private-facilities h6:before {
-                background: #27bffd;
+                background: var(--secondary-color);
             }
 
     .city-facilities-card .city-facilities-bar .percent-bar-wrapper {
