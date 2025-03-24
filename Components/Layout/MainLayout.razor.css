@@ -28,33 +28,34 @@
         }
 
                 ::deep.side-navbar .nav .nav-item a {
-                    padding: 8px;
-                    border-radius: 8px;
+                    padding: 8px 16px;
+                    border-radius: 12px;
                     display: flex;
                     gap: 8px;
                     flex-direction: row;
                     justify-content: flex-start;
                     align-items: center;
                     font: 600 13px 'IRANSans';
-                    color: #1970e2;
+                    color: var(--black-color);
                 }
 
                     .side-navbar .nav .nav-item a img {
-                        width: 24px;
+                        width: 22px;
                         aspect-ratio: 1;
                     }
-                
-                .side-navbar .nav .nav-item:hover,
-                .side-navbar .nav .nav-item:has(a.active) {
-                    background-color: #1970e2;
+
+                .side-navbar .nav .nav-item:hover {
+                    box-shadow: var(--card-box-shadow);
                 }
 
-                ::deep.side-navbar .nav .nav-item:hover a {
-                    filter: invert(33%) brightness(175%);
+                .side-navbar .nav .nav-item:has(a.active) {
+                    box-shadow: var(--card-box-shadow);
+                    background-color: var(--primary-color);
                 }
 
                 ::deep.side-navbar .nav .nav-item a.active {
                     filter: invert(33%) brightness(1000%);
+                    cursor: unset;
                 }
 
 .content {
