@@ -5,14 +5,9 @@
     </div>
     <div class="card-body">
         <div class="count-bars">
-            @foreach(string percent in percents)
+           @foreach (ConstructionProject project in projects)
             {
-                <span class="count-bar" style="height: @percent%;" @onmouseover="() => UpdateProject(percent)"></span>
-            }
-
-            @foreach (ConstructionProject project in projects)
-            {
-                <span class="count-bar" style="height: @countBarHeight%;"></span>
+                <span class="count-bar" style="height: @project.ProjectCompletionProgresses.Max(m => m.Percentage)%;" @onmouseover="() => UpdateProject(project)"></span>
             }
         </div>
         <div class="card-footer project-info">
@@ -32,11 +27,10 @@
     private AppDbContext context = default!;
 
     private ICollection<ConstructionProject> projects;
-    private int countBarHeight = 0;
     private string projectTitle = string.Empty;
     private string projectCity = string.Empty;
-    private string projectStart = string.Empty;
-    private string projectProgress = string.Empty;
+    private int projectStart = 0;
+    private int projectProgress = 0;
 
     private List<string> percents = new List<string>();
 
@@ -47,25 +41,22 @@
         context = DbFactory.CreateDbContext();
 
         projects = context.ConstructionProjects
+            .Include(m => m.City)
+            .Include(mbox => mbox.ProjectCompletionProgresses)
+            .OrderBy(m => m.Title)
             .Where(m => m.ProjectCompletionProgresses
                 .Where(m => m.Percentage >= 70).Count() > 0)
             .ToList();
 
-        Random random = new Random();
-        for (int i = 0; i <= 18; i++)
-        {
-
-            percents.Add(random.Next(70, 100).ToString());
-        }
-
-        UpdateProject("70");
+        UpdateProject(projects.First());
     }
 
-    private void UpdateProject(string percent)
+    private void UpdateProject(ConstructionProject project)
     {
-        projectTitle = "استادیوم وحدت";
-        projectCity = "آستارا";
-        projectStart = "1398";
-        projectProgress = percent;
+        projectTitle = project.Title;
+        projectCity = project.City.PersianName;
+        projectStart = project.StartYear;
+        projectProgress = project.ProjectCompletionProgresses
+            .Max(m => m.Percentage);
     }
 }

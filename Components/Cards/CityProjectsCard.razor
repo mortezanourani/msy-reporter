@@ -48,48 +48,7 @@
         cities = context.Cities;
 
         SelectCity();
-
-        projects = context.ConstructionProjects
-            .Where(m => m.City == city)
-            .Where(m => m.ProjectBudgets
-                .Where(m => m.Year == 1403)
-                .Count() != 0)
-            .ToList();
-
-        var id = Guid.NewGuid();
-        var projectProgress1 = new List<ProjectCompletionProgress>();
-        projectProgress1.Add(new ProjectCompletionProgress
-            {
-                ProjectId = id,
-                Percentage = 80
-            });
-
-        projects.Add(new ConstructionProject
-            {
-                Id = id,
-                Title = "استادیوم وحدت",
-                ProjectCompletionProgresses = projectProgress1
-            });
-
-        var projectProgress2 = new List<ProjectCompletionProgress>();
-        projectProgress2.Add(new ProjectCompletionProgress
-            {
-                ProjectId = id,
-                Percentage = 10
-            });
-        projectProgress2.Add(new ProjectCompletionProgress
-            {
-                ProjectId = id,
-                Percentage = 30
-            });
-
-        projects.Add(new ConstructionProject
-            {
-                Id = id,
-                Title = "زمین چمن مصنوعی عنبران",
-                ProjectCompletionProgresses = projectProgress2,
-            });
-    }
+   }
 
     private void SelectCity()
     {
@@ -97,5 +56,13 @@
             .Include(c => c.AthleticFacilities)
             .FirstOrDefault(c => c.Id == cityId);
 
+        projects = context.ConstructionProjects
+            .Include(m => m.City)
+            .Include(m => m.ProjectCompletionProgresses)
+            .Where(m => m.City == city)
+            .Where(m => m.ProjectBudgets
+                .Where(m => m.Year == 1403)
+                .Count() != 0)
+            .ToList();
     }
 }
