@@ -55,6 +55,19 @@ else
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.Use(async (context, next) =>
+{
+    if(context.Request.Path == "/account/signout")
+    {
+        var signInManager = context.RequestServices.GetRequiredService<SignInManager<ApplicationUser>>();
+        await signInManager.SignOutAsync();
+        context.Response.Redirect("/");
+        return;
+    }
+
+    await next.Invoke();
+});
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
