@@ -1,5 +1,4 @@
 ﻿@page "/Projects"
-@implements IAsyncDisposable
 
 <PageTitle>Construction Projects</PageTitle>
 
@@ -7,13 +6,7 @@
 
 <div class="row">
     <div class="col1-1">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="title">آمار مقایسه ای پروژه های عمرانی</h6>
-            </div>
-            <div class="card-body">
-            </div>
-        </div>
+        <ProjectsYearProgeressCard />
     </div>
 </div>
 <div class="row">
@@ -26,26 +19,5 @@
 </div>
 
 @code {
-    private AppDbContext context = default!;
 
-    private IQueryable<City>? cities;
-
-    private int cityId { get; set; } = 1;
-    private City? city { get; set; }
-
-    protected override void OnInitialized()
-    {
-        context = DbFactory.CreateDbContext();
-       
-        cities = context.Cities;
-
-        SelectCity();
-    }
-
-    private void SelectCity()
-    {
-        city = cities?.Include(c => c.AthleticFacilities).FirstOrDefault(c => c.Id == cityId);
-    }
-
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
