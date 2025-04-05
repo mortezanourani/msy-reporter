@@ -654,9 +654,9 @@ begin
 		[IsRenovation] bit not null,
 		[TypeId] int not null,
 		[StartYear] int not null,
-		[FinishYear] int null,
-		[Area] int not null,
-		[SportArea] int not null,
+		--[FinishYear] int null,
+		[Area] int null,
+		[SportArea] int null,
 		constraint [PK_ConstructionProjects] primary key ([Id]),
 		constraint [FK_ConstructionProjects_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
 		constraint [FK_ConstructionProjects_FacilityTypes_TypeId] foreign key ([TypeId]) references [FacilityTypes]([Id])
@@ -700,13 +700,14 @@ begin
 	create table [ProjectBudgets] (
 		[ProjectId] uniqueidentifier not null,
 		[Year] int not null,
-		[Internal] int default 0 not null,
-		[Province] int default 0 not null,
-		[National] int default 0 not null,
+		--[Internal] int default 0 not null,
+		--[Province] int default 0 not null,
+		--[National] int default 0 not null,
+		[FundingSource] nvarchar(max) null,
 		[ApprovedBudgets] int not null,
 		[ContractorUnpaid] int default 0 null,
 		[CompletionBudget] int default 0 null,
-		[Percentage] int not null,
+		--[Percentage] int not null,
 		constraint [PK_ProjectBudgets] primary key ([ProjectId], [Year]),
 		constraint [FK_ProjectBudgets_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id])
 	);

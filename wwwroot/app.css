@@ -6,7 +6,7 @@
     --dark-color: #0d2137;
     --black-color: #36382e;
 
-    --card-bg: whitesmoke;
+    --card-bg: white;
     --card-color-bg: linear-gradient(-45deg, var(--dark-color), var(--primary-color));
     --card-box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 1px 2px 4px 0 rgba(0, 0, 0, 0.2);
 

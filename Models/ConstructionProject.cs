@@ -19,11 +19,9 @@ public partial class ConstructionProject
 
     public int StartYear { get; set; }
 
-    public int? FinishYear { get; set; }
+    public int? Area { get; set; }
 
-    public int Area { get; set; }
-
-    public int SportArea { get; set; }
+    public int? SportArea { get; set; }
 
     public virtual City City { get; set; } = null!;
 
