@@ -1,0 +1,115 @@
+﻿@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="title">درصد شهری و روستایی</h6>
+    </div>
+    <div class="card-body">
+        <canvas id="projectsRuralChart" class=""></canvas>
+    </div>
+    <div class="card-footer flex-row-reverse">
+
+    </div>
+</div>
+
+<script>
+    let projectsRuralChart;
+
+    function renderProjectsRuralChart(data) {
+    const ctx = document.getElementById('projectsRuralChart').getContext('2d');
+
+    if (projectsRuralChart) {
+    projectsRuralChart.destroy();
+    }
+
+    projectsRuralChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+    labels: ['شهری', 'روستایی'],
+    datasets: [{
+    data: data,
+    backgroundColor: ['#2e77ae', '#ff8e2b'],
+    hoverBackgroundColor: ['#3e87be', '#ff9e3b']
+    }]
+    },
+    options: {
+    responsive: true,
+    plugins: {
+    legend: {
+    display: false,
+    position: 'top'
+    }
+    },
+    cutout: '65%'
+    }
+    });
+    }
+
+
+    function updateProjectsRuralChart (data) {
+    if (projectsRuralChart) {
+    projectsRuralChart.data.datasets[0].data = data;
+    projectsRuralChart.update();
+    }
+    }
+</script>
+
+@code {
+    [Parameter]
+    public City? City { get; set; }
+
+    private AppDbContext context = default!;
+
+    private IQueryable<ConstructionProject> projects;
+    private List<decimal> ruralPercentages = new List<decimal>();
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    protected override void OnParametersSet()
+    {
+        projects = context.ConstructionProjects
+            .Include(project => project.ProjectCompletionProgresses)
+            .Where(project => project.ProjectCompletionProgresses
+                .Max(progress => progress.Percentage) < 100);
+
+        if (City!.Id != 0)
+        {
+            projects = projects.Where(project =>
+                project.City.Id == City!.Id);
+        }
+
+        var projectsCount = projects.Count();
+
+        var projectsRuralCount = projects
+            .Where(project => project.IsRural == true)
+            .Count();
+
+        ruralPercentages.Clear();
+        if (projectsCount > 0)
+        {
+            ruralPercentages.Add(
+                Math.Round(decimal.Divide(projectsRuralCount * 100, projectsCount))
+            );
+
+            ruralPercentages.Add(
+                Math.Round(decimal.Divide((projectsCount - projectsRuralCount) * 100, projectsCount))
+            );
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("renderProjectsRuralChart", ruralPercentages);
+        }
+
+        await JSRuntime.InvokeVoidAsync("updateProjectsRuralChart", ruralPercentages);
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

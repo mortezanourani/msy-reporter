@@ -42,7 +42,7 @@
 
         projects = context.ConstructionProjects
             .Include(m => m.City)
-            .Include(mbox => mbox.ProjectCompletionProgresses)
+            .Include(m => m.ProjectCompletionProgresses)
             .OrderBy(m => m.Title)
             .Where(m => m.ProjectCompletionProgresses
                 .Where(m => m.Percentage >= 70).Count() > 0)

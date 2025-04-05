@@ -3,7 +3,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h6 class="title">آمار مقایسه ای پروژه های عمرانی</h6>
+        <h6 class="title">آمار مقایسه ای اعتبارات عمرانی</h6>
     </div>
     <div class="card-body">
         <canvas id="lineChart"></canvas>
@@ -34,7 +34,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'مجموع اعتبارات مصوب',
+                    label: 'مجموع اعتبارات مصوب سال',
                     data: data,
                     borderColor: 'blue',
                     backgroundColor: 'rgba(0, 123, 255, 0.3)',
@@ -75,7 +75,7 @@
                         }
                     },
                     y: {
-                        display: false,
+                        // display: false,
                         ticks: {
                             font: {
                                 family: 'IRANSans',
@@ -126,12 +126,14 @@
     {
         minYears = projectBudgets
             .Where(m => m.Year < maxYear)
-            .Select(m => m.Year)
+            .GroupBy(m => m.Year)
+            .Select(g => g.Key)
             .ToList();
 
         maxYears = projectBudgets
             .Where(m => m.Year > minYear)
-            .Select(m => m.Year)
+            .GroupBy(m => m.Year)
+            .Select(g => g.Key)
             .ToList();
             
         var projectsBudgets = projectBudgets

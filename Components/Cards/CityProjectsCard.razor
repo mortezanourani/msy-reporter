@@ -1,12 +1,6 @@
 ﻿<div class="card city-projects-card">
     <div class="card-header border-bottom">
-        <h6 class="title">پروژه های سال جاری</h6>
-        <InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
-            @foreach (City city in cities!)
-            {
-                <option value="@city.Id">@city.PersianName</option>
-            }
-        </InputSelect>
+        <h6 class="title">پروژه های نیمه تمام @City!.PersianName</h6>
     </div>
     <div class="card-body">
         <div class="projects-list">
@@ -26,43 +20,34 @@
         </div>
     </div>
     <div class="card-footer pt-0">
-        <NavLink href="/Projects/List">تمامی پروژه های سال جاری @city!.PersianName</NavLink>
+        <NavLink href="/Projects/List">تمامی پروژه های سال جاری @City!.PersianName</NavLink>
     </div>
 </div>
 
 @code {
+    [Parameter]
+    public City? City { get; set; }
+
     private AppDbContext context = default!;
-
-    private IQueryable<City>? cities;
-    private int cityId { get; set; } = 1;
-    private City? city { get; set; }
-
-    private ICollection<ConstructionProject>? projects;
+    private IQueryable<ConstructionProject>? projects;
 
     protected override void OnInitialized()
     {
-        base.OnInitialized();
-
         context = DbFactory.CreateDbContext();
+    }
 
-        cities = context.Cities;
-
-        SelectCity();
-   }
-
-    private void SelectCity()
+    protected override void OnParametersSet()
     {
-        city = cities?
-            .Include(c => c.AthleticFacilities)
-            .FirstOrDefault(c => c.Id == cityId);
-
         projects = context.ConstructionProjects
-            .Include(m => m.City)
-            .Include(m => m.ProjectCompletionProgresses)
-            .Where(m => m.City == city)
-            .Where(m => m.ProjectBudgets
-                .Where(m => m.Year == 1403)
-                .Count() != 0)
-            .ToList();
+            .Include(project => project.City)
+            .Include(project => project.ProjectCompletionProgresses)
+            .Where(project => project.ProjectCompletionProgresses
+                .Max(progress => progress.Percentage) < 100);
+
+        if (City!.Id != 0)
+        {
+            projects = projects
+                .Where(m => m.City.Id == City.Id);
+        }
     }
 }

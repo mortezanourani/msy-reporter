@@ -1,19 +1,34 @@
 ﻿@page "/Projects"
 
+@implements IAsyncDisposable
+
 <PageTitle>Construction Projects</PageTitle>
 
 <h2 class="page-title mb-3">پروژه های عمرانی</h2>
 
 <div class="row">
-    <div class="col2-5">
-        <CityProjectsCard />
+    <div class="col1-1">
+        <InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
+            @foreach (City city in cities!)
+            {
+                <option value="@city.Id">@city.PersianName</option>
+            }
+        </InputSelect>
     </div>
+</div>
+<div class="row">
+    <div class="col1-3">
+        <CityRuralProjects City=@city />
+    </div>
+    <div class="col2-3">
+        <CityProjectsCard City=@city />
+    </div>
+</div>
+<div class="row">
     <div class="col3-5">
-        <div class="row">
-            <div class="col1-1">
-                <ProjectsYearProgeressCard />
-            </div>
-        </div>
+        <ProjectsYearProgeressCard />
+    </div>
+    <div class="col2-5">
         <div class="row">
             <div class="col1-1 mb-0">
                 <Projects70Card />
@@ -21,21 +36,38 @@
         </div>
     </div>
 </div>
-@* 
-<div class="row">
-    <div class="col1-1">
-        <ProjectsYearProgeressCard />
-    </div>
-</div>
-<div class="row">
-    <div class="col3-5">
-        <Projects70Card />
-    </div>
-    <div class="col2-5">
-        <CityProjectsCard />
-    </div>
-</div>
- *@
-@code {
 
+@code {
+    private AppDbContext context = default!;
+
+    private int cityId;
+    private string cityName;
+
+    private City? city;
+    private List<City> cities = new List<City>();
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+
+        cities.Add(new City
+        {
+            Id = 0,
+            Name = "Guilan",
+            NormalizedName = "GUILAN",
+            PersianName = "استان"
+        });
+
+        cities.AddRange(context.Cities.ToList());
+
+        SelectCity();
+    }
+
+    private void SelectCity()
+    {
+        city = cities.FirstOrDefault(m => m.Id == cityId);
+        // cityName = city!.PersianName;
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
