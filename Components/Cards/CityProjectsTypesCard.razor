@@ -1,0 +1,154 @@
+﻿@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="title">درصد نوع پروژه</h6>
+    </div>
+    <div class="card-body">
+        <canvas id="projectsTypesChart" class=""></canvas>
+    </div>
+    <div class="card-footer legend">
+        <div class="legend-row hall">
+            <h6>سرپوشیده</h6>
+            <p>@hallProjectsCount</p>
+            <p>%@hallProjectsPercentage</p>
+        </div>
+        <div class="legend-row land">
+            <h6>روباز</h6>
+            <p>@landProjectsCount</p>
+            <p>%@landProjectsPercentage</p>
+        </div>
+        <div class="legend-row complex">
+            <h6>مجموعه ورزشی</h6>
+            <p>@complexProjectsCount</p>
+            <p>%@complexProjectsPercentage</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let projectsTypesChart;
+
+    function renderProjectsTypesChart(data) {
+        const ctx = document.getElementById('projectsTypesChart').getContext('2d');
+
+        if (projectsTypesChart) {
+            projectsTypesChart.destroy();
+        }
+
+        projectsTypesChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['سرپوشیده', 'روباز', 'مجموعه ورزشی'],
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b'],
+                    hoverBackgroundColor: ['#3e87be', '#a5cdf2', '#ff9e3b']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            family: 'IRANSans',
+                            size: 11,
+                        },
+                        titleFont: {
+                            family: 'IRANSans',
+                            size: 12,
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+    }
+
+    function updateProjectsTypesChart (data) {
+        if (projectsTypesChart) {
+            projectsTypesChart.data.datasets[0].data = data;
+            projectsTypesChart.update();
+        }
+    }
+</script>
+
+@code {
+    [Parameter]
+    public City? City { get; set; }
+
+    private AppDbContext context = default!;
+
+    private IQueryable<ConstructionProject> projects;
+    private List<decimal> projectsTypesPercentages = new List<decimal>();
+
+    private int hallProjectsCount;
+    private decimal hallProjectsPercentage;
+
+    private int landProjectsCount;
+    private decimal landProjectsPercentage;
+
+    private int complexProjectsCount;
+    private decimal complexProjectsPercentage;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    protected override void OnParametersSet()
+    {
+        projects = context.ConstructionProjects
+            .Include(project => project.ProjectCompletionProgresses)
+            .Where(project => project.ProjectCompletionProgresses
+                .Max(progress => progress.Percentage) < 100);
+
+        if (City!.Id != 0)
+        {
+            projects = projects.Where(project =>
+                project.City.Id == City!.Id);
+        }
+
+        projectsTypesPercentages.Clear();
+        var projectsCount = projects.Count();
+        if (projectsCount > 0)
+        {
+            hallProjectsCount = projects
+                .Where(project => project.TypeId == 1)
+                .Count();
+
+            landProjectsCount = projects
+                .Where(project => project.TypeId == 2)
+                .Count();
+
+            complexProjectsCount = projects
+                .Where(project => project.TypeId == 3)
+                .Count();
+
+            hallProjectsPercentage = Math.Round(decimal.Divide(hallProjectsCount * 100, projectsCount));
+            landProjectsPercentage = Math.Round(decimal.Divide(landProjectsCount * 100, projectsCount));
+            complexProjectsPercentage = Math.Round(decimal.Divide(complexProjectsCount * 100, projectsCount));
+
+            projectsTypesPercentages.Add(hallProjectsPercentage);
+            projectsTypesPercentages.Add(landProjectsPercentage);
+            projectsTypesPercentages.Add(complexProjectsPercentage);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("renderProjectsTypesChart", projectsTypesPercentages);
+        }
+
+        await JSRuntime.InvokeVoidAsync("updateProjectsTypesChart", projectsTypesPercentages);
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
