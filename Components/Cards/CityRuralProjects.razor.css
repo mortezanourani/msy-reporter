@@ -2,3 +2,53 @@
     max-width: 200px;
     margin: 0 auto;
 }
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+    .legend .legend-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 25%;
+        padding-bottom: 12px;
+    }
+
+        .legend .legend-row + .legend-row {
+            padding: 12px 0 0;
+            border-top: 1px solid #d8e2ef;
+        }
+
+        .legend .legend-row * {
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .legend .legend-row h6 {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-weight: 400;
+            flex-grow: 1;
+        }
+
+            .legend .legend-row h6:before {
+                display: inline-block;
+                width: 12px;
+                aspect-ratio: 1;
+                border-radius: 50%;
+                content: "";
+            }
+
+        .legend .legend-row.urban h6:before {
+            background: var(--primary-color);
+        }
+
+        .legend .legend-row.rural h6:before {
+            background: var(--secondary-color);
+        }

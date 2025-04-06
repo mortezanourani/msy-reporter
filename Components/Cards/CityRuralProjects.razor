@@ -8,8 +8,17 @@
     <div class="card-body">
         <canvas id="projectsRuralChart" class=""></canvas>
     </div>
-    <div class="card-footer flex-row-reverse">
-
+    <div class="card-footer legend">
+        <div class="legend-row urban">
+            <h6>شهری</h6>
+            <p>@urbanProjectsCount</p>
+            <p>%@urbanProjectsPercentage</p>
+        </div>
+        <div class="legend-row rural">
+            <h6>روستایی</h6>
+            <p>@ruralProjectsCount</p>
+            <p>%@ruralProjectsPercentage</p>
+        </div>
     </div>
 </div>
 
@@ -17,41 +26,51 @@
     let projectsRuralChart;
 
     function renderProjectsRuralChart(data) {
-    const ctx = document.getElementById('projectsRuralChart').getContext('2d');
+        const ctx = document.getElementById('projectsRuralChart').getContext('2d');
 
-    if (projectsRuralChart) {
-    projectsRuralChart.destroy();
-    }
+        if (projectsRuralChart) {
+            projectsRuralChart.destroy();
+        }
 
-    projectsRuralChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-    labels: ['شهری', 'روستایی'],
-    datasets: [{
-    data: data,
-    backgroundColor: ['#2e77ae', '#ff8e2b'],
-    hoverBackgroundColor: ['#3e87be', '#ff9e3b']
-    }]
-    },
-    options: {
-    responsive: true,
-    plugins: {
-    legend: {
-    display: false,
-    position: 'top'
-    }
-    },
-    cutout: '65%'
-    }
-    });
+        projectsRuralChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['شهری', 'روستایی'],
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#2e77ae', '#ff8e2b'],
+                    hoverBackgroundColor: ['#3e87be', '#ff9e3b']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            family: 'IRANSans',
+                            size: 11,
+                        },
+                        titleFont: {
+                            family: 'IRANSans',
+                            size: 12,
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
     }
 
 
     function updateProjectsRuralChart (data) {
-    if (projectsRuralChart) {
-    projectsRuralChart.data.datasets[0].data = data;
-    projectsRuralChart.update();
-    }
+        if (projectsRuralChart) {
+            projectsRuralChart.data.datasets[0].data = data;
+            projectsRuralChart.update();
+        }
     }
 </script>
 
@@ -63,6 +82,12 @@
 
     private IQueryable<ConstructionProject> projects;
     private List<decimal> ruralPercentages = new List<decimal>();
+
+    private int ruralProjectsCount;
+    private decimal ruralProjectsPercentage;
+
+    private int urbanProjectsCount;
+    private decimal urbanProjectsPercentage;
 
     protected override void OnInitialized()
     {
@@ -82,22 +107,21 @@
                 project.City.Id == City!.Id);
         }
 
-        var projectsCount = projects.Count();
-
-        var projectsRuralCount = projects
-            .Where(project => project.IsRural == true)
-            .Count();
-
         ruralPercentages.Clear();
+        var projectsCount = projects.Count();
         if (projectsCount > 0)
         {
-            ruralPercentages.Add(
-                Math.Round(decimal.Divide(projectsRuralCount * 100, projectsCount))
-            );
+            ruralProjectsCount = projects
+                .Where(project => project.IsRural == true)
+                .Count();
 
-            ruralPercentages.Add(
-                Math.Round(decimal.Divide((projectsCount - projectsRuralCount) * 100, projectsCount))
-            );
+            urbanProjectsCount = projectsCount - ruralProjectsCount;
+
+            ruralProjectsPercentage = Math.Round(decimal.Divide(ruralProjectsCount * 100, projectsCount));
+            urbanProjectsPercentage = Math.Round(decimal.Divide(urbanProjectsCount * 100, projectsCount));
+
+            ruralPercentages.Add(ruralProjectsPercentage);
+            ruralPercentages.Add(urbanProjectsPercentage);
         }
     }
 
