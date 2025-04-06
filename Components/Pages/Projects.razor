@@ -8,6 +8,11 @@
 
 <div class="row">
     <div class="col1-1">
+        <ProvinceProjectsProgressCard />
+    </div>
+</div>
+<div class="row">
+    <div class="col1-1">
         <InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
             @foreach (City city in cities!)
             {
@@ -30,9 +35,6 @@
     </div>
 </div>
 <div class="row">
-    <div class="col3-5">
-        <ProjectsYearProgeressCard />
-    </div>
     <div class="col2-5">
         <div class="row">
             <div class="col1-1 mb-0">
