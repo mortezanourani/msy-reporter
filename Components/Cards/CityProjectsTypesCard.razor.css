@@ -27,6 +27,7 @@
 
         .legend .legend-row * {
             font-size: 13px;
+            color: var(--light-color);
             margin: 0;
         }
 
@@ -47,7 +48,7 @@
             }
 
         .legend .legend-row.hall h6:before {
-            background: var(--primary-color);
+            background: var(--secondary-color);
         }
 
         .legend .legend-row.land h6:before {
@@ -55,5 +56,5 @@
         }
 
         .legend .legend-row.complex h6:before {
-            background: var(--secondary-color);
+            background: var(--light-color);
         }

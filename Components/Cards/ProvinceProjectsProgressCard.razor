@@ -15,13 +15,16 @@
         <div class="legend-row unfinished">
             <h6>پروژه های عمرانی نیمه تمام</h6>
         </div>
+        <div class="legend-row downTo70">
+            <h6>پروژه های عمرانی نیمه تمام بالای 70</h6>
+        </div>
     </div>
 </div>
 
 <script>
     let provinceProjectsProgressChart;
 
-    function renderProvinceProjectsProgressChart (labels, data1, data2) {
+    function renderProvinceProjectsProgressChart (labels, data1, data2, data3) {
         const ctx = document.getElementById('provinceProjectsProgressChart').getContext('2d');
         provinceProjectsProgressChart = new Chart(ctx, {
             type: 'bar',
@@ -31,14 +34,21 @@
                     label: 'پروژه های عمرانی',
                     data: data1,
                     backgroundColor: '#95bdf2',
-                    order: 2,
+                    order: 1,
                     fill: true
                 },
                 {
                     label: 'پروژه های عمرانی نیمه تمام',
                     data: data2,
                     backgroundColor: '#2e77ae',
-                    order: 1,
+                    order: 2,
+                    fill: true
+                },
+                {
+                    label: 'پروژه های عمرانی بالای 70 درصد',
+                    data: data3,
+                    backgroundColor: '#ff8e2b',
+                    order: 3,
                     fill: true
                 }]
             },
@@ -69,7 +79,7 @@
                 },
                 scales: {
                     x: {
-                        stacked: true,
+                        // stacked: true,
                         ticks: {
                             font: {
                                 family: 'IRANSans',
@@ -93,11 +103,12 @@
         });
     }
 
-    function updateProvinceProjectsProgressChart (labels, data1, data2) {
+    function updateProvinceProjectsProgressChart (labels, data1, data2, data3) {
         if (provinceProjectsProgressChart) {
             provinceProjectsProgressChart.data.labels = labels;
             provinceProjectsProgressChart.data.datasets[0].data = data1;
             provinceProjectsProgressChart.data.datasets[1].data = data2;
+            provinceProjectsProgressChart.data.datasets[2].data = data3;
             provinceProjectsProgressChart.update();
         }
     }
@@ -112,6 +123,7 @@
     private List<string> cities;
     private List<int> totalProjectsCount;
     private List<int> unfinishedProjectsCount;
+    private List<int> downTo70ProjectsCount;
 
     protected override void OnInitialized()
     {
@@ -143,7 +155,19 @@
             .OrderBy(project => project.City)
             .GroupBy(project => project.City)
                 .Select(group => group.Where(project => project.ProjectCompletionProgresses
-                    .Max(progress => progress.Percentage) < 100 == true))
+                    .Max(progress => progress.Percentage) < 80 == true))
+            .ToList()
+            .Select(project => project.Count())
+            .ToList();
+
+        downTo70ProjectsCount = projects
+            .OrderBy(project => project.City)
+            .GroupBy(project => project.City)
+            .Select(group => group.Where(project => 
+                project.ProjectCompletionProgresses
+                    .Max(progress => progress.Percentage) < 80 == true && 
+                project.ProjectCompletionProgresses
+                    .Max(progress => progress.Percentage) >= 70 == true))
             .ToList()
             .Select(project => project.Count())
             .ToList();
@@ -153,10 +177,10 @@
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("renderProvinceProjectsProgressChart", cities, totalProjectsCount, unfinishedProjectsCount);
+            await JSRuntime.InvokeVoidAsync("renderProvinceProjectsProgressChart", cities, totalProjectsCount, unfinishedProjectsCount, downTo70ProjectsCount);
         }
 
-        await JSRuntime.InvokeVoidAsync("updateProvinceProjectsProgressChart", cities, totalProjectsCount, unfinishedProjectsCount);
+        await JSRuntime.InvokeVoidAsync("updateProvinceProjectsProgressChart", cities, totalProjectsCount, unfinishedProjectsCount, downTo70ProjectsCount);
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

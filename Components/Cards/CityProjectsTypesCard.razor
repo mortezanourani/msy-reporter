@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 
-<div class="card">
+<div class="card color-card">
     <div class="card-header">
         <h6 class="title">درصد نوع پروژه</h6>
     </div>
@@ -43,8 +43,9 @@
                 labels: ['سرپوشیده', 'روباز', 'مجموعه ورزشی'],
                 datasets: [{
                     data: data,
-                    backgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b'],
-                    hoverBackgroundColor: ['#3e87be', '#a5cdf2', '#ff9e3b']
+                    borderColor: '#1d546a',
+                    backgroundColor: ['#ff8e2b', '#95bdf2', '#deebf8'],
+                    hoverBackgroundColor: ['#ff9e3b', '#a5cdf2', '#fff']
                 }]
             },
             options: {
