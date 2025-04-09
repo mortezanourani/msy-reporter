@@ -81,7 +81,7 @@
     private AppDbContext context = default!;
 
     private IQueryable<ConstructionProject> projects;
-    private List<decimal> ruralPercentages = new List<decimal>();
+    private List<decimal> chartCounts = new List<decimal>();
 
     private int ruralProjectsCount;
     private decimal ruralProjectsPercentage;
@@ -107,32 +107,37 @@
                 project.City.Id == City!.Id);
         }
 
-        ruralPercentages.Clear();
         var projectsCount = projects.Count();
+
+        urbanProjectsCount = projects
+            .Where(project => project.IsRural == false)
+            .Count();
+
+        ruralProjectsCount = projects
+            .Where(project => project.IsRural == true)
+            .Count();
+
+        urbanProjectsPercentage = 0;
+        ruralProjectsPercentage = 0;
         if (projectsCount > 0)
         {
-            ruralProjectsCount = projects
-                .Where(project => project.IsRural == true)
-                .Count();
-
-            urbanProjectsCount = projectsCount - ruralProjectsCount;
-
-            ruralProjectsPercentage = Math.Round(decimal.Divide(ruralProjectsCount * 100, projectsCount));
             urbanProjectsPercentage = Math.Round(decimal.Divide(urbanProjectsCount * 100, projectsCount));
-
-            ruralPercentages.Add(ruralProjectsPercentage);
-            ruralPercentages.Add(urbanProjectsPercentage);
+            ruralProjectsPercentage = Math.Round(decimal.Divide(ruralProjectsCount * 100, projectsCount));
         }
+
+        chartCounts.Clear();
+        chartCounts.Add(urbanProjectsCount);
+        chartCounts.Add(ruralProjectsCount);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("renderProjectsRuralChart", ruralPercentages);
+            await JSRuntime.InvokeVoidAsync("renderProjectsRuralChart", chartCounts);
         }
 
-        await JSRuntime.InvokeVoidAsync("updateProjectsRuralChart", ruralPercentages);
+        await JSRuntime.InvokeVoidAsync("updateProjectsRuralChart", chartCounts);
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

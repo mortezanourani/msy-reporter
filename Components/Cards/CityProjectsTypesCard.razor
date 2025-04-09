@@ -86,7 +86,7 @@
     private AppDbContext context = default!;
 
     private IQueryable<ConstructionProject> projects;
-    private List<decimal> projectsTypesPercentages = new List<decimal>();
+    private List<decimal> chartCounts = new List<decimal>();
 
     private int hallProjectsCount;
     private decimal hallProjectsPercentage;
@@ -115,40 +115,45 @@
                 project.City.Id == City!.Id);
         }
 
-        projectsTypesPercentages.Clear();
+ 
         var projectsCount = projects.Count();
+
+        hallProjectsCount = projects
+            .Where(project => project.TypeId == 1)
+            .Count();
+
+        landProjectsCount = projects
+            .Where(project => project.TypeId == 2)
+            .Count();
+
+        complexProjectsCount = projects
+            .Where(project => project.TypeId == 3)
+            .Count();
+
+        hallProjectsPercentage = 0;
+        landProjectsPercentage = 0;
+        complexProjectsPercentage = 0;
         if (projectsCount > 0)
         {
-            hallProjectsCount = projects
-                .Where(project => project.TypeId == 1)
-                .Count();
-
-            landProjectsCount = projects
-                .Where(project => project.TypeId == 2)
-                .Count();
-
-            complexProjectsCount = projects
-                .Where(project => project.TypeId == 3)
-                .Count();
-
             hallProjectsPercentage = Math.Round(decimal.Divide(hallProjectsCount * 100, projectsCount));
             landProjectsPercentage = Math.Round(decimal.Divide(landProjectsCount * 100, projectsCount));
             complexProjectsPercentage = Math.Round(decimal.Divide(complexProjectsCount * 100, projectsCount));
-
-            projectsTypesPercentages.Add(hallProjectsPercentage);
-            projectsTypesPercentages.Add(landProjectsPercentage);
-            projectsTypesPercentages.Add(complexProjectsPercentage);
         }
+
+        chartCounts.Clear();
+        chartCounts.Add(hallProjectsCount);
+        chartCounts.Add(landProjectsCount);
+        chartCounts.Add(complexProjectsCount);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("renderProjectsTypesChart", projectsTypesPercentages);
+            await JSRuntime.InvokeVoidAsync("renderProjectsTypesChart", chartCounts);
         }
 
-        await JSRuntime.InvokeVoidAsync("updateProjectsTypesChart", projectsTypesPercentages);
+        await JSRuntime.InvokeVoidAsync("updateProjectsTypesChart", chartCounts);
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
