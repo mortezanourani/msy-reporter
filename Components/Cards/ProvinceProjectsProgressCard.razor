@@ -155,7 +155,7 @@
             .OrderBy(project => project.City)
             .GroupBy(project => project.City)
                 .Select(group => group.Where(project => project.ProjectCompletionProgresses
-                    .Max(progress => progress.Percentage) < 80 == true))
+                    .Max(progress => progress.Percentage) < 100 == true))
             .ToList()
             .Select(project => project.Count())
             .ToList();
@@ -165,7 +165,7 @@
             .GroupBy(project => project.City)
             .Select(group => group.Where(project => 
                 project.ProjectCompletionProgresses
-                    .Max(progress => progress.Percentage) < 80 == true && 
+                    .Max(progress => progress.Percentage) < 100 == true && 
                 project.ProjectCompletionProgresses
                     .Max(progress => progress.Percentage) >= 70 == true))
             .ToList()
