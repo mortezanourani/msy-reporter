@@ -13,7 +13,7 @@
                 <PropertyColumn Sortable="true" Title="نوع فعالیت" Property="@(project => project.IsRenovation ? "تعمیر و تجهیز" : "احداث")" />
                 <PropertyColumn Sortable="true" Title="نوع پروژه" Property="@(project => project.Type.PersianName)" />
                 <PropertyColumn Sortable="true" Title="سال آغاز" Property="@(project => project.StartYear)" />
-                <PropertyColumn Sortable="true" Title="پیشرفت فیزیکی" Property="@(project => string.Format("%{0}", project.ProjectCompletionProgresses!.Max(progress => progress.Percentage)))" />
+                <PropertyColumn Title="پیشرفت فیزیکی" Property="@(project => string.Format("%{0}", project.ProjectCompletionProgresses!.Max(progress => progress.Percentage)))" />
                 <TemplateColumn>
                     <a class="info-link" href="/Project/@context.Id">
                         <span class="material-symbols-rounded">info</span>

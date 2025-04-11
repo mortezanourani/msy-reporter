@@ -1,4 +1,7 @@
-﻿<div class="row">
+﻿@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+<div class="row">
     <div class="col1-1">
         <div class="card city-facilities-card">
             <div class="card-header border-bottom">
@@ -30,20 +33,64 @@
                         </div>
                     </div>
                     <div class="percent-bar-wrapper">
-                        <div class="percent-bar"
-                        style="background-image:
-radial-gradient(white 49%, transparent 50%, transparent 75%, white 76%),
-conic-gradient(var(--primary-color) 0, var(--primary-color) @(msyFacilitiesDeg-1)deg, transparent @(msyFacilitiesDeg)deg),
-conic-gradient(transparent @(msyFacilitiesDeg+1)deg, #95bdf2 @(msyFacilitiesDeg+2)deg, #95bdf2 @(msyFacilitiesDeg+govFacilitiesDeg-1)deg, transparent @(msyFacilitiesDeg+govFacilitiesDeg)deg ),
-conic-gradient(transparent @(msyFacilitiesDeg+govFacilitiesDeg+1)deg, var(--secondary-color) @(msyFacilitiesDeg+govFacilitiesDeg+2)deg, var(--secondary-color) 358deg, transparent 359deg);">
-                            <h4>@totalFacilities</h4>
-                        </div>
+                        <canvas id="cityFacilitiesChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    let cityFacilitiesChart;
+
+    function renderCityFacilitiesChart(data) {
+        const ctx = document.getElementById('cityFacilitiesChart').getContext('2d');
+
+        if (cityFacilitiesChart) {
+            cityFacilitiesChart.destroy();
+        }
+
+        cityFacilitiesChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['اماکن ورزشی وزارت ورزش و جوانان', 'اماکن ورزشی سایر ارگان ها', 'باشگاه های خصوصی'],
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b'],
+                    hoverBackgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            family: 'IRANSans',
+                            size: 11,
+                        },
+                        titleFont: {
+                            family: 'IRANSans',
+                            size: 12,
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+    }
+
+    function updateCityFacilitiesChart (data) {
+        if (cityFacilitiesChart) {
+            cityFacilitiesChart.data.datasets[0].data = data;
+            cityFacilitiesChart.update();
+        }
+    }
+</script>
 
 @code {
     private AppDbContext context = default!;
@@ -55,17 +102,14 @@ conic-gradient(transparent @(msyFacilitiesDeg+govFacilitiesDeg+1)deg, var(--seco
 
     private int msyFacilities { get; set; } = 0;
     private decimal msyFacilitiesPercent { get; set; } = 0;
-    private decimal msyFacilitiesDeg { get; set; } = 0;
 
     private int govFacilities { get; set; } = 0;
     private decimal govFacilitiesPercent { get; set; } = 0;
-    private decimal govFacilitiesDeg { get; set; } = 0;
 
     private int privateFacilities { get; set; } = 0;
     private decimal privateFacilitiesPercent { get; set; } = 0;
-    private decimal privateFacilitiesDeg { get; set; } = 0;
 
-    private int totalFacilities { get; set; } = 0;
+    private List<decimal> chartCounts = new List<decimal>();
 
     protected override void OnInitialized()
     {
@@ -78,32 +122,51 @@ conic-gradient(transparent @(msyFacilitiesDeg+govFacilitiesDeg+1)deg, var(--seco
         SelectCity();
     }
 
-    private void ResetPercents()
+    private void SelectCity()
     {
+        city = context.Cities
+            .Include(c => c.AthleticFacilities)
+            .FirstOrDefault(c => c.Id == cityId);
+
+        var totalFacilities = city!.AthleticFacilities.Count();
+
+        msyFacilities = city!.AthleticFacilities
+            .Where(m => m.OwnershipId == 1)
+            .Count();
+
+        govFacilities = city!.AthleticFacilities
+            .Where(m => m.OwnershipId == 2)
+            .Count();
+
+        privateFacilities = city!.AthleticFacilities
+            .Where(m => { return m.OwnershipId == 3 || m.OwnershipId == 4; })
+            .Count();
+
         msyFacilitiesPercent = 0;
         govFacilitiesPercent = 0;
         privateFacilitiesPercent = 0;
-    }
-
-    private void SelectCity()
-    {
-        city = cities?.Include(c => c.AthleticFacilities).FirstOrDefault(c => c.Id == cityId);
-
-        msyFacilities = city.AthleticFacilities.Where(m => m.OwnershipId == 1).Count();
-        govFacilities = city.AthleticFacilities.Where(m => m.OwnershipId == 2).Count();
-        privateFacilities = city.AthleticFacilities.Where(m => { return m.OwnershipId == 3 || m.OwnershipId == 4; }).Count();
-        totalFacilities = msyFacilities + govFacilities + privateFacilities;
-
-        ResetPercents();
-        if (totalFacilities != 0)
+        if (totalFacilities > 0)
         {
             msyFacilitiesPercent = Math.Round(decimal.Divide(msyFacilities * 100, totalFacilities));
             govFacilitiesPercent = Math.Round(decimal.Divide(govFacilities * 100, totalFacilities));
             privateFacilitiesPercent = Math.Round(decimal.Divide(privateFacilities * 100, totalFacilities));
         }
 
-        msyFacilitiesDeg = msyFacilitiesPercent * 360 / 100;
-        govFacilitiesDeg = msyFacilitiesDeg + (govFacilitiesPercent * 360 / 100);
-        privateFacilitiesDeg = privateFacilitiesPercent * 360;
+        chartCounts.Clear();
+        chartCounts.Add(msyFacilities);
+        chartCounts.Add(govFacilities);
+        chartCounts.Add(privateFacilities);
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("renderCityFacilitiesChart", chartCounts);
+        }
+
+        await JSRuntime.InvokeVoidAsync("renderCityFacilitiesChart", chartCounts);
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
