@@ -1,0 +1,278 @@
+﻿@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+<div class="row">
+	<div class="col1-2">
+		<div class="card cornered1">
+			<div class="card-body">
+				<div>
+					<h6 class="title">تعداد هیات های فعال استانی</h6>
+					<h2>@activesCount</h2>
+				</div>
+				<div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد احکام ریاست:</p>
+						<b>@presidentsCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد احکام سرپرستی:</p>
+						<b>@interimPresidentsCount</b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col1-2">
+		<div class="card cornered2">
+			<div class="card-body">
+				<div>
+					<h6 class="title">تعداد مجامع برگزار شده</h6>
+					<h2>@meetingsCount</h2>
+				</div>
+				<div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد مجامع عمومی:</p>
+						<b>@generalMeetingsCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد مجامع انتخابی:</p>
+						<b>@electiveMeetingsCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد مجامع فوق العاده:</p>
+						<b>@extraOrdinaryMeetingsCount</b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+    <div class="col1-1">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="title">وضعیت هیات های شهرستانی</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="provinceFederationsStatusChart"></canvas>
+            </div>
+            <div class="card-footer legend">
+                <div class="legend-row total">
+                    <h6>هیات های فعال</h6>
+                </div>
+                <div class="legend-row unfinished">
+                    <h6>احکام ریاست هیات ها</h6>
+                </div>
+                <div class="legend-row downTo70">
+                    <h6>احکام سرپرستی هیات ها</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let provinceFederationsStatusChart;
+
+    function renderProvinceFederationsStatusChart (labels, data1, data2, data3) {
+        const ctx = document.getElementById('provinceFederationsStatusChart').getContext('2d');
+        provinceFederationsStatusChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'هیات های فعال',
+                    data: data1,
+                    backgroundColor: '#ff8e2b',
+                    order: 1,
+                    fill: true
+                },
+                {
+                    label: 'احکام ریاست هیات ها',
+                    data: data2,
+                    backgroundColor: '#2e77ae',
+                    order: 2,
+                    fill: true
+                },
+                {
+                    label: 'احکام سرپرستی هیات ها',
+                    data: data3,
+                    backgroundColor: '#95bdf2',
+                    order: 3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                        labels: {
+                            font: {
+                                family: 'IRANSans',
+                                size: 13,
+                                weight: 500
+                            }
+                        },
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            family: 'IRANSans',
+                            size: 11,
+                        },
+                        titleFont: {
+                            family: 'IRANSans',
+                            size: 12,
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        // stacked: true,
+                        ticks: {
+                            font: {
+                                family: 'IRANSans',
+                                size: 12,
+                                weight: 600
+                            }
+                        }
+                    },
+                    y: {
+                        stacked: false,
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                family: 'IRANSans',
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function updateProvinceFederationsStatusChart (labels, data1, data2, data3) {
+        if (provinceFederationsStatusChart) {
+            provinceFederationsStatusChart.data.labels = labels;
+            provinceFederationsStatusChart.data.datasets[0].data = data1;
+            provinceFederationsStatusChart.data.datasets[1].data = data2;
+            provinceFederationsStatusChart.data.datasets[2].data = data3;
+            provinceFederationsStatusChart.update();
+        }
+    }
+</script>
+
+@code {
+	[Parameter]
+	public City? City { get; set; }
+
+	private AppDbContext context = default!;
+
+	private IQueryable<Federation>? federations;
+
+	private int activesCount;
+	private int presidentsCount;
+	private int interimPresidentsCount;
+
+	private IQueryable<FederationMeeting>? federationMeetings;
+
+	private int meetingsCount;
+	private int generalMeetingsCount;
+	private int electiveMeetingsCount;
+	private int extraOrdinaryMeetingsCount;
+
+    private List<string> cities;
+    private List<int> activeFederationsCount;
+    private List<int> hasPresidentFederationsCount;
+    private List<int> hasInterimPresidentFederationsCount;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		federations = context.Federations
+			.Include(federation => federation.FederationPresidents)
+			.Where(federation => federation.City == null);
+
+
+		activesCount = federations!
+			.Count(federation => federation.FederationPresidents.Count() > 0);
+
+		presidentsCount = federations!
+			.Count(federation => federation.FederationPresidents
+				.Any(president => president.IsPresident));
+
+		interimPresidentsCount = federations!
+			.Count(federation => federation.FederationPresidents
+				.Any(president => !president.IsPresident));
+
+		federationMeetings = context.FederationMeetings
+			.Include(meeting => meeting.Type)
+			.Where(meeting => meeting.Year == 1403);
+
+		meetingsCount = federationMeetings.Count();
+
+		generalMeetingsCount = federationMeetings
+			.Count(meeting => meeting.Type.Type == "General");
+
+		electiveMeetingsCount = federationMeetings
+			.Count(meeting => meeting.Type.Type == "Elective");
+
+		extraOrdinaryMeetingsCount = federationMeetings
+			.Count(meeting => meeting.Type.Type == "ExtraOrdinary");
+
+        UpdateChart();
+	}
+
+    private async void UpdateChart()
+    {
+        var citiesFederations = context.Federations!
+            .Include(federation => federation.FederationPresidents)
+            .Where(federation => federation.City != null)
+            .OrderBy(federation => federation.City);
+
+        cities = citiesFederations!
+            .GroupBy(federation => federation.City)
+                .Select(group => group.Key!.PersianName)
+            .ToList();
+
+        activeFederationsCount = citiesFederations!
+            .GroupBy(federation => federation.City)
+                .Select(group => group
+                    .Where(federation => federation.FederationPresidents != null)
+                    .Count())
+            .ToList();
+
+        hasPresidentFederationsCount = citiesFederations!
+            .GroupBy(federation => federation.City)
+            .Select(group => group
+                .Where(federation => federation.FederationPresidents
+                    .Any(president => president.IsPresident)))
+            .ToList()
+            .Select(t => t.Count())
+            .ToList();
+
+        hasInterimPresidentFederationsCount = citiesFederations!
+            .GroupBy(federation => federation.City)
+            .Select(group => group
+                .Where(federation => federation.FederationPresidents
+                    .Any(president => !president.IsPresident)))
+            .ToList()
+            .Select(t => t.Count())
+            .ToList();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("renderProvinceFederationsStatusChart", cities, activeFederationsCount, hasPresidentFederationsCount, hasInterimPresidentFederationsCount);
+        }
+
+        await JSRuntime.InvokeVoidAsync("updateProvinceFederationsStatusChart", cities, activeFederationsCount, hasPresidentFederationsCount, hasInterimPresidentFederationsCount);
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

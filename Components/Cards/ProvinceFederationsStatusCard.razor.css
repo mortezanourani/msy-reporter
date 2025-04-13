@@ -1,0 +1,76 @@
+﻿.card.cornered1 {
+    background-image: url('images/card-corner-4.png');
+}
+
+.card.cornered2 {
+    background-image: url('images/card-corner-5.png');
+}
+
+.card.cornered3 {
+    background-image: url('images/card-corner-3.png');
+}
+
+.card.cornered1,
+.card.cornered2,
+.card.cornered3 {
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: right center;
+    background-size: contain;
+}
+
+.legend {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 24px;
+}
+
+    .legend .legend-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 25%;
+        padding: 12px 0;
+        border-top: 0px solid #d8e2ef;
+    }
+
+        .legend .legend-row:last-child {
+            border-top: 0px solid #d8e2ef;
+        }
+
+        .legend .legend-row * {
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .legend .legend-row h6 {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-weight: 400;
+            flex-grow: 1;
+        }
+
+            .legend .legend-row h6:before {
+                display: inline-block;
+                width: 12px;
+                aspect-ratio: 1;
+                border-radius: 50%;
+                content: "";
+            }
+
+        .legend .legend-row.total h6:before {
+            background: var(--secondary-color);
+        }
+
+        .legend .legend-row.unfinished h6:before {
+            background: var(--primary-color);
+        }
+
+        .legend .legend-row.downTo70 h6:before {
+            background: #95bdf2;
+        }
+

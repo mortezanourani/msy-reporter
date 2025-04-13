@@ -1,58 +1,18 @@
 ﻿@page "/Federations"
 
+@implements IAsyncDisposable
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
 <PageTitle>Federations</PageTitle>
 
 <h2 class="page-title mb-3">هیات های ورزشی</h2>
 
-<div class="row">
-	<div class="col1-3">
-		<div class="card cornered1">
-			<div class="card-body">
-				<div>
-					<h6 class="title">تعداد هیات های فعال استانی</h6>
-					<h2>@activesCount</h2>
-				</div>
-				<div>
-					<div class="d-flex justify-content-between">
-						<p>تعداد احکام ریاست:</p>
-						<b>@presidentsCount</b>
-					</div>
-					<div class="d-flex justify-content-between">
-						<p>تعداد احکام سرپرستی:</p>
-						<b>@interimPresidentsCount</b>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col1-3">
-		<div class="card cornered2">
-			<div class="card-body">
-				<div>
-					<h6 class="title">تعداد مجامع برگزار شده</h6>
-					<h2>@meetingsCount</h2>
-				</div>
-				<div>
-					<div class="d-flex justify-content-between">
-						<p>تعداد مجامع عمومی:</p>
-						<b>@generalMeetingsCount</b>
-					</div>
-					<div class="d-flex justify-content-between">
-						<p>تعداد مجامع انتخابی:</p>
-						<b>@electiveMeetingsCount</b>
-					</div>
-					<div class="d-flex justify-content-between">
-						<p>تعداد مجامع فوق العاده:</p>
-						<b>@interimPresidentsCount</b>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<ProvinceFederationsStatusCard />
 
-<div class="row">
-	<div class="col1-1">
+<div class="card city-federations-card">
+	<div class="card-header">
+		<h6 class="title">فهرست هیات های ورزشی @city!.PersianName</h6>
 		<InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
 			@foreach (City city in cities!)
 			{
@@ -60,8 +20,26 @@
 			}
 		</InputSelect>
 	</div>
+	<div class="card-body">
+		<div class="federations-list">
+			@if (federations.Any())
+			{
+				<QuickGrid Items="federations" Theme="" Class="federations-table">
+					<PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.PersianName)" />
+					<PropertyColumn Sortable="true" Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
+					<PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
+					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.FederationPresidents.FirstOrDefault().Name)" />
+					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.FederationPresidents.FirstOrDefault().IsPresident ? "رئیس" : "سرپرست")" />
+					<TemplateColumn>
+						<a class="info-link" href="/Project/@context.Id">
+							<span class="material-symbols-rounded">info</span>
+						</a>
+					</TemplateColumn>
+				</QuickGrid>
+			}
+		</div>
+	</div>
 </div>
-<CityFederationsListCard City="@city" />
 
 @code {
 	private AppDbContext context = default!;
@@ -138,5 +116,22 @@
 	private void SelectCity()
 	{
 		city = cities.FirstOrDefault(city => city.Id == cityId);
+
+		if (cityId != 0)
+		{
+			federations = context.Federations
+				.Include(federation => federation.City)
+				.Include(federation => federation.FederationPresidents)
+				.Where(federation => federation.City!.Id == cityId);
+		}
+		else
+		{
+			federations = context.Federations
+				.Include(federation => federation.City)
+				.Include(federation => federation.FederationPresidents)
+				.Where(federation => federation.City == null);
+		}
 	}
+
+	public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
