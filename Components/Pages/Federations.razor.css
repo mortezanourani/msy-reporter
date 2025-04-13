@@ -1,0 +1,29 @@
+﻿.card.cornered1 {
+    background-image: url('images/card-corner-4.png');
+}
+
+.card.cornered2 {
+    background-image: url('images/card-corner-5.png');
+}
+
+.card.cornered3 {
+    background-image: url('images/card-corner-3.png');
+}
+
+.card.cornered1,
+.card.cornered2,
+.card.cornered3 {
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: right center;
+    background-size: contain;
+}
+
+::deep select {
+    width: 150px;
+    font: 400 13px IRANSans;
+    outline: none;
+    border: 1px solid lightgray;
+    padding: 3px;
+    border-radius: 6px;
+}

@@ -1,0 +1,142 @@
+﻿@page "/Federations"
+
+<PageTitle>Federations</PageTitle>
+
+<h2 class="page-title mb-3">هیات های ورزشی</h2>
+
+<div class="row">
+	<div class="col1-3">
+		<div class="card cornered1">
+			<div class="card-body">
+				<div>
+					<h6 class="title">تعداد هیات های فعال استانی</h6>
+					<h2>@activesCount</h2>
+				</div>
+				<div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد احکام ریاست:</p>
+						<b>@presidentsCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد احکام سرپرستی:</p>
+						<b>@interimPresidentsCount</b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col1-3">
+		<div class="card cornered2">
+			<div class="card-body">
+				<div>
+					<h6 class="title">تعداد مجامع برگزار شده</h6>
+					<h2>@meetingsCount</h2>
+				</div>
+				<div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد مجامع عمومی:</p>
+						<b>@generalMeetingsCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد مجامع انتخابی:</p>
+						<b>@electiveMeetingsCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>تعداد مجامع فوق العاده:</p>
+						<b>@interimPresidentsCount</b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col1-1">
+		<InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
+			@foreach (City city in cities!)
+			{
+				<option value="@city.Id">@city.PersianName</option>
+			}
+		</InputSelect>
+	</div>
+</div>
+<CityFederationsListCard City="@city" />
+
+@code {
+	private AppDbContext context = default!;
+
+	private int cityId;
+
+	private City? city;
+	private List<City> cities = new List<City>();
+
+	private IQueryable<Federation> federations;
+
+	private int activesCount;
+	private int presidentsCount;
+	private int interimPresidentsCount;
+
+	private IQueryable<FederationMeeting> federationMeetings;
+
+	private int meetingsCount;
+	private int generalMeetingsCount;
+	private int electiveMeetingsCount;
+	private int extraOrdinaryMeetingsCount;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		cities.Add(new City
+			{
+				Id = 0,
+				Name = "Guilan",
+				NormalizedName = "GUILAN",
+				PersianName = "استان"
+			});
+
+		cities.AddRange(context.Cities.ToList());
+
+		federations = context.Federations;
+
+		activesCount = federations!
+			.Include(federation => federation.FederationPresidents)
+			.Where(federation => federation.City == null)
+			.Count(federation => federation.FederationPresidents.Count() > 0);
+
+		presidentsCount = federations!
+			.Include(federation => federation.FederationPresidents)
+			.Where(federation => federation.City == null)
+			.Count(federation => federation.FederationPresidents
+				.Any(president => president.IsPresident));
+
+		interimPresidentsCount = federations!
+			.Include(federation => federation.FederationPresidents)
+			.Where(federation => federation.City == null)
+			.Count(federation => federation.FederationPresidents
+				.Any(president => !president.IsPresident));
+
+		federationMeetings = context.FederationMeetings
+			.Include(meeting => meeting.Type)
+			.Where(meeting => meeting.Year == 1403);
+
+		meetingsCount = federationMeetings.Count();
+
+		generalMeetingsCount = federationMeetings
+			.Count(meeting => meeting.Type.Type == "General");
+
+		electiveMeetingsCount = federationMeetings
+			.Count(meeting => meeting.Type.Type == "Elective");
+
+		extraOrdinaryMeetingsCount = federationMeetings
+			.Count(meeting => meeting.Type.Type == "ExtraOrdinary");
+
+		SelectCity();
+	}
+
+	private void SelectCity()
+	{
+		city = cities.FirstOrDefault(city => city.Id == cityId);
+	}
+}

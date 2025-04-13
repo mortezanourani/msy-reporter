@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+<div class="card city-federations-card">
+    <div class="card-header pb-0">
+        <h6 class="title">فهرست هیات های ورزشی @City!.PersianName</h6>
+    </div>
+    <div class="card-body">
+        <div class="projects-list">
+            <QuickGrid Items="federations" Theme="" Class="projects-table">
+                <PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.PersianName)" />
+                <PropertyColumn Sortable="true" Title="شهرستان" Property="@(federation => federation.City!.PersianName)" />
+                <PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
+                <PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.FederationPresidents.FirstOrDefault().Name)" />
+                <PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.FederationPresidents.FirstOrDefault().IsPresident ? "رئیس" : "سرپرست")" />
+            </QuickGrid>
+        </div>
+    </div>
+    <div class="card-footer pt-0">
+        <NavLink href="/Projects/List">تمامی پروژه های سال جاری @City!.PersianName</NavLink>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public City? City { get; set; }
+
+    private AppDbContext context = default!;
+    private IQueryable<Federation>? federations;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    protected override void OnParametersSet()
+    {
+        federations = context.Federations
+            .Include(federation => federation.City)
+            .Include(federation => federation.FederationPresidents);
+
+        if (City!.Id != 0)
+    {
+            federations = federations
+                .Where(federation => federation.City!.Id == City.Id);
+        }
+        else
+        {
+            federations = federations
+                .Where(federation => federation.City == null);
+        }
+    }
+}
