@@ -10,7 +10,11 @@
 					<h2>@activesCount</h2>
 				</div>
 				<div>
-					<div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between">
+                        <p>تعداد هیات های دارای شناسه:</p>
+                        <b>@hasIdFederationsCount</b>
+                    </div>
+                    <div class="d-flex justify-content-between">
 						<p>تعداد احکام ریاست:</p>
 						<b>@presidentsCount</b>
 					</div>
@@ -173,7 +177,8 @@
 	private IQueryable<Federation>? federations;
 
 	private int activesCount;
-	private int presidentsCount;
+    private int hasIdFederationsCount;
+    private int presidentsCount;
 	private int interimPresidentsCount;
 
 	private IQueryable<FederationMeeting>? federationMeetings;
@@ -199,6 +204,9 @@
 
 		activesCount = federations!
 			.Count(federation => federation.FederationPresidents.Count() > 0);
+
+		hasIdFederationsCount = federations!
+			.Count(federation => !string.IsNullOrEmpty(federation.NationalId));
 
 		presidentsCount = federations!
 			.Count(federation => federation.FederationPresidents
