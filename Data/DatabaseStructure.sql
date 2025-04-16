@@ -16,34 +16,7 @@ begin
 	use [Reporter];
 end;
 
--- Basic Tables ------------------------------------------------------------------------------------
-if not exists (
-	select * from sys.objects
-		where name = 'AgeGroups' and type = 'U'
-)
-begin
-	create table [AgeGroups] (
-		[Id] int identity(1,1) not null,
-		[Name] nvarchar(256) not null,
-		[NormalizedName] as upper([Name]),
-		[PersianName] nvarchar(256) not null,
-		constraint [PK_AgeGroups] primary key ([Id]),
-		constraint [IX_AgeGroups_Name] unique ([NormalizedName])
-	);
-
-	insert into [AgeGroups]
-		([Name], [PersianName])
-		values
-		('Under10', 'نونهالان'),
-		('Under12', 'خردسالان'),
-		('Under14', 'زیر 14 سال'),
-		('Under18', 'نوجوانان'),
-		('Youth', 'جوانان'),
-		('Under23', 'زیر 23 سال'),
-		('Adults', 'بزرگسالان'),
-		('Veterans', 'پیشکسوتان');
-end;
-
+-- General Tables
 if not exists (
 	select * from sys.objects
 		where name = 'Cities' and type = 'U'
@@ -83,85 +56,6 @@ end;
 
 if not exists (
 	select * from sys.objects
-		where name = 'EventLevels' and type = 'U'
-)
-begin
-	create table [EventLevels] (
-		[Id] int identity(1,1) not null,
-		[IsInternational] bit not null,
-		[Name] nvarchar(256) not null,
-		[NormalizedName] as upper([Name]),
-		[PersianName] nvarchar(256) not null,
-		constraint [PK_EventLevels] primary key ([Id]),
-		constraint [IX_EventLevels_Name] unique ([NormalizedName])
-	);
-
-	insert into [EventLevels]
-		([IsInternational], [Name], [PersianName])
-		values
-		(0, 'Province', 'استانی'),
-		(0, 'National', 'ملی'),
-		(0, 'Para National', 'پارا ملی'),
-		(0, 'National Olympiad', 'المپیاد استعدادهای برتر-کشوری'),
-		(1, 'International Olympiad', 'المپیاد استعدادهای برتر-فراملی'),
-		(1, 'International', 'بین‌ المللی'),
-		(1, 'Para International', 'پارا بین‌ المللی'),
-		(1, 'Asian', 'آسیایی'),
-		(1, 'Para Asian', 'پارا آسیایی'),
-		(1, 'Eurasian', 'اوراسیا'),
-		(1, 'World', 'جهانی'),
-		(1, 'Para World', 'پارا جهانی'),
-		(1, 'Asian Games', 'بازی های آسیایی'),
-		(1, 'Asian Para Games', 'پارا بازی های آسیایی'),
-		(1, 'Islamic Solidarity', 'کشورهای اسلامی'),
-		(1, 'Olympic', 'المپیک'),
-		(1, 'Paralympic', 'پارا المپیک'),
-		(1, 'Winter Olympic', 'المپیک زمستانی'),
-		(1, 'Summer Olympic', 'المپیک تابستانی'),
-		(1, 'Universiade', 'المپیک دانشجویان'),
-		(1, 'International Beach', 'ساحلی بین المللی');
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'FacilityTypes' and type = 'U'
-)
-begin
-	create table [FacilityTypes] (
-		[Id] int identity(1,1) not null,
-		[Name] nvarchar(256) not null,
-		[NormalizedName] as upper([Name]),
-		[PersianName] nvarchar(256) not null,
-		constraint [PK_FacilityTypes] primary key ([Id]),
-		constraint [IX_FacilityTypes_Name] unique ([NormalizedName])
-	);
-
-	insert into [FacilityTypes]
-		([Name], [PersianName])
-		values
-		('Hall', 'سرپوشیده'),
-		('Land', 'روباز'),
-		('Complex', 'مجموعه'),
-		('Centre', 'دفتر باشگاه');
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'Federations' and type = 'U'
-)
-begin
-	create table [Federations] (
-		[Id] int identity(1,1) not null,
-		[Name] nvarchar(256) not null,
-		[NormalizedName] as upper([Name]),
-		[PersianName] nvarchar(256) not null,
-		constraint [PK_Federations] primary key ([Id]),
-		constraint [IX_Federations_Name] unique ([NormalizedName])
-	 );
-end;
-
-if not exists (
-	select * from sys.objects
 		where name = 'Genders' and type = 'U'
 )
 begin
@@ -181,150 +75,22 @@ begin
 		('Female', 'خانم');
 end;
 
+-- Federations Tables
 if not exists (
 	select * from sys.objects
-		where name = 'InviteeRoles' and type = 'U'
+		where name = 'Federations' and type = 'U'
 )
 begin
-	create table [InviteeRoles] (
-		[Id] int identity(1,1) not null,
-		[Role] nvarchar(256) not null,
-		[NormalizedRole] as upper([Role]),
-		[PersianTitle] nvarchar(max) not null,
-		constraint [PK_InviteeRoles] primary key ([Id]),
-		constraint [IX_InviteeRoles] unique ([NormalizedRole])
-	);
-
-	insert into [InviteeRoles]
-		([Role], [PersianTitle])
-		values
-		('Player', 'بازیکن'),
-		('Coach', 'مربی');
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'LegalTitles' and type = 'U'
-)
-begin
-	create table [LegalTitles] (
+	create table [Federations] (
 		[Id] int identity(1,1) not null,
 		[Name] nvarchar(256) not null,
 		[NormalizedName] as upper([Name]),
 		[PersianName] nvarchar(256) not null,
-		constraint [PK_LegalTitles] primary key ([Id]),
-		constraint [IX_LegalTitles_Name] unique ([NormalizedName])
-	);
-
-	insert into [LegalTitles]
-		([Name], [PersianName])
-		values
-		('Beneficial', 'حقیقی'),
-		('Legal', 'حقوقی');
+		constraint [PK_Federations] primary key ([Id]),
+		constraint [IX_Federations_Name] unique ([NormalizedName])
+	 );
 end;
 
-if not exists (
-	select * from sys.objects
-		where name = 'Medals' and type = 'U'
-)
-begin
-	create table [Medals] (
-		[Id] int identity(1,1) not null,
-		[IsIndividualMedal] bit not null,
-		[Color] nvarchar(256) not null,
-		[NormalizedColor] as upper([Color]),
-		[PersianTitle] nvarchar(256) not null,
-		constraint [PK_Medals] primary key ([Id]),
-		constraint [IX_Medals_Medal] unique ([IsIndividualMedal], [NormalizedColor])
-	);
-
-	insert into [Medals]
-		([IsIndividualMedal], [Color], [PersianTitle])
-		values
-		(1, 'Gold', 'طلا'),
-		(1, 'Silver', 'نقره'),
-		(1, 'Bronze', 'برنز'),
-		(0, 'Gold', 'طلا تیمی'),
-		(0, 'Silver', 'نقره تیمی'),
-		(0, 'Bronze', 'برنز تیمی');
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'MeetingTypes' and type = 'U'
-)
-begin
-	create table [MeetingTypes] (
-		[Id] int identity(1,1) not null,
-		[Type] nvarchar(256) not null,
-		[NormalizedType] as upper([Type]),
-		[PersianTitle] nvarchar(256) not null,
-		[IsElective] bit not null,
-		constraint [PK_MeetingTypes] primary key ([Id]),
-		constraint [IX_MeetingTypes_Type] unique ([NormalizedType])
-	);
-
-	insert into [MeetingTypes]
-		([Type], [PersianTitle], [IsElective])
-		values
-		('General', 'جلسه عمومی سالیانه', 0),
-		('Elective', 'انتخابات', 1),
-		('ExtraOrdinary', 'جلسه فوق العاده', 1);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'Ownerships' and type = 'U'
-)
-begin
-	create table [Ownerships] (
-		[Id] int identity(1,1) not null,
-		[IsGovernmentOwned] bit not null,
-		[Type] nvarchar(256) not null,
-		[NormalizedType] as upper([Type]),
-		[PersianTitle] nvarchar(256) not null,
-		constraint [PK_Ownerships] primary key ([Id]),
-		constraint [IX_Ownerships_Type] unique ([IsGovernmentOwned], [NormalizedType])
-	);
-
-	insert into [Ownerships]
-		([IsGovernmentOwned], [Type], [PersianTitle])
-		values
-		(1, 'MSYOwned', 'دولتی - وزارت ورزش و جوانان'),
-		(1, 'GovernmentOther', 'دولتی - سایر ارگان ها'),
-		(0, 'PrivateIndividual', 'باشگاه خصوصی - حقیقی'),
-		(0, 'PrivateCorporate', 'باشگاه خصوصی - حقوقی');
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'SportsCourseGrades' and type = 'U'
-)
-begin
-	create table [SportsCourseGrades] (
-		[Id] int identity(1,1) not null,
-		[Grade] nvarchar(256) not null,
-		[NormalizedGrade] as upper([Grade]),
-		[PersianName] nvarchar(256) not null,
-		constraint [PK_SportsCourseGrades] primary key ([Id]),
-		constraint [IX_SportsCourseGrades_Grade] unique ([NormalizedGrade])
-	);
-
-	insert into [SportsCourseGrades]
-		([Grade], [PersianName])
-		values
-		('C', 'درجه سه'),
-		('B', 'درجه دو'),
-		('A', 'درجه یک'),
-		('National', 'ملی'),
-		('International-C', 'درجه سه بین المللی'),
-		('International-B', 'درجه دو بین المللی'),
-		('International-A', 'درجه یک بین المللی'),
-		('Asia-D', 'D آسیا'),
-		('Asia-C', 'C آسیا');
-end;
-
--- Main Tables -------------------------------------------------------------------------------------
 if not exists (
 	select * from sys.objects
 		where name = 'CityFederations' and type = 'U'
@@ -370,6 +136,29 @@ end;
 
 if not exists (
 	select * from sys.objects
+		where name = 'MeetingTypes' and type = 'U'
+)
+begin
+	create table [MeetingTypes] (
+		[Id] int identity(1,1) not null,
+		[Type] nvarchar(256) not null,
+		[NormalizedType] as upper([Type]),
+		[PersianTitle] nvarchar(256) not null,
+		[IsElective] bit not null,
+		constraint [PK_MeetingTypes] primary key ([Id]),
+		constraint [IX_MeetingTypes_Type] unique ([NormalizedType])
+	);
+
+	insert into [MeetingTypes]
+		([Type], [PersianTitle], [IsElective])
+		values
+		('General', 'جلسه عمومی سالیانه', 0),
+		('Elective', 'انتخابات', 1),
+		('ExtraOrdinary', 'جلسه فوق العاده', 1);
+end;
+
+if not exists (
+	select * from sys.objects
 		where name = 'FederationMeetings' and type = 'U'
 )
 begin
@@ -400,6 +189,54 @@ begin
 		constraint [PK_MeetingVotes] primary key ([MeetingId], [Name]),
 		constraint [FK_MeetingVotes_FederationMeetings_MeetingId] foreign key ([MeetingId]) references [FederationMeetings]([Id])
 	);
+end;
+
+-- Facilities Tables
+if not exists (
+	select * from sys.objects
+		where name = 'Ownerships' and type = 'U'
+)
+begin
+	create table [Ownerships] (
+		[Id] int identity(1,1) not null,
+		[IsGovernmentOwned] bit not null,
+		[Type] nvarchar(256) not null,
+		[NormalizedType] as upper([Type]),
+		[PersianTitle] nvarchar(256) not null,
+		constraint [PK_Ownerships] primary key ([Id]),
+		constraint [IX_Ownerships_Type] unique ([IsGovernmentOwned], [NormalizedType])
+	);
+
+	insert into [Ownerships]
+		([IsGovernmentOwned], [Type], [PersianTitle])
+		values
+		(1, 'MSYOwned', 'دولتی - وزارت ورزش و جوانان'),
+		(1, 'GovernmentOther', 'دولتی - سایر ارگان ها'),
+		(0, 'PrivateIndividual', 'باشگاه خصوصی - حقیقی'),
+		(0, 'PrivateCorporate', 'باشگاه خصوصی - حقوقی');
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'FacilityTypes' and type = 'U'
+)
+begin
+	create table [FacilityTypes] (
+		[Id] int identity(1,1) not null,
+		[Type] nvarchar(256) not null,
+		[NormalizedType] as upper([Type]),
+		[PersianTitle] nvarchar(256) not null,
+		constraint [PK_FacilityTypes] primary key ([Id]),
+		constraint [IX_FacilityTypes_Type] unique ([NormalizedType])
+	);
+
+	insert into [FacilityTypes]
+		([Type], [PersianTitle])
+		values
+		('Hall', 'سرپوشیده'),
+		('Land', 'روباز'),
+		('Complex', 'مجموعه'),
+		('Centre', 'دفتر باشگاه');
 end;
 
 if not exists (
@@ -440,6 +277,27 @@ begin
 		constraint [FK_FacilityUserGenders_AthleticFacilities_FacilityId] foreign key ([FacilityId]) references [AthleticFacilities]([Id]),
 		constraint [FK_FacilityUserGenders_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
 	);
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'LegalTitles' and type = 'U'
+)
+begin
+	create table [LegalTitles] (
+		[Id] int identity(1,1) not null,
+		[Title] nvarchar(256) not null,
+		[NormalizedTitle] as upper([Title]),
+		[PersianTitle] nvarchar(256) not null,
+		constraint [PK_LegalTitles] primary key ([Id]),
+		constraint [IX_LegalTitles_Title] unique ([NormalizedTitle])
+	);
+
+	insert into [LegalTitles]
+		([Title], [PersianTitle])
+		values
+		('Beneficial', 'حقیقی'),
+		('Legal', 'حقوقی');
 end;
 
 if not exists (
@@ -488,59 +346,55 @@ begin
 	);
 end;
 
+-- Registered Athletes Tables
 if not exists (
 	select * from sys.objects
-		where name = 'Champions' and type = 'U'
+		where name = 'Insurances' and type = 'U'
 )
 begin
-	create table [Champions] (
+	create table [Insurances] (
 		[Id] uniqueidentifier default newid() not null,
-		[Name] nvarchar(max) not null,
-		[SeenCode] nvarchar(10) null,
-		[Phone] nvarchar(max) null,
-		[GenderId] int not null,
-		[CityId] int null,
-		constraint [PK_Champions] primary key ([Id]),
-		constraint [FK_Champions_SeenCode] unique ([SeenCode]),
-		constraint [FK_Champions_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id]),
-		constraint [FK_Champions_Cities_City_Id] foreign key ([CityId]) references [Cities]([Id])
-	);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'Championships' and type = 'U'
-)
-begin
-	create table [Championships] (
-		[Id] uniqueidentifier default newid() not null,
+		[CityId] int not null,
 		[FederationId] uniqueidentifier not null,
-		[Sport] nvarchar(max) not null,
-		[AgeGroupId] int null,
-		[EventLevelId] int not null,
-		[Host] nvarchar(max) not null,
-		[Year] nvarchar(max) not null,
-		[MedalId] int not null,
-		constraint [PK_Championships] primary key ([Id]),
-		constraint [FK_Championships_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
-		constraint [FK_Championships_AgeGroups_AgeGroupsId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
-		constraint [FK_Championships_EventLevels_EventLevelId] foreign key ([EventLevelId]) references [EventLevels]([Id]),
-		constraint [FK_Championships_Medals_MedalId] foreign key ([MedalId]) references [Medals]([Id])
+		[GenderId] int not null,
+		[Year] int not null,
+		[Month] int not null,
+		[Count] int not null,
+		constraint [PK_Insurances] primary key ([Id]),
+		constraint [IX_Insurances] unique ([CityId], [FederationId], [GenderId], [Year], [Month]),
+		constraint [FK_Insurances_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
+		constraint [FK_Insurances_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+		constraint [FK_Insurances_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
 	);
 end;
 
+-- Sports Courses Tables
 if not exists (
 	select * from sys.objects
-		where name = 'ChampionChampionships' and type = 'U'
+		where name = 'SportsCourseGrades' and type = 'U'
 )
 begin
-	create table [ChampionChampionships] (
-		[ChampionId] uniqueidentifier not null,
-		[ChampionshipId] uniqueidentifier not null,
-		constraint [PK_ChampionChampionships] primary key ([ChampionId], [ChampionshipId]),
-		constraint [FK_ChampionChampionships_Champions_ChampionId] foreign key ([ChampionId]) references [Champions]([Id]),
-		constraint [FK_ChampionChampionships_Championship_ChampionshipId] foreign key ([ChampionshipId]) references [Championships]([Id])
+	create table [SportsCourseGrades] (
+		[Id] int identity(1,1) not null,
+		[Grade] nvarchar(256) not null,
+		[NormalizedGrade] as upper([Grade]),
+		[PersianName] nvarchar(256) not null,
+		constraint [PK_SportsCourseGrades] primary key ([Id]),
+		constraint [IX_SportsCourseGrades_Grade] unique ([NormalizedGrade])
 	);
+
+	insert into [SportsCourseGrades]
+		([Grade], [PersianName])
+		values
+		('C', 'درجه سه'),
+		('B', 'درجه دو'),
+		('A', 'درجه یک'),
+		('National', 'ملی'),
+		('International-C', 'درجه سه بین المللی'),
+		('International-B', 'درجه دو بین المللی'),
+		('International-A', 'درجه یک بین المللی'),
+		('Asia-D', 'D آسیا'),
+		('Asia-C', 'C آسیا');
 end;
 
 if not exists (
@@ -591,24 +445,235 @@ begin
 	);
 end;
 
+-- Champions Tables
 if not exists (
 	select * from sys.objects
-		where name = 'Insurances' and type = 'U'
+		where name = 'Athletes' and type = 'U'
 )
 begin
-	create table [Insurances] (
+	create table [Athletes] (
 		[Id] uniqueidentifier default newid() not null,
-		[CityId] int not null,
-		[FederationId] uniqueidentifier not null,
+		[Name] nvarchar(256) not null,
+		[SeenCode] nvarchar(10) null,
 		[GenderId] int not null,
+		[CityId] int not null,
+		[Phone] nvarchar(max) null,
+		constraint [PK_Athletes] primary key ([Id]),
+		constraint [FK_Athletes_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id]),
+		constraint [FK_Athletes_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
+	);
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'AgeGroups' and type = 'U'
+)
+begin
+	create table [AgeGroups] (
+		[Id] int identity(1,1) not null,
+		[Name] nvarchar(256) not null,
+		[NormalizedName] as upper([Name]),
+		[PersianName] nvarchar(256) not null,
+		constraint [PK_AgeGroups] primary key ([Id]),
+		constraint [IX_AgeGroups_Name] unique ([NormalizedName])
+	);
+
+	insert into [AgeGroups]
+		([Name], [PersianName])
+		values
+		('Under10', 'نونهالان'),
+		('Under12', 'خردسالان'),
+		('Under14', 'زیر 14 سال'),
+		('Under18', 'نوجوانان'),
+		('Youth', 'جوانان'),
+		('Under23', 'زیر 23 سال'),
+		('Adults', 'بزرگسالان'),
+		('Veterans', 'پیشکسوتان');
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'CampTypes' and type = 'U'
+)
+begin
+	create table [CampTypes] (
+		[Id] int identity(1,1) not null,
+		[Type] nvarchar(256) not null,
+		[NormalizedType] as upper([Type]),
+		[PersianType] nvarchar(max) not null,
+		constraint [PK_CampTypes] primary key ([Id]),
+		constraint [IX_CampTypes] unique ([NormalizedType])
+	);
+
+	insert into [CampTypes]
+		([Type], [PersianType])
+		values
+		('Tryout', 'انتخابی'),
+		('Training', 'اعزام');
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'NationalTeamCamps' and type = 'U'
+)
+begin
+	create table [NationalTeamCamps] (
+		[Id] uniqueidentifier default newid() not null,
+		[FederationId] int not null,
+		[Sport] nvarchar(max) null,
+		[GenderId] int not null,
+		[AgeGroupId] int null,
+		[Year] int not null,
+		[TypeId] int not null,
+		[Location] nvarchar(max) not null,
+		constraint [PK_NationalTeamCamps] primary key ([Id]),
+		constraint [FK_NationalTeamCamps_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+		constraint [FK_NationalTeamCamps_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id]),
+		constraint [FK_NationalTeamCamps_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
+		constraint [FK_NationalTeamCamps_CampTypes_TypeId] foreign key ([TypeId]) references [CampTyes]([Id])
+	);
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'InviteeRoles' and type = 'U'
+)
+begin
+	create table [InviteeRoles] (
+		[Id] int identity(1,1) not null,
+		[Role] nvarchar(256) not null,
+		[NormalizedRole] as upper([Role]),
+		[PersianRole] nvarchar(max) not null,
+		constraint [PK_InviteeRoles] primary key ([Id]),
+		constraint [IX_InviteeRoles] unique ([NormalizedRole])
+	);
+
+	insert into [InviteeRoles]
+		([Role], [PersianRole])
+		values
+		('Player', 'بازیکن'),
+		('Coach', 'مربی');
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'CampInvitees' and type = 'U'
+)
+begin
+	create table [CampInvitees] (
+		[CampId] uniqueidentifier not null,
+		[AthleteId] uniqueidentifier not null,
+		[RoleId] int not null,
+		constraint [PK_CampInvitees] primary key ([Id]),
+		constraint [FK_CampInvitees_NationalTeamCamps_CampId] foreign key ([CampId]) references [NationalTeamCamps]([Id]),
+		constraint [FK_CampInvitees_Athletes_AthleteId] foreign key ([AthleteId]) references [Athletes]([Id]),
+		constraint [FK_CampInvitees_InviteeRoles_RoleId] foreign key ([RoleId]) references [InviteeRoles]([Id])
+	);
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'TournamentLevels' and type = 'U'
+)
+begin
+	create table [TournamentLevels] (
+		[Id] int identity(1,1) not null,
+		[IsInternational] bit not null,
+		[Title] nvarchar(256) not null,
+		[NormalizedTitle] as upper([Name]),
+		[PersianTitle] nvarchar(256) not null,
+		constraint [PK_TournamentLevelsLevels] primary key ([Id]),
+		constraint [IX_TournamentLevelsLevels_Title] unique ([Normalizedtitle])
+	);
+
+	insert into [TournamentLevels]
+		([IsInternational], [Title], [PersianTitle])
+		values
+		(0, 'Province', 'استانی'),
+		(0, 'National', 'ملی'),
+		(0, 'Para National', 'پارا ملی'),
+		(0, 'National Olympiad', 'المپیاد استعدادهای برتر-کشوری'),
+		(1, 'International Olympiad', 'المپیاد استعدادهای برتر-فراملی'),
+		(1, 'International', 'بین‌ المللی'),
+		(1, 'Para International', 'پارا بین‌ المللی'),
+		(1, 'Asian', 'آسیایی'),
+		(1, 'Para Asian', 'پارا آسیایی'),
+		(1, 'Eurasian', 'اوراسیا'),
+		(1, 'World', 'جهانی'),
+		(1, 'Para World', 'پارا جهانی'),
+		(1, 'Asian Games', 'بازی های آسیایی'),
+		(1, 'Asian Para Games', 'پارا بازی های آسیایی'),
+		(1, 'Islamic Solidarity', 'کشورهای اسلامی'),
+		(1, 'Olympic', 'المپیک'),
+		(1, 'Paralympic', 'پارا المپیک'),
+		(1, 'Winter Olympic', 'المپیک زمستانی'),
+		(1, 'Summer Olympic', 'المپیک تابستانی'),
+		(1, 'Universiade', 'المپیک دانشجویان'),
+		(1, 'International Beach', 'ساحلی بین المللی');
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'Tournaments' and type = 'U'
+)
+begin
+	create table [Tournaments] (
+		[Id] uniqueidentifier default newid() not null,
+		[FederationId] int not null,
+		[Sport] nvarchar(max) not null,
+		[AgeGroupId] int null,
+		[LevelId] int not null,
+		[Host] nvarchar(max) not null,
 		[Year] int not null,
 		[Month] int not null,
-		[Count] int not null,
-		constraint [PK_Insurances] primary key ([Id]),
-		constraint [IX_Insurances] unique ([CityId], [FederationId], [GenderId], [Year], [Month]),
-		constraint [FK_Insurances_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
-		constraint [FK_Insurances_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
-		constraint [FK_Insurances_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
+		[Day] int null,
+		constraint [PK_Tournaments] primary key ([Id]),
+		constraint [FK_Tournaments_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+		constraint [FK_Tournaments_AgeGroups_AgeGroupsId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
+		constraint [FK_Tournaments_TournamentLevels_LevelId] foreign key ([LevelId]) references [TounamentLevels]([Id])
+	);
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'Medals' and type = 'U'
+)
+begin
+	create table [Medals] (
+		[Id] int identity(1,1) not null,
+		[IsIndividualMedal] bit not null,
+		[Color] nvarchar(256) not null,
+		[NormalizedColor] as upper([Color]),
+		[PersianTitle] nvarchar(256) not null,
+		constraint [PK_Medals] primary key ([Id]),
+		constraint [IX_Medals_Medal] unique ([IsIndividualMedal], [NormalizedColor])
+	);
+
+	insert into [Medals]
+		([IsIndividualMedal], [Color], [PersianTitle])
+		values
+		(1, 'Gold', 'طلا'),
+		(1, 'Silver', 'نقره'),
+		(1, 'Bronze', 'برنز'),
+		(0, 'Gold', 'طلا تیمی'),
+		(0, 'Silver', 'نقره تیمی'),
+		(0, 'Bronze', 'برنز تیمی');
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'Champions' and type = 'U'
+)
+begin
+	create table [Champions] (
+		[AthleteId] uniqueidentifier not null,
+		[TournamentId] uniqueidentifier not null,
+		[Field] nvarchar(max) null,
+		[MedalId] int null,
+		constraint [PK_Champions] primary key ([AthleteId], [TournamentId], [MedalId]),
+		constraint [FK_Champions_Athletes_AthleteId] foreign key ([AthleteId]) references [Athletes]([Id]),
+		constraint [FK_Champions_Tournaments_TournamentId] foreign key ([TournametId]) references [Tournaments]([Id]),
+		constraint [FK_Champions_Medals_MedalId] foreign key ([MedalId]) references [Medals]([Id])
 	);
 end;
 
@@ -619,44 +684,22 @@ if not exists (
 begin
 	create table [Records] (
 		[Id] uniqueidentifier default newid() not null,
-		[FederationId] uniqueidentifier not null,
-		[Sport] nvarchar(max) not null,
+		[AthleteId] uniqueidentifier not null,
+		[FederationId] int not null,
+		[Sport] nvarchar(256) not null,
 		[AgeGroupId] int null,
-		[OldRecord] nvarchar(max) not null,
-		[Name] nvarchar(max) not null,
-		[Date] date not null,
-		[CityId] int not null,
-		[Location] nvarchar(max) null,
-		[Current] nvarchar(max) not null,
+		[Date] nvarchar(max) not null,
+		[Host] nvarchar(max) null,
+		[Old] nvarchar(max) not null,
+		[New] nvarchar(max) not null,
 		constraint [PK_Records] primary key ([Id]),
+		constraint [FK_Records_Athletes_AthleteId] foreign key ([AthleteId]) references [Athletes]([Id]),
 		constraint [FK_Records_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
-		constraint [FK_Records_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
-		constraint [FK_Records_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
+		constraint [FK_Records_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id])
 	);
 end;
 
-if not exists (
-	select * from sys.objects
-		where name = 'NationalTeamInvitees' and type = 'U'
-)
-begin
-	create table [NationalTeamInvitees] (
-		[Id] uniqueidentifier default newid() not null,
-		[RoleId] int not null,
-		[Name] nvarchar(256) not null,
-		[GenderId] int not null,
-		[FederationId] uniqueidentifier not null,
-		[AgeGroupId] int null,
-		[Year] int not null,
-		[IsAccepted] bit not null, -- عضو تیم ملی
-		constraint [PK_NationalTeamInvitees] primary key ([Id]),
-		constraint [FK_NationalTeamInvitees_InviteeRoles_RoleId] foreign key ([RoleId]) references [InviteeRoles]([Id]),
-		constraint [FK_NationalTeamInvitees_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id]),
-		constraint [FK_NationalTeamInvitees_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
-		constraint [FK_NationalTeamInvitees_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id])
-	);
-end;
-
+-- Construction Projects Tables
 if not exists (
 	select * from sys.objects
 		where name = 'ConstructionProjects' and type = 'U'
@@ -670,7 +713,6 @@ begin
 		[IsRenovation] bit not null,
 		[TypeId] int not null,
 		[StartYear] int not null,
-		--[FinishYear] int null,
 		[Area] int null,
 		[SportArea] int null,
 		constraint [PK_ConstructionProjects] primary key ([Id]),
@@ -716,14 +758,10 @@ begin
 	create table [ProjectBudgets] (
 		[ProjectId] uniqueidentifier not null,
 		[Year] int not null,
-		--[Internal] int default 0 not null,
-		--[Province] int default 0 not null,
-		--[National] int default 0 not null,
 		[FundingSource] nvarchar(max) null,
 		[ApprovedBudgets] int not null,
 		[ContractorUnpaid] int default 0 null,
 		[CompletionBudget] int default 0 null,
-		--[Percentage] int not null,
 		constraint [PK_ProjectBudgets] primary key ([ProjectId], [Year]),
 		constraint [FK_ProjectBudgets_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id])
 	);
