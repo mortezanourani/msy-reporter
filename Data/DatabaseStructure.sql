@@ -50,7 +50,7 @@ if not exists (
 )
 begin
 	create table [Cities] (
-		[Id] int identity(1,1) not null,
+		[Id] int identity(0,1) not null,
 		[Name] nvarchar(256) not null,
 		[NormalizedName] as upper([Name]),
 		[PersianName] nvarchar(256) not null,
@@ -61,6 +61,7 @@ begin
 	insert into [Cities]
 		([Name], [PersianName])
 		values
+		('Guilan', 'استان'),
 		('Astara', 'آستارا'),
 		('Astaneh', 'آستانه اشرفیه'),
 		('Amlash', 'املش'),
@@ -150,18 +151,12 @@ if not exists (
 )
 begin
 	create table [Federations] (
-		[Id] uniqueidentifier default newid() not null,
-		[CityId] int null,
+		[Id] int identity(1,1) not null,
 		[Name] nvarchar(256) not null,
 		[NormalizedName] as upper([Name]),
 		[PersianName] nvarchar(256) not null,
-		[NationalId] nvarchar(max) null,
-		[Address] nvarchar(max) null,
-		[ZipCode] nvarchar(max) null,
-		[Phone] nvarchar(max) null,
 		constraint [PK_Federations] primary key ([Id]),
-		constraint [IX_Federations_Name] unique ([CityId], [NormalizedName]),
-		constraint [FK_Federations_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
+		constraint [IX_Federations_Name] unique ([NormalizedName])
 	 );
 end;
 
@@ -332,12 +327,32 @@ end;
 -- Main Tables -------------------------------------------------------------------------------------
 if not exists (
 	select * from sys.objects
+		where name = 'CityFederations' and type = 'U'
+)
+begin
+	create table [CityFederations] (
+		[FederationId] int not null,
+		[CityId] int not null,
+		[NationalId] nvarchar(16) null,
+		[Address] nvarchar(max) null,
+		[ZipCode] nvarchar(max) null,
+		[Phone] nvarchar(max) null,
+		constraint [PK_CityFederations] primary key ([FederationId], [CityId]),
+		constraint [IX_Federations_NationalId] unique ([NationalId]),
+		constraint [FK_Federations_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+		constraint [FK_Federations_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
+	 );
+end;
+
+if not exists (
+	select * from sys.objects
 		where name = 'FederationPresidents' and type = 'U'
 )
 begin
 	create table [FederationPresidents] (
 		[Id] uniqueidentifier default newid() not null,
-		[FederationId] uniqueidentifier not null,
+		[FederationId] int not null,
+		[CityId] int not null,
 		[Name] nvarchar(max) not null,
 		[SeedCode] nvarchar(max) not null,
 		[BirthDate] nvarchar(max) not null,
@@ -346,9 +361,10 @@ begin
 		[EducationalMajor] nvarchar(max) null,
 		[AppointmentOrder] nvarchar(max) null,
 		[AppointmentDate] nvarchar(max) null,
+		[TermEnd] nvarchar(max) null,
 		[IsPresident] bit not null,
 		constraint [PK_FederationPresidents] primary key ([Id]),
-		constraint [FK_FederationPresidents_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]) 
+		constraint [FK_FederationPresidents_CityFederations_CityFederationId] foreign key ([FederationId], [CityId]) references [CityFederations]([FederationId], [CityId]) 
 	);
 end;
 
@@ -359,7 +375,7 @@ if not exists (
 begin
 	create table [FederationMeetings] (
 		[Id] uniqueidentifier default newid() not null,
-		[FederationId] uniqueidentifier not null,
+		[FederationId] int not null,
 		[TypeId] int not null,
 		[Year] int not null,
 		[Month] int not null,
