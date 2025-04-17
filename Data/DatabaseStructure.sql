@@ -355,7 +355,7 @@ begin
 	create table [Insurances] (
 		[Id] uniqueidentifier default newid() not null,
 		[CityId] int not null,
-		[FederationId] uniqueidentifier not null,
+		[FederationId] int not null,
 		[GenderId] int not null,
 		[Year] int not null,
 		[Month] int not null,
@@ -406,7 +406,7 @@ begin
 		[Id] uniqueidentifier default newid() not null,
 		[IsCoaching] bit not null,
 		[GradeId] int not null,
-		[FederationId] uniqueidentifier not null,
+		[FederationId] int not null,
 		[Year] nvarchar(max) not null,
 		constraint [PK_SportsCourses] primary key ([Id]),
 		constraint [FK_SportsCourses_SportsCourseGrades_GradeId] foreign key ([GradeId]) references [SportsCourseGrades]([Id]),
@@ -530,7 +530,7 @@ begin
 		constraint [FK_NationalTeamCamps_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
 		constraint [FK_NationalTeamCamps_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id]),
 		constraint [FK_NationalTeamCamps_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
-		constraint [FK_NationalTeamCamps_CampTypes_TypeId] foreign key ([TypeId]) references [CampTyes]([Id])
+		constraint [FK_NationalTeamCamps_CampTypes_TypeId] foreign key ([TypeId]) references [CampTypes]([Id])
 	);
 end;
 
@@ -564,7 +564,7 @@ begin
 		[CampId] uniqueidentifier not null,
 		[AthleteId] uniqueidentifier not null,
 		[RoleId] int not null,
-		constraint [PK_CampInvitees] primary key ([Id]),
+		constraint [PK_CampInvitees] primary key ([CampId], [AthleteId]),
 		constraint [FK_CampInvitees_NationalTeamCamps_CampId] foreign key ([CampId]) references [NationalTeamCamps]([Id]),
 		constraint [FK_CampInvitees_Athletes_AthleteId] foreign key ([AthleteId]) references [Athletes]([Id]),
 		constraint [FK_CampInvitees_InviteeRoles_RoleId] foreign key ([RoleId]) references [InviteeRoles]([Id])
@@ -580,10 +580,10 @@ begin
 		[Id] int identity(1,1) not null,
 		[IsInternational] bit not null,
 		[Title] nvarchar(256) not null,
-		[NormalizedTitle] as upper([Name]),
+		[NormalizedTitle] as upper([Title]),
 		[PersianTitle] nvarchar(256) not null,
 		constraint [PK_TournamentLevelsLevels] primary key ([Id]),
-		constraint [IX_TournamentLevelsLevels_Title] unique ([Normalizedtitle])
+		constraint [IX_TournamentLevelsLevels_Title] unique ([NormalizedTitle])
 	);
 
 	insert into [TournamentLevels]
@@ -630,7 +630,7 @@ begin
 		constraint [PK_Tournaments] primary key ([Id]),
 		constraint [FK_Tournaments_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
 		constraint [FK_Tournaments_AgeGroups_AgeGroupsId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
-		constraint [FK_Tournaments_TournamentLevels_LevelId] foreign key ([LevelId]) references [TounamentLevels]([Id])
+		constraint [FK_Tournaments_TournamentLevels_LevelId] foreign key ([LevelId]) references [TournamentLevels]([Id])
 	);
 end;
 
@@ -666,13 +666,15 @@ if not exists (
 )
 begin
 	create table [Champions] (
+		[Id] uniqueidentifier default newid() not null,
 		[AthleteId] uniqueidentifier not null,
 		[TournamentId] uniqueidentifier not null,
-		[Field] nvarchar(max) null,
+		[Field] nvarchar(256) null,
 		[MedalId] int null,
-		constraint [PK_Champions] primary key ([AthleteId], [TournamentId], [MedalId]),
+		constraint [PK_Champions] primary key ([Id]),
+		constraint [IX_Champions] unique ([AthleteId], [TournamentId], [Field], [MedalId]),
 		constraint [FK_Champions_Athletes_AthleteId] foreign key ([AthleteId]) references [Athletes]([Id]),
-		constraint [FK_Champions_Tournaments_TournamentId] foreign key ([TournametId]) references [Tournaments]([Id]),
+		constraint [FK_Champions_Tournaments_TournamentId] foreign key ([TournamentId]) references [Tournaments]([Id]),
 		constraint [FK_Champions_Medals_MedalId] foreign key ([MedalId]) references [Medals]([Id])
 	);
 end;
