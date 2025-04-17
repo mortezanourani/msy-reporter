@@ -13,11 +13,11 @@ public partial class Gender
 
     public string PersianName { get; set; } = null!;
 
-    public virtual ICollection<Champion> Champions { get; set; } = new List<Champion>();
+    public virtual ICollection<Athlete> Athletes { get; set; } = new List<Athlete>();
 
     public virtual ICollection<Insurance> Insurances { get; set; } = new List<Insurance>();
 
-    public virtual ICollection<NationalTeamInvitee> NationalTeamInvitees { get; set; } = new List<NationalTeamInvitee>();
+    public virtual ICollection<NationalTeamCamp> NationalTeamCamps { get; set; } = new List<NationalTeamCamp>();
 
     public virtual ICollection<SportsCourseParticipant> SportsCourseParticipants { get; set; } = new List<SportsCourseParticipant>();
 

@@ -7,7 +7,7 @@ public partial class FederationMeeting
 {
     public Guid Id { get; set; }
 
-    public Guid FederationId { get; set; }
+    public int FederationId { get; set; }
 
     public int TypeId { get; set; }
 

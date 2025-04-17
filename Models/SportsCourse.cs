@@ -11,7 +11,7 @@ public partial class SportsCourse
 
     public int GradeId { get; set; }
 
-    public Guid FederationId { get; set; }
+    public int FederationId { get; set; }
 
     public string Year { get; set; } = null!;
 

@@ -18,17 +18,21 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<AgeGroup> AgeGroups { get; set; }
 
+    public virtual DbSet<Athlete> Athletes { get; set; }
+
     public virtual DbSet<AthleticFacility> AthleticFacilities { get; set; }
+
+    public virtual DbSet<CampInvitee> CampInvitees { get; set; }
+
+    public virtual DbSet<CampType> CampTypes { get; set; }
 
     public virtual DbSet<Champion> Champions { get; set; }
 
-    public virtual DbSet<Championship> Championships { get; set; }
-
     public virtual DbSet<City> Cities { get; set; }
 
-    public virtual DbSet<ConstructionProject> ConstructionProjects { get; set; }
+    public virtual DbSet<CityFederation> CityFederations { get; set; }
 
-    public virtual DbSet<EventLevel> EventLevels { get; set; }
+    public virtual DbSet<ConstructionProject> ConstructionProjects { get; set; }
 
     public virtual DbSet<FacilityType> FacilityTypes { get; set; }
 
@@ -56,7 +60,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<MeetingVote> MeetingVotes { get; set; }
 
-    public virtual DbSet<NationalTeamInvitee> NationalTeamInvitees { get; set; }
+    public virtual DbSet<NationalTeamCamp> NationalTeamCamps { get; set; }
 
     public virtual DbSet<Ownership> Ownerships { get; set; }
 
@@ -72,6 +76,10 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<SportsCourseParticipant> SportsCourseParticipants { get; set; }
 
+    public virtual DbSet<Tournament> Tournaments { get; set; }
+
+    public virtual DbSet<TournamentLevel> TournamentLevels { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Persian_100_CI_AI");
@@ -85,6 +93,21 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(256)
                 .HasComputedColumnSql("(upper([Name]))", false);
             entity.Property(e => e.PersianName).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<Athlete>(entity =>
+        {
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.Name).HasMaxLength(256);
+            entity.Property(e => e.SeenCode).HasMaxLength(10);
+
+            entity.HasOne(d => d.City).WithMany(p => p.Athletes)
+                .HasForeignKey(d => d.CityId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Gender).WithMany(p => p.Athletes)
+                .HasForeignKey(d => d.GenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<AthleticFacility>(entity =>
@@ -120,56 +143,48 @@ public partial class AppDbContext : DbContext
                     });
         });
 
-        modelBuilder.Entity<Champion>(entity =>
+        modelBuilder.Entity<CampInvitee>(entity =>
         {
-            entity.HasIndex(e => e.SeenCode, "FK_Champions_SeenCode").IsUnique();
+            entity.HasKey(e => new { e.CampId, e.AthleteId });
 
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.SeenCode).HasMaxLength(10);
-
-            entity.HasOne(d => d.City).WithMany(p => p.Champions)
-                .HasForeignKey(d => d.CityId)
-                .HasConstraintName("FK_Champions_Cities_City_Id");
-
-            entity.HasOne(d => d.Gender).WithMany(p => p.Champions)
-                .HasForeignKey(d => d.GenderId)
+            entity.HasOne(d => d.Athlete).WithMany(p => p.CampInvitees)
+                .HasForeignKey(d => d.AthleteId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasMany(d => d.Championships).WithMany(p => p.Champions)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ChampionChampionship",
-                    r => r.HasOne<Championship>().WithMany()
-                        .HasForeignKey("ChampionshipId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_ChampionChampionships_Championship_ChampionshipId"),
-                    l => l.HasOne<Champion>().WithMany()
-                        .HasForeignKey("ChampionId")
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    j =>
-                    {
-                        j.HasKey("ChampionId", "ChampionshipId");
-                        j.ToTable("ChampionChampionships");
-                    });
+            entity.HasOne(d => d.Camp).WithMany(p => p.CampInvitees)
+                .HasForeignKey(d => d.CampId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Role).WithMany(p => p.CampInvitees)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-        modelBuilder.Entity<Championship>(entity =>
+        modelBuilder.Entity<CampType>(entity =>
         {
+            entity.HasIndex(e => e.NormalizedType, "IX_CampTypes").IsUnique();
+
+            entity.Property(e => e.NormalizedType)
+                .HasMaxLength(256)
+                .HasComputedColumnSql("(upper([Type]))", false);
+            entity.Property(e => e.Type).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<Champion>(entity =>
+        {
+            entity.HasIndex(e => new { e.AthleteId, e.TournamentId, e.Field, e.MedalId }, "IX_Champions").IsUnique();
+
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.Field).HasMaxLength(256);
 
-            entity.HasOne(d => d.AgeGroup).WithMany(p => p.Championships)
-                .HasForeignKey(d => d.AgeGroupId)
-                .HasConstraintName("FK_Championships_AgeGroups_AgeGroupsId");
-
-            entity.HasOne(d => d.EventLevel).WithMany(p => p.Championships)
-                .HasForeignKey(d => d.EventLevelId)
+            entity.HasOne(d => d.Athlete).WithMany(p => p.Champions)
+                .HasForeignKey(d => d.AthleteId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(d => d.Federation).WithMany(p => p.Championships)
-                .HasForeignKey(d => d.FederationId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.Medal).WithMany(p => p.Champions).HasForeignKey(d => d.MedalId);
 
-            entity.HasOne(d => d.Medal).WithMany(p => p.Championships)
-                .HasForeignKey(d => d.MedalId)
+            entity.HasOne(d => d.Tournament).WithMany(p => p.Champions)
+                .HasForeignKey(d => d.TournamentId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
@@ -184,6 +199,25 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.PersianName).HasMaxLength(256);
         });
 
+        modelBuilder.Entity<CityFederation>(entity =>
+        {
+            entity.HasKey(e => new { e.FederationId, e.CityId });
+
+            entity.HasIndex(e => e.NationalId, "IX_Federations_NationalId").IsUnique();
+
+            entity.Property(e => e.NationalId).HasMaxLength(16);
+
+            entity.HasOne(d => d.City).WithMany(p => p.CityFederations)
+                .HasForeignKey(d => d.CityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Federations_Cities_CityId");
+
+            entity.HasOne(d => d.Federation).WithMany(p => p.CityFederations)
+                .HasForeignKey(d => d.FederationId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Federations_Federations_FederationId");
+        });
+
         modelBuilder.Entity<ConstructionProject>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
@@ -191,8 +225,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.City).WithMany(p => p.ConstructionProjects)
                 .HasForeignKey(d => d.CityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Projects_Cities_CityId");
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Type).WithMany(p => p.ConstructionProjects)
                 .HasForeignKey(d => d.TypeId)
@@ -216,40 +249,26 @@ public partial class AppDbContext : DbContext
                     });
         });
 
-        modelBuilder.Entity<EventLevel>(entity =>
-        {
-            entity.HasIndex(e => e.NormalizedName, "IX_EventLevels_Name").IsUnique();
-
-            entity.Property(e => e.Name).HasMaxLength(256);
-            entity.Property(e => e.NormalizedName)
-                .HasMaxLength(256)
-                .HasComputedColumnSql("(upper([Name]))", false);
-            entity.Property(e => e.PersianName).HasMaxLength(256);
-        });
-
         modelBuilder.Entity<FacilityType>(entity =>
         {
-            entity.HasIndex(e => e.NormalizedName, "IX_FacilityTypes_Name").IsUnique();
+            entity.HasIndex(e => e.NormalizedType, "IX_FacilityTypes_Type").IsUnique();
 
-            entity.Property(e => e.Name).HasMaxLength(256);
-            entity.Property(e => e.NormalizedName)
+            entity.Property(e => e.NormalizedType)
                 .HasMaxLength(256)
-                .HasComputedColumnSql("(upper([Name]))", false);
-            entity.Property(e => e.PersianName).HasMaxLength(256);
+                .HasComputedColumnSql("(upper([Type]))", false);
+            entity.Property(e => e.PersianTitle).HasMaxLength(256);
+            entity.Property(e => e.Type).HasMaxLength(256);
         });
 
         modelBuilder.Entity<Federation>(entity =>
         {
-            entity.HasIndex(e => new { e.CityId, e.NormalizedName }, "IX_Federations_Name").IsUnique();
+            entity.HasIndex(e => e.NormalizedName, "IX_Federations_Name").IsUnique();
 
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NormalizedName)
                 .HasMaxLength(256)
                 .HasComputedColumnSql("(upper([Name]))", false);
             entity.Property(e => e.PersianName).HasMaxLength(256);
-
-            entity.HasOne(d => d.City).WithMany(p => p.Federations).HasForeignKey(d => d.CityId);
         });
 
         modelBuilder.Entity<FederationMeeting>(entity =>
@@ -271,9 +290,10 @@ public partial class AppDbContext : DbContext
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
-            entity.HasOne(d => d.Federation).WithMany(p => p.FederationPresidents)
-                .HasForeignKey(d => d.FederationId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.CityFederation).WithMany(p => p.FederationPresidents)
+                .HasForeignKey(d => new { d.FederationId, d.CityId })
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FederationPresidents_CityFederations_CityFederationId");
         });
 
         modelBuilder.Entity<Gender>(entity =>
@@ -318,13 +338,13 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<LegalTitle>(entity =>
         {
-            entity.HasIndex(e => e.NormalizedName, "IX_LegalTitles_Name").IsUnique();
+            entity.HasIndex(e => e.NormalizedTitle, "IX_LegalTitles_Title").IsUnique();
 
-            entity.Property(e => e.Name).HasMaxLength(256);
-            entity.Property(e => e.NormalizedName)
+            entity.Property(e => e.NormalizedTitle)
                 .HasMaxLength(256)
-                .HasComputedColumnSql("(upper([Name]))", false);
-            entity.Property(e => e.PersianName).HasMaxLength(256);
+                .HasComputedColumnSql("(upper([Title]))", false);
+            entity.Property(e => e.PersianTitle).HasMaxLength(256);
+            entity.Property(e => e.Title).HasMaxLength(256);
         });
 
         modelBuilder.Entity<M5license>(entity =>
@@ -393,23 +413,22 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-        modelBuilder.Entity<NationalTeamInvitee>(entity =>
+        modelBuilder.Entity<NationalTeamCamp>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.Name).HasMaxLength(256);
 
-            entity.HasOne(d => d.AgeGroup).WithMany(p => p.NationalTeamInvitees).HasForeignKey(d => d.AgeGroupId);
+            entity.HasOne(d => d.AgeGroup).WithMany(p => p.NationalTeamCamps).HasForeignKey(d => d.AgeGroupId);
 
-            entity.HasOne(d => d.Federation).WithMany(p => p.NationalTeamInvitees)
+            entity.HasOne(d => d.Federation).WithMany(p => p.NationalTeamCamps)
                 .HasForeignKey(d => d.FederationId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(d => d.Gender).WithMany(p => p.NationalTeamInvitees)
+            entity.HasOne(d => d.Gender).WithMany(p => p.NationalTeamCamps)
                 .HasForeignKey(d => d.GenderId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(d => d.Role).WithMany(p => p.NationalTeamInvitees)
-                .HasForeignKey(d => d.RoleId)
+            entity.HasOne(d => d.Type).WithMany(p => p.NationalTeamCamps)
+                .HasForeignKey(d => d.TypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
@@ -450,11 +469,12 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Record>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.Sport).HasMaxLength(256);
 
             entity.HasOne(d => d.AgeGroup).WithMany(p => p.Records).HasForeignKey(d => d.AgeGroupId);
 
-            entity.HasOne(d => d.City).WithMany(p => p.Records)
-                .HasForeignKey(d => d.CityId)
+            entity.HasOne(d => d.Athlete).WithMany(p => p.Records)
+                .HasForeignKey(d => d.AthleteId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Federation).WithMany(p => p.Records)
@@ -512,6 +532,36 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Gender).WithMany(p => p.SportsCourseParticipants)
                 .HasForeignKey(d => d.GenderId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<Tournament>(entity =>
+        {
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+            entity.HasOne(d => d.AgeGroup).WithMany(p => p.Tournaments)
+                .HasForeignKey(d => d.AgeGroupId)
+                .HasConstraintName("FK_Tournaments_AgeGroups_AgeGroupsId");
+
+            entity.HasOne(d => d.Federation).WithMany(p => p.Tournaments)
+                .HasForeignKey(d => d.FederationId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Level).WithMany(p => p.Tournaments)
+                .HasForeignKey(d => d.LevelId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<TournamentLevel>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_TournamentLevelsLevels");
+
+            entity.HasIndex(e => e.NormalizedTitle, "IX_TournamentLevelsLevels_Title").IsUnique();
+
+            entity.Property(e => e.NormalizedTitle)
+                .HasMaxLength(256)
+                .HasComputedColumnSql("(upper([Title]))", false);
+            entity.Property(e => e.PersianTitle).HasMaxLength(256);
+            entity.Property(e => e.Title).HasMaxLength(256);
         });
 
         OnModelCreatingPartial(modelBuilder);

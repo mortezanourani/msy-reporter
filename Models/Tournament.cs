@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class Record
+public partial class Tournament
 {
     public Guid Id { get; set; }
-
-    public Guid AthleteId { get; set; }
 
     public int FederationId { get; set; }
 
@@ -15,17 +13,21 @@ public partial class Record
 
     public int? AgeGroupId { get; set; }
 
-    public string Date { get; set; } = null!;
+    public int LevelId { get; set; }
 
-    public string? Host { get; set; }
+    public string Host { get; set; } = null!;
 
-    public string Old { get; set; } = null!;
+    public int Year { get; set; }
 
-    public string New { get; set; } = null!;
+    public int Month { get; set; }
+
+    public int? Day { get; set; }
 
     public virtual AgeGroup? AgeGroup { get; set; }
 
-    public virtual Athlete Athlete { get; set; } = null!;
+    public virtual ICollection<Champion> Champions { get; set; } = new List<Champion>();
 
     public virtual Federation Federation { get; set; } = null!;
+
+    public virtual TournamentLevel Level { get; set; } = null!;
 }

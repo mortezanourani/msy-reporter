@@ -7,11 +7,11 @@ public partial class FacilityType
 {
     public int Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string Type { get; set; } = null!;
 
-    public string? NormalizedName { get; set; }
+    public string? NormalizedType { get; set; }
 
-    public string PersianName { get; set; } = null!;
+    public string PersianTitle { get; set; } = null!;
 
     public virtual ICollection<AthleticFacility> AthleticFacilities { get; set; } = new List<AthleticFacility>();
 

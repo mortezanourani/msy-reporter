@@ -174,7 +174,7 @@
 
 	private AppDbContext context = default!;
 
-	private IQueryable<Federation>? federations;
+	private IQueryable<CityFederation>? federations;
 
 	private int activesCount;
     private int hasIdFederationsCount;
@@ -197,7 +197,7 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		federations = context.Federations
+		federations = context.CityFederations
 			.Include(federation => federation.FederationPresidents)
 			.Where(federation => federation.City == null);
 
@@ -236,7 +236,7 @@
 
     private async void UpdateChart()
     {
-        var citiesFederations = context.Federations!
+        var citiesFederations = context.CityFederations!
             .Include(federation => federation.FederationPresidents)
             .Where(federation => federation.City != null)
             .OrderBy(federation => federation.City);

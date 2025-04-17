@@ -9,7 +9,7 @@ public partial class Insurance
 
     public int CityId { get; set; }
 
-    public Guid FederationId { get; set; }
+    public int FederationId { get; set; }
 
     public int GenderId { get; set; }
 

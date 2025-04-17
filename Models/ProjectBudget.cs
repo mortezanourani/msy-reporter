@@ -9,13 +9,13 @@ public partial class ProjectBudget
 
     public int Year { get; set; }
 
+    public string? FundingSource { get; set; }
+
     public int ApprovedBudgets { get; set; }
 
     public int? ContractorUnpaid { get; set; }
 
     public int? CompletionBudget { get; set; }
-
-    public string? FundingSource { get; set; }
 
     public virtual ConstructionProject Project { get; set; } = null!;
 }

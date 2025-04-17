@@ -7,19 +7,17 @@ public partial class Champion
 {
     public Guid Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    public Guid AthleteId { get; set; }
 
-    public string? SeenCode { get; set; }
+    public Guid TournamentId { get; set; }
 
-    public string? Phone { get; set; }
+    public string? Field { get; set; }
 
-    public int GenderId { get; set; }
+    public int? MedalId { get; set; }
 
-    public int? CityId { get; set; }
+    public virtual Athlete Athlete { get; set; } = null!;
 
-    public virtual City? City { get; set; }
+    public virtual Medal? Medal { get; set; }
 
-    public virtual Gender Gender { get; set; } = null!;
-
-    public virtual ICollection<Championship> Championships { get; set; } = new List<Championship>();
+    public virtual Tournament Tournament { get; set; } = null!;
 }

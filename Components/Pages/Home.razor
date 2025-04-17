@@ -35,15 +35,15 @@
 		refereesCount = context.SportsCourses
 			.Include(sc => sc.Participants).Count();
 
-		provinceFederationsCount = context.Federations
+		provinceFederationsCount = context.CityFederations
 			.Include(f => f.FederationPresidents)
-			.Where(f => f.City == null)
+			.Where(f => f.City.Id == 0)
 			.Where(f => f.FederationPresidents != null)
 			.Count();
 
-		provinceFederationsCount = context.Federations
+		citiesFederationsCount = context.CityFederations
 			.Include(f => f.FederationPresidents)
-			.Where(f => f.City != null)
+			.Where(f => f.City.Id != 0)
 			.Where(f => f.FederationPresidents != null)
 			.Count();
 	}

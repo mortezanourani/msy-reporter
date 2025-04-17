@@ -15,5 +15,5 @@ public partial class Medal
 
     public string PersianTitle { get; set; } = null!;
 
-    public virtual ICollection<Championship> Championships { get; set; } = new List<Championship>();
+    public virtual ICollection<Champion> Champions { get; set; } = new List<Champion>();
 }

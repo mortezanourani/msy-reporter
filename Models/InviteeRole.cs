@@ -11,7 +11,7 @@ public partial class InviteeRole
 
     public string? NormalizedRole { get; set; }
 
-    public string PersianTitle { get; set; } = null!;
+    public string PersianRole { get; set; } = null!;
 
-    public virtual ICollection<NationalTeamInvitee> NationalTeamInvitees { get; set; } = new List<NationalTeamInvitee>();
+    public virtual ICollection<CampInvitee> CampInvitees { get; set; } = new List<CampInvitee>();
 }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class LegalTitle
+public partial class TournamentLevel
 {
     public int Id { get; set; }
+
+    public bool IsInternational { get; set; }
 
     public string Title { get; set; } = null!;
 
@@ -13,5 +15,5 @@ public partial class LegalTitle
 
     public string PersianTitle { get; set; } = null!;
 
-    public virtual ICollection<M5license> M5licenses { get; set; } = new List<M5license>();
+    public virtual ICollection<Tournament> Tournaments { get; set; } = new List<Tournament>();
 }

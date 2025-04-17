@@ -25,13 +25,13 @@
 			@if (federations.Any())
 			{
 				<QuickGrid Items="federations" Theme="" Class="federations-table">
-					<PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.PersianName)" />
+					<PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
 					<PropertyColumn Sortable="true" Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
 					<PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
 					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.FederationPresidents.FirstOrDefault().Name)" />
 					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.FederationPresidents.FirstOrDefault().IsPresident ? "رئیس" : "سرپرست")" />
 					<TemplateColumn>
-						<a class="info-link" href="/Project/@context.Id">
+						<a class="info-link" href="/Federation?Federation=@context.FederationId&City=@context.CityId">
 							<span class="material-symbols-rounded">info</span>
 						</a>
 					</TemplateColumn>
@@ -49,7 +49,7 @@
 	private City? city;
 	private List<City> cities = new List<City>();
 
-	private IQueryable<Federation> federations;
+	private IQueryable<CityFederation> federations;
 
 	private int activesCount;
 	private int presidentsCount;
@@ -66,32 +66,24 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		cities.Add(new City
-			{
-				Id = 0,
-				Name = "Guilan",
-				NormalizedName = "GUILAN",
-				PersianName = "استان"
-			});
+		cities = context.Cities.ToList();
 
-		cities.AddRange(context.Cities.ToList());
-
-		federations = context.Federations;
+		federations = context.CityFederations;
 
 		activesCount = federations!
 			.Include(federation => federation.FederationPresidents)
-			.Where(federation => federation.City == null)
+			.Where(federation => federation.City.Id == 0)
 			.Count(federation => federation.FederationPresidents.Count() > 0);
 
 		presidentsCount = federations!
 			.Include(federation => federation.FederationPresidents)
-			.Where(federation => federation.City == null)
+			.Where(federation => federation.City.Id == 0)
 			.Count(federation => federation.FederationPresidents
 				.Any(president => president.IsPresident));
 
 		interimPresidentsCount = federations!
 			.Include(federation => federation.FederationPresidents)
-			.Where(federation => federation.City == null)
+			.Where(federation => federation.City.Id == 0)
 			.Count(federation => federation.FederationPresidents
 				.Any(president => !president.IsPresident));
 
@@ -117,20 +109,10 @@
 	{
 		city = cities.FirstOrDefault(city => city.Id == cityId);
 
-		if (cityId != 0)
-		{
-			federations = context.Federations
-				.Include(federation => federation.City)
-				.Include(federation => federation.FederationPresidents)
-				.Where(federation => federation.City!.Id == cityId);
-		}
-		else
-		{
-			federations = context.Federations
-				.Include(federation => federation.City)
-				.Include(federation => federation.FederationPresidents)
-				.Where(federation => federation.City == null);
-		}
+		federations = context.CityFederations
+			.Include(federation => federation.City)
+			.Include(federation => federation.FederationPresidents)
+			.Where(federation => federation.City!.Id == cityId);
 	}
 
 	public async ValueTask DisposeAsync() => await context.DisposeAsync();

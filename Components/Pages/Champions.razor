@@ -90,8 +90,14 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		var champions = context.Champions
-			.Include(champion => champion.Gender);
+		// var champions = context.Champions
+		// 	.Include(champion => champion.Gender);
+
+		var champions = context.Athletes
+			.Include(athlete => athlete.Gender)
+			.Include(athlete => athlete.Champions)
+			.Where(athlete => athlete.Champions
+				.Any(champion => champion.Medal != null));
 
 		championsCount = champions.Count();
 
@@ -101,29 +107,52 @@
 		womenChampionsCount = champions
 			.Count(champion => champion.Gender.Id == 2);
 
-		var medals = context.Medals;
+		// var medals = context.Medals;
 
-		medalsCount = medals.Count();
+		// medalsCount = medals.Count();
 
-		menMedalsCount = context.Championships
-			.Where(championship => championship.Champions
-				.Any(champion => champion.Gender.Id == 1))
-			.Count(championship => championship.Medal != null);
+		medalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Count(champion => champion.Medal != null);
 
-		womenMedalsCount = medals
-			.Count(medal => medal.Color == "Gold");
+		// menMedalsCount = context.Championships
+		// 	.Where(championship => championship.Champions
+		// 		.Any(champion => champion.Gender.Id == 1))
+		// 	.Count(championship => championship.Medal != null);
 
-		goldMedalsCount = champions
-			.Count(champion => champion.Championships
-				.Any(championship => championship.Medal.Color == "Gold"));
+		menMedalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Where(champion => champion.Athlete.GenderId == 1)
+			.Count(champion => champion.Medal != null);
 
-		silverMedalsCount = champions
-			.Count(champion => champion.Championships
-				.Any(championship => championship.Medal.Color == "Silver"));
+		// womenMedalsCount = medals
+		// 	.Count(medal => medal.Color == "Gold");
 
-		bronzeMedalsCount = champions
-			.Count(champion => champion.Championships
-				.Any(championship => championship.Medal.Color == "Bronze"));
+		womenMedalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Where(champion => champion.Athlete.GenderId == 2)
+			.Count(champion => champion.Medal != null);
+
+		// goldMedalsCount = champions
+		// 	.Count(champion => champion.Championships
+		// 		.Any(championship => championship.Medal.Color == "Gold"));
+
+		goldMedalsCount = context.Champions
+			.Count(champion => champion.Medal!.Color == "Gold");
+
+		// silverMedalsCount = champions
+		// 	.Count(champion => champion.Championships
+		// 		.Any(championship => championship.Medal.Color == "Silver"));
+
+		goldMedalsCount = context.Champions
+			.Count(champion => champion.Medal!.Color == "Silver");
+
+		// bronzeMedalsCount = champions
+		// 	.Count(champion => champion.Championships
+		// 		.Any(championship => championship.Medal.Color == "Bronze"));
+
+		goldMedalsCount = context.Champions
+			.Count(champion => champion.Medal!.Color == "Bronze");
 	}
 
 	public async ValueTask DisposeAsync() => await context.DisposeAsync();

@@ -11,7 +11,7 @@
                 <PropertyColumn Sortable="true" Title="شهرستان" Property="@(project => project.City.PersianName)" />
                 <PropertyColumn Sortable="true" Title="موقعیت" Property="@(project => project.IsRural == true ? "روستایی" : "شهری")" />
                 <PropertyColumn Sortable="true" Title="نوع فعالیت" Property="@(project => project.IsRenovation ? "تعمیر و تجهیز" : "احداث")" />
-                <PropertyColumn Sortable="true" Title="نوع پروژه" Property="@(project => project.Type.PersianName)" />
+                <PropertyColumn Sortable="true" Title="نوع پروژه" Property="@(project => project.Type.PersianTitle)" />
                 <PropertyColumn Sortable="true" Title="سال آغاز" Property="@(project => project.StartYear)" />
                 <PropertyColumn Title="پیشرفت فیزیکی" Property="@(project => string.Format("%{0}", project.ProjectCompletionProgresses!.Max(progress => progress.Percentage)))" />
                 <TemplateColumn>
