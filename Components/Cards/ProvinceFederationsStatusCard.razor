@@ -199,11 +199,11 @@
 
 		federations = context.CityFederations
 			.Include(federation => federation.FederationPresidents)
-			.Where(federation => federation.City == null);
+			.Where(federation => federation.City.Id == 0);
 
 
 		activesCount = federations!
-			.Count(federation => federation.FederationPresidents.Count() > 0);
+			.Count(federation => federation.FederationPresidents.Any());
 
 		hasIdFederationsCount = federations!
 			.Count(federation => !string.IsNullOrEmpty(federation.NationalId));
@@ -238,7 +238,7 @@
     {
         var citiesFederations = context.CityFederations!
             .Include(federation => federation.FederationPresidents)
-            .Where(federation => federation.City != null)
+            .Where(federation => federation.City.Id == 0)
             .OrderBy(federation => federation.City);
 
         cities = citiesFederations!

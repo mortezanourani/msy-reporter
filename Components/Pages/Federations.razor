@@ -22,11 +22,11 @@
 	</div>
 	<div class="card-body">
 		<div class="federations-list">
-			@if (federations.Any())
+			@if (federations is not null)
 			{
 				<QuickGrid Items="federations" Theme="" Class="federations-table">
 					<PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
-					<PropertyColumn Sortable="true" Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
+					<PropertyColumn Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
 					<PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
 					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.FederationPresidents.FirstOrDefault().Name)" />
 					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.FederationPresidents.FirstOrDefault().IsPresident ? "رئیس" : "سرپرست")" />
@@ -68,40 +68,6 @@
 
 		cities = context.Cities.ToList();
 
-		federations = context.CityFederations;
-
-		activesCount = federations!
-			.Include(federation => federation.FederationPresidents)
-			.Where(federation => federation.City.Id == 0)
-			.Count(federation => federation.FederationPresidents.Count() > 0);
-
-		presidentsCount = federations!
-			.Include(federation => federation.FederationPresidents)
-			.Where(federation => federation.City.Id == 0)
-			.Count(federation => federation.FederationPresidents
-				.Any(president => president.IsPresident));
-
-		interimPresidentsCount = federations!
-			.Include(federation => federation.FederationPresidents)
-			.Where(federation => federation.City.Id == 0)
-			.Count(federation => federation.FederationPresidents
-				.Any(president => !president.IsPresident));
-
-		federationMeetings = context.FederationMeetings
-			.Include(meeting => meeting.Type)
-			.Where(meeting => meeting.Year == 1403);
-
-		meetingsCount = federationMeetings.Count();
-
-		generalMeetingsCount = federationMeetings
-			.Count(meeting => meeting.Type.Type == "General");
-
-		electiveMeetingsCount = federationMeetings
-			.Count(meeting => meeting.Type.Type == "Elective");
-
-		extraOrdinaryMeetingsCount = federationMeetings
-			.Count(meeting => meeting.Type.Type == "ExtraOrdinary");
-
 		SelectCity();
 	}
 
@@ -111,6 +77,7 @@
 
 		federations = context.CityFederations
 			.Include(federation => federation.City)
+			.Include(federation => federation.Federation)
 			.Include(federation => federation.FederationPresidents)
 			.Where(federation => federation.City!.Id == cityId);
 	}

@@ -51,6 +51,8 @@
 
         .city-federations-card .federations-list ::deep.federations-table thead tr th .col-title {
             justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .city-federations-card .federations-list ::deep.federations-table thead tr th:first-child .col-title {
