@@ -9,7 +9,7 @@ public partial class Tournament
 
     public int FederationId { get; set; }
 
-    public string Sport { get; set; } = null!;
+    public string? Sport { get; set; }
 
     public int? AgeGroupId { get; set; }
 
@@ -19,7 +19,7 @@ public partial class Tournament
 
     public int Year { get; set; }
 
-    public int Month { get; set; }
+    public int? Month { get; set; }
 
     public int? Day { get; set; }
 

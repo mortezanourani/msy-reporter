@@ -15,6 +15,8 @@ public partial class Champion
 
     public int? MedalId { get; set; }
 
+    public int? MedalsCount { get; set; }
+
     public virtual Athlete Athlete { get; set; } = null!;
 
     public virtual Medal? Medal { get; set; }
