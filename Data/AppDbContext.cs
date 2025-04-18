@@ -203,19 +203,19 @@ public partial class AppDbContext : DbContext
         {
             entity.HasKey(e => new { e.FederationId, e.CityId });
 
-            entity.HasIndex(e => e.NationalId, "IX_Federations_NationalId").IsUnique();
+            entity.HasIndex(e => e.NationalId, "IX_CityFederations_NationalId")
+                .IsUnique()
+                .HasFilter("([NationalId] IS NOT NULL)");
 
             entity.Property(e => e.NationalId).HasMaxLength(16);
 
             entity.HasOne(d => d.City).WithMany(p => p.CityFederations)
                 .HasForeignKey(d => d.CityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Federations_Cities_CityId");
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Federation).WithMany(p => p.CityFederations)
                 .HasForeignKey(d => d.FederationId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Federations_Federations_FederationId");
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<ConstructionProject>(entity =>
@@ -351,7 +351,9 @@ public partial class AppDbContext : DbContext
         {
             entity.ToTable("M5Licenses");
 
-            entity.HasIndex(e => e.Serial, "IX_M5Licenses_Serial").IsUnique();
+            entity.HasIndex(e => e.Serial, "IX_M5Licenses_Serial")
+                .IsUnique()
+                .HasFilter("([Serial] IS NOT NULL)");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Serial).HasMaxLength(256);
@@ -367,7 +369,9 @@ public partial class AppDbContext : DbContext
         {
             entity.ToTable("M88Contracts");
 
-            entity.HasIndex(e => e.Serial, "IX_M88Contracts_Serial").IsUnique();
+            entity.HasIndex(e => e.Serial, "IX_M88Contracts_Serial")
+                .IsUnique()
+                .HasFilter("([Serial] IS NOT NULL)");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.M5licenseId).HasColumnName("M5LicenseId");
@@ -524,7 +528,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<SportsCourseParticipant>(entity =>
         {
-            entity.HasIndex(e => e.SeenCode, "IX_SportsCourseParticipants_SeenCode").IsUnique();
+            entity.HasIndex(e => e.SeenCode, "IX_SportsCourseParticipants_SeenCode")
+                .IsUnique()
+                .HasFilter("([SeenCode] IS NOT NULL)");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.SeenCode).HasMaxLength(10);

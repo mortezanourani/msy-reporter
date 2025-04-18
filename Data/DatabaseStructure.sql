@@ -118,7 +118,7 @@ if not exists (
 		where name = 'FederationPresidents' and type = 'U'
 )
 begin
-	create table [CityFederationPresidents] (
+	create table [FederationPresidents] (
 		[Id] uniqueidentifier default newid() not null,
 		[FederationId] int not null,
 		[CityId] int not null,
@@ -132,8 +132,8 @@ begin
 		[AppointmentDate] nvarchar(max) null,
 		[TermEnd] nvarchar(max) null,
 		[IsPresident] bit not null,
-		constraint [PK_CityFederationPresidents] primary key ([Id]),
-		constraint [FK_CityFederationPresidents_CityFederations_CityFederationId] foreign key ([FederationId], [CityId]) references [CityFederations]([FederationId], [CityId]) 
+		constraint [PK_FederationPresidents] primary key ([Id]),
+		constraint [FK_FederationPresidents_CityFederations_CityFederationId] foreign key ([FederationId], [CityId]) references [CityFederations]([FederationId], [CityId]) 
 	);
 end;
 
