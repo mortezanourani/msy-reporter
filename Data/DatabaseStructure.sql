@@ -104,10 +104,13 @@ begin
 		[ZipCode] nvarchar(max) null,
 		[Phone] nvarchar(max) null,
 		constraint [PK_CityFederations] primary key ([FederationId], [CityId]),
-		constraint [IX_Federations_NationalId] unique ([NationalId]),
-		constraint [FK_Federations_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
-		constraint [FK_Federations_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
+		constraint [FK_CityFederations_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+		constraint [FK_CityFederations_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
 	 );
+
+	 create unique index [IX_CityFederations_NationalId] 
+		on [CityFederations]([NationalId]) 
+			where [NationalId] is not null;
 end;
 
 if not exists (
@@ -115,12 +118,12 @@ if not exists (
 		where name = 'FederationPresidents' and type = 'U'
 )
 begin
-	create table [FederationPresidents] (
+	create table [CityFederationPresidents] (
 		[Id] uniqueidentifier default newid() not null,
 		[FederationId] int not null,
 		[CityId] int not null,
 		[Name] nvarchar(max) not null,
-		[SeedCode] nvarchar(max) not null,
+		[SeenCode] nvarchar(max) not null,
 		[BirthDate] nvarchar(max) not null,
 		[Phone] nvarchar(max) null,
 		[EducationalQualification] nvarchar(max) null,
@@ -129,8 +132,8 @@ begin
 		[AppointmentDate] nvarchar(max) null,
 		[TermEnd] nvarchar(max) null,
 		[IsPresident] bit not null,
-		constraint [PK_FederationPresidents] primary key ([Id]),
-		constraint [FK_FederationPresidents_CityFederations_CityFederationId] foreign key ([FederationId], [CityId]) references [CityFederations]([FederationId], [CityId]) 
+		constraint [PK_CityFederationPresidents] primary key ([Id]),
+		constraint [FK_CityFederationPresidents_CityFederations_CityFederationId] foreign key ([FederationId], [CityId]) references [CityFederations]([FederationId], [CityId]) 
 	);
 end;
 
@@ -319,9 +322,12 @@ begin
 		[Phone] nvarchar(max) null,
 		constraint [PK_M5Licenses] primary key ([Id]),
 		constraint [FK_M5Licenses_AthleticFacilities_FacilityId] foreign key ([FacilityId]) references [AthleticFacilities]([Id]),
-		constraint [FK_M5Licenses_LegalTitles_LegalTitleId] foreign key ([LegalTitleId]) references [LegalTitles]([Id]),
-		constraint [IX_M5Licenses_Serial] unique ([Serial])
+		constraint [FK_M5Licenses_LegalTitles_LegalTitleId] foreign key ([LegalTitleId]) references [LegalTitles]([Id])
 	);
+
+	create unique index [IX_M5Licenses_Serial] 
+		on [M5Licenses]([Serial])
+			where [Serial] is not null;
 end;
 
 if not exists (
@@ -341,9 +347,12 @@ begin
 		[M5LicenseId] uniqueidentifier null,
 		constraint [PK_M88Contracts] primary key ([Id]),
 		constraint [FK_M88Contracts_AthleticFacilities_FacilityId] foreign key ([FacilityId]) references [AthleticFacilities]([Id]),
-		constraint [FK_M88Contracts_M5Licenses_M5LicenseId] foreign key ([M5LicenseId]) references [M5Licenses]([Id]),
-		constraint [IX_M88Contracts_Serial] unique ([Serial])
+		constraint [FK_M88Contracts_M5Licenses_M5LicenseId] foreign key ([M5LicenseId]) references [M5Licenses]([Id])
 	);
+
+	create unique index [IX_M88Contracts_Serial]
+		on [M88Contracts]([Serial])
+			where [Serial] is not null;
 end;
 
 -- Registered Athletes Tables
@@ -426,9 +435,12 @@ begin
 		[Phone] nvarchar(max) null,
 		[GenderId] int not null,
 		constraint [PK_SportsCourseParticipants] primary key ([Id]),
-		constraint [IX_SportsCourseParticipants_SeenCode] unique ([SeenCode]),
 		constraint [FK_SportsCourseParticipants_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
 	);
+
+	create unique index [IX_SportsCourseParticipants_SeenCode]
+		on [SportsCourseParticipants]([SeenCode])
+			where [SeenCode] is not null;
 end;
 
 if not exists (
