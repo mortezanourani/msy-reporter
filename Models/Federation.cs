@@ -13,6 +13,8 @@ public partial class Federation
 
     public string PersianName { get; set; } = null!;
 
+    public bool IsPara { get; set; }
+
     public virtual ICollection<CityFederation> CityFederations { get; set; } = new List<CityFederation>();
 
     public virtual ICollection<FederationMeeting> FederationMeetings { get; set; } = new List<FederationMeeting>();
