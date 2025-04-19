@@ -1,4 +1,17 @@
 ﻿go
+if db_id('ReporterAuth') is null
+begin
+	create database [ReporterAuth]
+		collate Persian_100_CI_AI;
+	print 'Reporter Authentication database created succesfully.';
+end
+else
+begin
+	print 'Reporter Authentication database already exists.';
+end;
+go
+
+go
 if db_id('Reporter') is null
 begin
 	create database [Reporter]
