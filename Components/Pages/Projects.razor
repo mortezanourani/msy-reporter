@@ -47,15 +47,7 @@
     {
         context = DbFactory.CreateDbContext();
 
-        cities.Add(new City
-        {
-            Id = 0,
-            Name = "Guilan",
-            NormalizedName = "GUILAN",
-            PersianName = "استان"
-        });
-
-        cities.AddRange(context.Cities.ToList());
+        cities = context.Cities.ToList();
 
         SelectCity();
     }
@@ -63,7 +55,6 @@
     private void SelectCity()
     {
         city = cities.FirstOrDefault(m => m.Id == cityId);
-        // cityName = city!.PersianName;
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
