@@ -177,6 +177,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Field).HasMaxLength(256);
 
+            entity.HasOne(d => d.AgeGroup).WithMany(p => p.Champions)
+                .HasForeignKey(d => d.AgeGroupId)
+                .HasConstraintName("FK_Tournaments_AgeGroups_AgeGroupId");
+
             entity.HasOne(d => d.Athlete).WithMany(p => p.Champions)
                 .HasForeignKey(d => d.AthleteId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
@@ -543,10 +547,6 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Tournament>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-
-            entity.HasOne(d => d.AgeGroup).WithMany(p => p.Tournaments)
-                .HasForeignKey(d => d.AgeGroupId)
-                .HasConstraintName("FK_Tournaments_AgeGroups_AgeGroupsId");
 
             entity.HasOne(d => d.Federation).WithMany(p => p.Tournaments)
                 .HasForeignKey(d => d.FederationId)

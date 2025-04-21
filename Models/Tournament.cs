@@ -11,8 +11,6 @@ public partial class Tournament
 
     public string? Sport { get; set; }
 
-    public int? AgeGroupId { get; set; }
-
     public int LevelId { get; set; }
 
     public string Host { get; set; } = null!;
@@ -22,8 +20,6 @@ public partial class Tournament
     public int? Month { get; set; }
 
     public int? Day { get; set; }
-
-    public virtual AgeGroup? AgeGroup { get; set; }
 
     public virtual ICollection<Champion> Champions { get; set; } = new List<Champion>();
 

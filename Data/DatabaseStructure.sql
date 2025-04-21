@@ -617,21 +617,15 @@ begin
 		values
 		(0, 'Province', 'استانی'),
 		(0, 'National', 'ملی'),
-		--(0, 'Para National', 'پارا ملی'),
 		(0, 'National Olympiad', 'المپیاد استعدادهای برتر-کشوری'),
 		(1, 'International Olympiad', 'المپیاد استعدادهای برتر-فراملی'),
 		(1, 'International', 'بین‌ المللی'),
-		--(1, 'Para International', 'پارا بین‌ المللی'),
 		(1, 'Asian', 'آسیایی'),
-		--(1, 'Para Asian', 'پارا آسیایی'),
 		(1, 'Eurasian', 'اوراسیا'),
 		(1, 'World', 'جهانی'),
-		--(1, 'Para World', 'پارا جهانی'),
 		(1, 'Asian Games', 'بازی های آسیایی'),
-		--(1, 'Asian Para Games', 'پارا بازی های آسیایی'),
 		(1, 'Islamic Solidarity', 'کشورهای اسلامی'),
 		(1, 'Olympic', 'المپیک'),
-		--(1, 'Paralympic', 'پارا المپیک'),
 		(1, 'Winter Olympic', 'المپیک زمستانی'),
 		(1, 'Summer Olympic', 'المپیک تابستانی'),
 		(1, 'Universiade', 'المپیک دانشجویان'),
@@ -647,7 +641,6 @@ begin
 		[Id] uniqueidentifier default newid() not null,
 		[FederationId] int not null,
 		[Sport] nvarchar(max) null,
-		[AgeGroupId] int null,
 		[LevelId] int not null,
 		[Host] nvarchar(max) not null,
 		[Year] int not null,
@@ -655,7 +648,6 @@ begin
 		[Day] int null,
 		constraint [PK_Tournaments] primary key ([Id]),
 		constraint [FK_Tournaments_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
-		constraint [FK_Tournaments_AgeGroups_AgeGroupsId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
 		constraint [FK_Tournaments_TournamentLevels_LevelId] foreign key ([LevelId]) references [TournamentLevels]([Id])
 	);
 end;
@@ -696,12 +688,14 @@ begin
 		[AthleteId] uniqueidentifier not null,
 		[TournamentId] uniqueidentifier not null,
 		[Field] nvarchar(256) null,
+		[AgeGroupId] int null,
 		[MedalId] int null,
 		[MedalsCount] int null,
 		constraint [PK_Champions] primary key ([Id]),
 		constraint [IX_Champions] unique ([AthleteId], [TournamentId], [Field], [MedalId]),
 		constraint [FK_Champions_Athletes_AthleteId] foreign key ([AthleteId]) references [Athletes]([Id]),
 		constraint [FK_Champions_Tournaments_TournamentId] foreign key ([TournamentId]) references [Tournaments]([Id]),
+		constraint [FK_Tournaments_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id]),
 		constraint [FK_Champions_Medals_MedalId] foreign key ([MedalId]) references [Medals]([Id])
 	);
 end;

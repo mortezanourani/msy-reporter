@@ -13,9 +13,13 @@ public partial class Champion
 
     public string? Field { get; set; }
 
+    public int? AgeGroupId { get; set; }
+
     public int? MedalId { get; set; }
 
     public int? MedalsCount { get; set; }
+
+    public virtual AgeGroup? AgeGroup { get; set; }
 
     public virtual Athlete Athlete { get; set; } = null!;
 

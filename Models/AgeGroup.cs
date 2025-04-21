@@ -13,9 +13,9 @@ public partial class AgeGroup
 
     public string PersianName { get; set; } = null!;
 
+    public virtual ICollection<Champion> Champions { get; set; } = new List<Champion>();
+
     public virtual ICollection<NationalTeamCamp> NationalTeamCamps { get; set; } = new List<NationalTeamCamp>();
 
     public virtual ICollection<Record> Records { get; set; } = new List<Record>();
-
-    public virtual ICollection<Tournament> Tournaments { get; set; } = new List<Tournament>();
 }
