@@ -31,8 +31,9 @@
 		<div class="card cornered2">
 			<div class="card-body">
 				<div>
-					<h6 class="title">مدال های استان</h6>
-					<h2>@championsCount</h2>
+					<h6 class="title m-0">مدال های استان</h6>
+					<p class="small mb-2">آقایان / بانوان</p>
+					<h2>@medalsCount</h2>
 				</div>
 				<div>
 					<div class="d-flex justify-content-between">
@@ -41,7 +42,7 @@
 					</div>
 					<div class="d-flex justify-content-between">
 						<p>بانوان:</p>
-						<b>@womenChampionsCount</b>
+						<b>@womenMedalsCount</b>
 					</div>
 				</div>
 			</div>
@@ -51,8 +52,9 @@
 		<div class="card cornered3">
 			<div class="card-body">
 				<div>
-					<h6 class="title">مدال های استان</h6>
-					<h2>@championsCount</h2>
+					<h6 class="title m-0">مدال های استان</h6>
+					<p class="small mb-2">رنگ مدال</p>
+					<h2>@medalsCount</h2>
 				</div>
 				<div>
 					<div class="d-flex justify-content-between">
@@ -144,14 +146,14 @@
 		// 	.Count(champion => champion.Championships
 		// 		.Any(championship => championship.Medal.Color == "Silver"));
 
-		goldMedalsCount = context.Champions
+		silverMedalsCount = context.Champions
 			.Count(champion => champion.Medal!.Color == "Silver");
 
 		// bronzeMedalsCount = champions
 		// 	.Count(champion => champion.Championships
 		// 		.Any(championship => championship.Medal.Color == "Bronze"));
 
-		goldMedalsCount = context.Champions
+		bronzeMedalsCount = context.Champions
 			.Count(champion => champion.Medal!.Color == "Bronze");
 	}
 
