@@ -6,20 +6,23 @@
     </div>
     <div class="card-body">
         <div class="projects-list">
-            <QuickGrid Items="projects" Theme="" Class="projects-table">
-                <PropertyColumn Sortable="true" Title="عنوان پروژه" Property="@(project => project.Title)" />
-                <PropertyColumn Sortable="true" Title="شهرستان" Property="@(project => project.City.PersianName)" />
-                <PropertyColumn Sortable="true" Title="موقعیت" Property="@(project => project.IsRural == true ? "روستایی" : "شهری")" />
-                <PropertyColumn Sortable="true" Title="نوع فعالیت" Property="@(project => project.IsRenovation ? "تعمیر و تجهیز" : "احداث")" />
-                <PropertyColumn Sortable="true" Title="نوع پروژه" Property="@(project => project.Type.PersianTitle)" />
-                <PropertyColumn Sortable="true" Title="سال آغاز" Property="@(project => project.StartYear)" />
-                <PropertyColumn Title="پیشرفت فیزیکی" Property="@(project => string.Format("%{0}", project.ProjectCompletionProgresses!.Max(progress => progress.Percentage)))" />
-                <TemplateColumn>
-                    <a class="info-link" href="/Project/@context.Id">
-                        <span class="material-symbols-rounded">info</span>
-                    </a>
-                </TemplateColumn>
-            </QuickGrid>
+            @if(projects is not null)
+            {
+                <QuickGrid Items="projects" Theme="" Class="projects-table">
+                    <PropertyColumn Sortable="true" Title="عنوان پروژه" Property="@(project => project.Title)" />
+                    <PropertyColumn Sortable="true" Title="شهرستان" Property="@(project => project.City.PersianName)" />
+                    <PropertyColumn Sortable="true" Title="موقعیت" Property="@(project => project.IsRural == true ? "روستایی" : "شهری")" />
+                    <PropertyColumn Sortable="true" Title="نوع فعالیت" Property="@(project => project.IsRenovation ? "تعمیر و تجهیز" : "احداث")" />
+                    <PropertyColumn Sortable="true" Title="نوع پروژه" Property="@(project => project.Type.PersianTitle)" />
+                    <PropertyColumn Sortable="true" Title="سال آغاز" Property="@(project => project.StartYear)" />
+                    <PropertyColumn Title="پیشرفت فیزیکی" Property="@(project => string.Format("%{0}", project.ProjectCompletionProgresses!.Max(progress => progress.Percentage)))" />
+                    <TemplateColumn>
+                        <a class="info-link" href="/Project/@context.Id">
+                            <span class="material-symbols-rounded">info</span>
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+            }
         </div>
     </div>
     <div class="card-footer pt-0">

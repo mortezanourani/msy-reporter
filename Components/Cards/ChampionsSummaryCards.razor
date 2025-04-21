@@ -1,0 +1,129 @@
+﻿@implements IAsyncDisposable
+
+<div class="row">
+	<div class="col1-3">
+		<div class="card cornered1">
+			<div class="card-header">
+				<h6 class="title">مدال آوران استان</h6>
+			</div>
+			<div class="card-body medals-card">
+				<div>
+					<h1 class="total">@championsCount</h1>
+				</div>
+				<div class="medal-items">
+					<div class="medal-item">
+						<span class="material-symbols-rounded">man</span>
+						<p>@menChampionsCount</p>
+					</div>
+					<div class="medal-item">
+						<span class="material-symbols-rounded">woman</span>
+						<p>@womenChampionsCount</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col2-3">
+		<div class="card cornered2">
+			<div class="card-header">
+				<h6 class="title">مدال های استان</h6>
+			</div>
+			<div class="row">
+				<div class="col1-2 mb-0">
+					<div class="card-body medals-card">
+						<div>
+							<h1 class="total">@medalsCount</h1>
+						</div>
+						<div class="medal-items">
+							<div class="medal-item">
+								<span class="material-symbols-rounded">man</span>
+								<p>@menMedalsCount</p>
+							</div>
+							<div class="medal-item">
+								<span class="material-symbols-rounded">woman</span>
+								<p>@womenMedalsCount</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col1-2 mb-0 d-flex">
+					<div class="card-body medals-card">
+						<div class="medal-items">
+							<div class="medal-item">
+								<span class="material-symbols-rounded medal-silver">trophy</span>
+								<p>@silverMedalsCount</p>
+							</div>
+							<div class="medal-item">
+								<span class="material-symbols-rounded medal-gold">trophy</span>
+								<p>@goldMedalsCount</p>
+							</div>
+							<div class="medal-item">
+								<span class="material-symbols-rounded medal-bronze">trophy</span>
+								<p>@bronzeMedalsCount</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	private AppDbContext context = default!;
+
+	private int championsCount;
+	private int menChampionsCount;
+	private int womenChampionsCount;
+
+	private int medalsCount;
+	private int menMedalsCount;
+	private int womenMedalsCount;
+	private int goldMedalsCount;
+	private int silverMedalsCount;
+	private int bronzeMedalsCount;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		var champions = context.Athletes
+			.Include(athlete => athlete.Gender)
+			.Include(athlete => athlete.Champions)
+			.Where(athlete => athlete.Champions
+				.Any(champion => champion.Medal != null));
+
+		championsCount = champions.Count();
+
+		menChampionsCount = champions
+			.Count(champion => champion.Gender.Id == 1);
+
+		womenChampionsCount = champions
+			.Count(champion => champion.Gender.Id == 2);
+
+		medalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Count(champion => champion.Medal != null);
+
+		menMedalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Where(champion => champion.Athlete.GenderId == 1)
+			.Count(champion => champion.Medal != null);
+
+		womenMedalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Where(champion => champion.Athlete.GenderId == 2)
+			.Count(champion => champion.Medal != null);
+
+		goldMedalsCount = context.Champions
+			.Count(champion => champion.Medal!.Color == "Gold");
+
+		silverMedalsCount = context.Champions
+			.Count(champion => champion.Medal!.Color == "Silver");
+
+		bronzeMedalsCount = context.Champions
+			.Count(champion => champion.Medal!.Color == "Bronze");
+	}
+
+	public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
