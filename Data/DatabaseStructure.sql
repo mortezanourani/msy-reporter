@@ -88,6 +88,28 @@ begin
 		('Female', 'خانم');
 end;
 
+if not exists (
+	select * from sys.objects
+		where name = 'FundingSources' and type = 'U'
+)
+begin
+	create table [FundingSources] (
+		[Id] int identity(1,1) not null,
+		[Title] nvarchar(16) not null,
+		[NormalizedTitle] as upper([Title]),
+		[PersianTitle] nvarchar(max) not null,
+		constraint [PK_ProjectTypes] primary key ([Id]),
+		constraint [IX_ProjectTypes] unique ([NormalizedTitle])
+	);
+
+	insert into [FundingSources]
+		([Title], [PersianTitle])
+		values
+		('National', 'ملی'),
+		('Province', 'استانی'),
+		('Organization', 'خودیاری');
+end;
+
 -- Federations Tables
 if not exists (
 	select * from sys.objects
@@ -725,51 +747,42 @@ end;
 -- Construction Projects Tables
 if not exists (
 	select * from sys.objects
+		where name = 'ProjectTypes' and type = 'U'
+)
+begin
+	create table [ProjectTypes] (
+		[Id] int identity(1,1) not null,
+		[Title] nvarchar(16) not null,
+		[NormalizedTitle] as upper([Title]),
+		[PersianTitle] nvarchar(max) not null,
+		constraint [PK_ProjectTypes] primary key ([Id]),
+		constraint [IX_ProjectTypes] unique ([NormalizedTitle])
+	);
+
+	insert into [ProjectTypes]
+		([Title], [PersianTitle])
+		values
+		('Build', 'احداث'),
+		('Completion', 'تکمیل'),
+		('Maintenance', 'تعمیر و نگهداری');
+end;
+
+if not exists (
+	select * from sys.objects
 		where name = 'ConstructionProjects' and type = 'U'
 )
 begin
 	create table [ConstructionProjects] (
 		[Id] uniqueidentifier default newid() not null,
-		[Title] nvarchar(256) not null,
 		[CityId] int not null,
-		[IsRural] bit null,
-		[IsRenovation] bit not null,
-		[TypeId] int not null,
-		[StartYear] int not null,
-		[Area] int null,
-		[SportArea] int null,
+		[FacilityId] int null,
+		[Title] nvarchar(256) not null,
+		[TypeId] int null,
+		[Year] int not null,
 		constraint [PK_ConstructionProjects] primary key ([Id]),
 		constraint [FK_ConstructionProjects_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
-		constraint [FK_ConstructionProjects_FacilityTypes_TypeId] foreign key ([TypeId]) references [FacilityTypes]([Id])
-	);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'ProjectUserGeneders' and type = 'U'
-)
-begin
-	create table [ProjectUserGeneders] (
-		[ProjectId] uniqueidentifier not null,
-		[GenderId] int not null,
-		constraint [PK_ProjectUserGenders] primary key ([ProjectId], [GenderId]),
-		constraint [FK_ProjectUserGenders_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id]),
-		constraint [FK_ProjectUserGenders_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
-	);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'ProjectCompletionProgress' and type = 'U'
-)
-begin
-	create table [ProjectCompletionProgress] (
-		[ProjectId] uniqueidentifier not null,
-		[Year] int not null,
-		[Percentage] int default 0 not null,
-		[CompletionYear] int null,
-		constraint [PK_ProjectCompletionProgress] primary key ([ProjectId], [Percentage]),
-		constraint [FK_ProjectCompletionProgress_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id])
+		constraint [FK_ConstructionProjects_AthleticFacilities_FacilityId] foreign key ([Id]) references [AthleticFacilities]([Id]),
+		constraint [FK_ConstructionProjects_ProjectTypes_TypeId] foreign key ([TypeId]) references [ProjectTypes]([Id])
 	);
 end;
 
@@ -780,12 +793,30 @@ if not exists (
 begin
 	create table [ProjectBudgets] (
 		[ProjectId] uniqueidentifier not null,
+		[Code] nvarchar(max) null,
 		[Year] int not null,
-		[FundingSource] nvarchar(max) null,
-		[ApprovedBudgets] int not null,
+		[SourceId] int not null,
+		[Approved] int not null,
+		constraint [PK_ProjectBudgets] primary key ([ProjectId], [Year], [SourceId]),
+		constraint [FK_ProjectBudgets_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id]),
+		constraint [FK_ProjectBudgets_FundingSources_SourceId] foreign key ([SourceId]) references [FundingSources]([Id])
+	);
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'ProjectProgress' and type = 'U'
+)
+begin
+	create table [ProjectProgress] (
+		[ProjectId] uniqueidentifier not null,
+		[Year] int not null,
+		[Month] int not null,
+		[Percentage] int default 0 not null,
 		[ContractorUnpaid] int default 0 null,
 		[CompletionBudget] int default 0 null,
-		constraint [PK_ProjectBudgets] primary key ([ProjectId], [Year]),
-		constraint [FK_ProjectBudgets_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id])
+		[CompletionYear] int null,
+		constraint [PK_ProjectProgress] primary key ([ProjectId], [Year], [Month]),
+		constraint [FK_ProjectProgress_ConstructionProjects_ProjectId] foreign key ([ProjectId]) references [ConstructionProjects]([Id])
 	);
 end;
