@@ -90,6 +90,51 @@ end;
 
 if not exists (
 	select * from sys.objects
+		where name = 'UsersGenders' and type = 'U'
+)
+begin
+	create table [UsersGenders] (
+		[Id] int identity(0,1) not null,
+		[Name] nvarchar(256) not null,
+		[NormalizedName] as upper([Name]),
+		[PersianName] nvarchar(256) not null,
+		constraint [PK_UsersGenders] primary key ([Id]),
+		constraint [IX_UsersGenders_Name] unique ([NormalizedName])
+	);
+
+	insert into [UsersGenders]
+		([Name], [PersianName])
+		values
+		('Mixed-gender', 'مشترک'),
+		('Male-only', 'ویژه آقایان'),
+		('Female-only', 'ویژه بانوان');
+end;
+
+if not exists (
+	select * from sys.objects
+		where name = 'FacilityTypes' and type = 'U'
+)
+begin
+	create table [FacilityTypes] (
+		[Id] int identity(1,1) not null,
+		[Type] nvarchar(256) not null,
+		[NormalizedType] as upper([Type]),
+		[PersianTitle] nvarchar(256) not null,
+		constraint [PK_FacilityTypes] primary key ([Id]),
+		constraint [IX_FacilityTypes_Type] unique ([NormalizedType])
+	);
+
+	insert into [FacilityTypes]
+		([Type], [PersianTitle])
+		values
+		('Hall', 'سرپوشیده'),
+		('Land', 'روباز'),
+		('Complex', 'مجموعه'),
+		('Centre', 'دفتر باشگاه');
+end;
+
+if not exists (
+	select * from sys.objects
 		where name = 'FundingSources' and type = 'U'
 )
 begin
@@ -122,6 +167,7 @@ begin
 		[NormalizedName] as upper([Name]),
 		[PersianName] nvarchar(256) not null,
 		[IsPara] bit default 0 not null,
+		[IsChampionship] bit default 0 not null,
 		constraint [PK_Federations] primary key ([Id]),
 		constraint [IX_Federations_Name] unique ([NormalizedName])
 	 );
@@ -129,35 +175,37 @@ end;
 
 if not exists (
 	select * from sys.objects
-		where name = 'CityFederations' and type = 'U'
+		where name = 'LocalFederations' and type = 'U'
 )
 begin
-	create table [CityFederations] (
+	create table [LocalFederations] (
+		[Id] uniqueidentifier default newid() not null,
 		[FederationId] int not null,
 		[CityId] int not null,
+		[District] nvarchar(16) null,
 		[NationalId] nvarchar(16) null,
 		[Address] nvarchar(max) null,
 		[ZipCode] nvarchar(max) null,
 		[Phone] nvarchar(max) null,
-		constraint [PK_CityFederations] primary key ([FederationId], [CityId]),
-		constraint [FK_CityFederations_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
-		constraint [FK_CityFederations_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
+		constraint [PK_LocalFederations] primary key ([Id]),
+		constraint [IX_LocalFederations_Index] unique ([FederationId], [CityId], [District]),
+		constraint [FK_LocalFederations_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+		constraint [FK_LocalFederations_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
 	 );
 
-	 create unique index [IX_CityFederations_NationalId] 
-		on [CityFederations]([NationalId]) 
+	 create unique index [IX_LocalFederations_NationalId] 
+		on [LocalFederations]([NationalId]) 
 			where [NationalId] is not null;
 end;
 
 if not exists (
 	select * from sys.objects
-		where name = 'FederationPresidents' and type = 'U'
+		where name = 'LocalFederationPresidents' and type = 'U'
 )
 begin
-	create table [FederationPresidents] (
+	create table [LocalFederationPresidents] (
 		[Id] uniqueidentifier default newid() not null,
-		[FederationId] int not null,
-		[CityId] int not null,
+		[FederationId] uniqueidentifier not null,
 		[Name] nvarchar(max) not null,
 		[SeenCode] nvarchar(max) not null,
 		[BirthDate] nvarchar(max) not null,
@@ -169,10 +217,11 @@ begin
 		[TermEnd] nvarchar(max) null,
 		[IsPresident] bit not null,
 		constraint [PK_FederationPresidents] primary key ([Id]),
-		constraint [FK_FederationPresidents_CityFederations_CityFederationId] foreign key ([FederationId], [CityId]) references [CityFederations]([FederationId], [CityId]) 
+		constraint [FK_FederationPresidents_LocalFederations_FederationId] foreign key ([FederationId]) references [LocalFederations]([Id]) 
 	);
 end;
 
+/* 
 if not exists (
 	select * from sys.objects
 		where name = 'MeetingTypes' and type = 'U'
@@ -229,168 +278,10 @@ begin
 		constraint [FK_MeetingVotes_FederationMeetings_MeetingId] foreign key ([MeetingId]) references [FederationMeetings]([Id])
 	);
 end;
+*/
 
 -- Facilities Tables
-if not exists (
-	select * from sys.objects
-		where name = 'Ownerships' and type = 'U'
-)
-begin
-	create table [Ownerships] (
-		[Id] int identity(1,1) not null,
-		[IsGovernmentOwned] bit not null,
-		[Type] nvarchar(256) not null,
-		[NormalizedType] as upper([Type]),
-		[PersianTitle] nvarchar(256) not null,
-		constraint [PK_Ownerships] primary key ([Id]),
-		constraint [IX_Ownerships_Type] unique ([IsGovernmentOwned], [NormalizedType])
-	);
-
-	insert into [Ownerships]
-		([IsGovernmentOwned], [Type], [PersianTitle])
-		values
-		(1, 'MSYOwned', 'دولتی - وزارت ورزش و جوانان'),
-		(1, 'GovernmentOther', 'دولتی - سایر ارگان ها'),
-		(0, 'PrivateIndividual', 'باشگاه خصوصی - حقیقی'),
-		(0, 'PrivateCorporate', 'باشگاه خصوصی - حقوقی');
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'FacilityTypes' and type = 'U'
-)
-begin
-	create table [FacilityTypes] (
-		[Id] int identity(1,1) not null,
-		[Type] nvarchar(256) not null,
-		[NormalizedType] as upper([Type]),
-		[PersianTitle] nvarchar(256) not null,
-		constraint [PK_FacilityTypes] primary key ([Id]),
-		constraint [IX_FacilityTypes_Type] unique ([NormalizedType])
-	);
-
-	insert into [FacilityTypes]
-		([Type], [PersianTitle])
-		values
-		('Hall', 'سرپوشیده'),
-		('Land', 'روباز'),
-		('Complex', 'مجموعه'),
-		('Centre', 'دفتر باشگاه');
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'AthleticFacilities' and type = 'U'
-)
-begin
-	create table [AthleticFacilities] (
-		[Id] uniqueidentifier default newid() not null,
-		[Name] nvarchar(max) not null,
-		[OwnershipId] int not null,
-		[TypeId] int null,
-		[IsRural] bit null,
-		[CityId] int not null,
-		[District] nvarchar(max) null,
-		[Area] int null,
-		[IsActive] bit default 1 not null,
-		[Sports] nvarchar(max) null,
-		[ZipCode] nvarchar(max) null,
-		[Address] nvarchar(max) null,
-		[Phone] nvarchar(max) null,
-		constraint [PK_AthleticFacilities] primary key ([Id]),
-		constraint [FK_AthleticFacilities_Ownerships_OwnershipId] foreign key ([OwnershipId]) references [Ownerships]([Id]),
-		constraint [FK_AthleticFacilities_FacilityTypes_TypeId] foreign key ([TypeId]) references [FacilityTypes]([Id]),
-		constraint [FK_AthleticFacilities_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
-	);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'FacilityUserGeneders' and type = 'U'
-)
-begin
-	create table [FacilityUserGeneders] (
-		[FacilityId] uniqueidentifier not null,
-		[GenderId] int not null,
-		constraint [PK_FacilityUserGenders] primary key ([FacilityId], [GenderId]),
-		constraint [FK_FacilityUserGenders_AthleticFacilities_FacilityId] foreign key ([FacilityId]) references [AthleticFacilities]([Id]),
-		constraint [FK_FacilityUserGenders_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
-	);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'LegalTitles' and type = 'U'
-)
-begin
-	create table [LegalTitles] (
-		[Id] int identity(1,1) not null,
-		[Title] nvarchar(256) not null,
-		[NormalizedTitle] as upper([Title]),
-		[PersianTitle] nvarchar(256) not null,
-		constraint [PK_LegalTitles] primary key ([Id]),
-		constraint [IX_LegalTitles_Title] unique ([NormalizedTitle])
-	);
-
-	insert into [LegalTitles]
-		([Title], [PersianTitle])
-		values
-		('Beneficial', 'حقیقی'),
-		('Legal', 'حقوقی');
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'M5Licenses' and type = 'U'
-)
-begin
-	create table [M5Licenses] (
-		[Id] uniqueidentifier default newid() not null,
-		[FacilityId] uniqueidentifier not null,
-		[LegalTitleId] int null,
-		[IsOwner] bit null,
-		[Serial] nvarchar(256) null,
-		[StartDate] date null,
-		[ExpireDate] date null,
-		[Company] nvarchar(max) null,
-		[Name] nvarchar(max) not null,
-		[SeenCode] nvarchar(max) null,
-		[Phone] nvarchar(max) null,
-		constraint [PK_M5Licenses] primary key ([Id]),
-		constraint [FK_M5Licenses_AthleticFacilities_FacilityId] foreign key ([FacilityId]) references [AthleticFacilities]([Id]),
-		constraint [FK_M5Licenses_LegalTitles_LegalTitleId] foreign key ([LegalTitleId]) references [LegalTitles]([Id])
-	);
-
-	create unique index [IX_M5Licenses_Serial] 
-		on [M5Licenses]([Serial])
-			where [Serial] is not null;
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'M88Contracts' and type = 'U'
-)
-begin
-	create table [M88Contracts] (
-		[Id] uniqueidentifier default newid() not null,
-		[FacilityId] uniqueidentifier not null,
-		[Serial] nvarchar(256) not null,
-		[StartDate] date not null,
-		[ExpireDate] date not null,
-		[Name] nvarchar(max) not null,
-		[SeenCode] nvarchar(max) not null,
-		[Phone] nvarchar(max) not null,
-		[M5LicenseId] uniqueidentifier null,
-		constraint [PK_M88Contracts] primary key ([Id]),
-		constraint [FK_M88Contracts_AthleticFacilities_FacilityId] foreign key ([FacilityId]) references [AthleticFacilities]([Id]),
-		constraint [FK_M88Contracts_M5Licenses_M5LicenseId] foreign key ([M5LicenseId]) references [M5Licenses]([Id])
-	);
-
-	create unique index [IX_M88Contracts_Serial]
-		on [M88Contracts]([Serial])
-			where [Serial] is not null;
-end;
-
+-- MSY-Owned Facilities Tables
 if not exists (
 	select * from sys.objects
 		where name = 'Facilities' and type = 'U'
@@ -401,59 +292,22 @@ begin
 		[Name] nvarchar(max) not null,
 		[TypeId] int null,
 		[CityId] int not null,
-		[District] nvarchar(max) null,
 		[IsRural] bit null,
+		[District] nvarchar(max) null,
 		[Area] int null,
 		[SportHallArea] int null,
 		[SportLandArea] int null,
 		[IsActive] bit default 0 not null,
+		[UsersGenderId] int default 0 not null,
 		[Sports] nvarchar(max) null,
 		[ZipCode] nvarchar(max) null,
 		[Address] nvarchar(max) null,
 		[Phone] nvarchar(max) null,
 		constraint [PK_Facilities] primary key ([Id]),
 		constraint [FK_Facilities_FacilityTypes_TypeId] foreign key ([TypeId]) references [FacilityTypes]([Id]),
-		constraint [FK_Facilities_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
+		constraint [FK_Facilities_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
+		constraint [FK_Facilities_UsersGenders_UsersGenderId] foreign key ([UsersGenderId]) references [UsersGenders]([Id]),
 	);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'FacilityUserGeneders' and type = 'U'
-)
-begin
-	create table [FacilityUserGeneders] (
-		[FacilityId] uniqueidentifier not null,
-		[GenderId] int not null,
-		constraint [PK_FacilityUserGenders] primary key ([FacilityId], [GenderId]),
-		constraint [FK_FacilityUserGenders_Facilities_FacilityId] foreign key ([FacilityId]) references [Facilities]([Id]),
-		constraint [FK_FacilityUserGenders_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
-	);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'FacilityContractLicenses' and type = 'U'
-)
-begin
-	create table [FacilityContractLicenses] (
-		[Id] uniqueidentifier default newid() not null,
-		[LegalTitleId] int null,
-		[Serial] nvarchar(256) null,
-		[StartDate] date null,
-		[ExpireDate] date null,
-		[CityFederationId] nvarchar(16) null,
-		[Name] nvarchar(max) not null,
-		[SeenCode] nvarchar(max) null,
-		[Phone] nvarchar(max) null,
-		constraint [PK_FacilityContractLicenses] primary key ([Id]),
-		constraint [FK_FacilityContractLicenses_LegalTitles_LegalTitleId] foreign key ([LegalTitleId]) references [LegalTitles]([Id]),
-		constraint [FK_FacilityContractLicenses_CityFederations_CityFederationId] foreign key ([CityFederationId]) references [CityFederations]([NationalId])
-	);
-
-	create unique index [IX_FacilityContractLicenses_Serial] 
-		on [FacilityContractLicenses]([Serial])
-			where [Serial] is not null;
 end;
 
 if not exists (
@@ -467,13 +321,15 @@ begin
 		[Serial] nvarchar(256) not null,
 		[StartDate] date not null,
 		[ExpireDate] date not null,
+		[LegalContractorId] uniqueidentifier null,
 		[Name] nvarchar(max) not null,
 		[SeenCode] nvarchar(max) not null,
 		[Phone] nvarchar(max) not null,
-		[LicenseId] uniqueidentifier null,
+		[LicenseSerial] nvarchar(256) null,
+		[LicenseDate] date null,
 		constraint [PK_FacilitiesContracts] primary key ([Id]),
 		constraint [FK_FacilitiesContracts_Facilities_FacilityId] foreign key ([FacilityId]) references [Facilities]([Id]),
-		constraint [FK_FacilitiesContracts_FacilityContractLicenses_LicenseId] foreign key ([LicenseId]) references [FacilityContractLicenses]([Id])
+		constraint [FK_FacilityContractLicenses_LocalFederations_LegalContractorId] foreign key ([LegalContractorId]) references [LocalFederations]([Id])
 	);
 
 	create unique index [IX_FacilityContracts_Serial]
@@ -481,6 +337,7 @@ begin
 			where [Serial] is not null;
 end;
 
+-- Governmental Facilities Tables
 if not exists (
 	select * from sys.objects
 		where name = 'GovernmentFacilities' and type = 'U'
@@ -498,27 +355,15 @@ begin
 		[SportHallArea] int null,
 		[SportLandArea] int null,
 		[IsActive] bit default 1 not null,
+		[UsersGenderId] int default 0 not null,
 		[Sports] nvarchar(max) null,
 		[ZipCode] nvarchar(max) null,
 		[Address] nvarchar(max) null,
 		[Phone] nvarchar(max) null,
 		constraint [PK_GovernmentFacilities] primary key ([Id]),
 		constraint [FK_GovernmentFacilities_FacilityTypes_TypeId] foreign key ([TypeId]) references [FacilityTypes]([Id]),
-		constraint [FK_GovernmentFacilities_Cities_CityId] foreign key ([CityId]) references [Cities]([Id])
-	);
-end;
-
-if not exists (
-	select * from sys.objects
-		where name = 'GovernmentFacilityUserGeneders' and type = 'U'
-)
-begin
-	create table [GovernmentFacilityUserGeneders] (
-		[FacilityId] uniqueidentifier not null,
-		[GenderId] int not null,
-		constraint [PK_GovernmentFacilityUserGenders] primary key ([FacilityId], [GenderId]),
-		constraint [FK_GovernmentFacilityUserGenders_GovernmentFacilities_FacilityId] foreign key ([FacilityId]) references [GovernmentFacilities]([Id]),
-		constraint [FK_GovernmentFacilityUserGenders_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
+		constraint [FK_GovernmentFacilities_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
+		constraint [FK_GovernmentFacilities_UsersGenders_UsersGenderId] foreign key ([UsersGenderId]) references [UsersGenders]([Id]),
 	);
 end;
 
@@ -530,7 +375,6 @@ begin
 	create table [GovernmentFacilityLicenses] (
 		[Id] uniqueidentifier default newid() not null,
 		[FacilityId] uniqueidentifier not null,
-		[LegalTitleId] int null,
 		[Serial] nvarchar(256) null,
 		[StartDate] date null,
 		[ExpireDate] date null,
@@ -538,8 +382,7 @@ begin
 		[SeenCode] nvarchar(max) null,
 		[Phone] nvarchar(max) null,
 		constraint [PK_GovernmentFacilityLicenses] primary key ([Id]),
-		constraint [FK_GovernmentFacilityLicenses_FacilityContracts_ContractId] foreign key ([FacilityId]) references [GovernmentFacilities]([Id]),
-		constraint [FK_GovernmentFacilityLicenses_LegalTitles_LegalTitleId] foreign key ([LegalTitleId]) references [LegalTitles]([Id])
+		constraint [FK_GovernmentFacilityLicenses_FacilityContracts_ContractId] foreign key ([FacilityId]) references [GovernmentFacilities]([Id])
 	);
 
 	create unique index [IX_GovernmentFacilityLicenses_Serial] 
@@ -547,6 +390,7 @@ begin
 			where [Serial] is not null;
 end;
 
+-- Private Facilities Tables [M5 Licenses]
 if not exists (
 	select * from sys.objects
 		where name = 'PrivateFacilities' and type = 'U'
@@ -575,38 +419,25 @@ end;
 
 if not exists (
 	select * from sys.objects
-		where name = 'PrivateFacilityUserGeneders' and type = 'U'
-)
-begin
-	create table [PrivateFacilityUserGeneders] (
-		[FacilityId] uniqueidentifier not null,
-		[GenderId] int not null,
-		constraint [PK_PrivateFacilityUserGenders] primary key ([FacilityId], [GenderId]),
-		constraint [FK_PrivateFacilityUserGenders_PrivateFacilities_FacilityId] foreign key ([FacilityId]) references [PrivateFacilities]([Id]),
-		constraint [FK_PrivateFacilityUserGenders_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
-	);
-end;
-
-if not exists (
-	select * from sys.objects
 		where name = 'PrivateFacilityLicenses' and type = 'U'
 )
 begin
 	create table [PrivateFacilityLicenses] (
 		[Id] uniqueidentifier default newid() not null,
 		[FacilityId] uniqueidentifier not null,
-		[LegalTitleId] int null,
+		[IsBeneficial] bit default 1 null,
 		[IsOwner] bit null,
 		[Serial] nvarchar(256) null,
 		[StartDate] date null,
 		[ExpireDate] date null,
+		[UsersGenderId] int default 0 not null,
 		[Company] nvarchar(max) null,
 		[Name] nvarchar(max) not null,
 		[SeenCode] nvarchar(max) null,
 		[Phone] nvarchar(max) null,
 		constraint [PK_PrivateFacilityLicenses] primary key ([Id]),
 		constraint [FK_PrivateFacilityLicenses_PrivateFacilities_FacilityId] foreign key ([FacilityId]) references [PrivateFacilities]([Id]),
-		constraint [FK_PrivateFacilityLicenses_LegalTitles_LegalTitleId] foreign key ([LegalTitleId]) references [LegalTitles]([Id])
+		constraint [FK_PrivateFacilityLicenses_UsersGenders_UsersGenderId] foreign key ([UsersGenderId]) references [UsersGenders]([Id])
 	);
 
 	create unique index [IX_PrivateFacilityLicenses_Serial] 
@@ -614,29 +445,8 @@ begin
 			where [Serial] is not null;
 end;
 
--- Registered Athletes Tables
-if not exists (
-	select * from sys.objects
-		where name = 'Insurances' and type = 'U'
-)
-begin
-	create table [Insurances] (
-		[Id] uniqueidentifier default newid() not null,
-		[CityId] int not null,
-		[FederationId] int not null,
-		[GenderId] int not null,
-		[Year] int not null,
-		[Month] int not null,
-		[Count] int not null,
-		constraint [PK_Insurances] primary key ([Id]),
-		constraint [IX_Insurances] unique ([CityId], [FederationId], [GenderId], [Year], [Month]),
-		constraint [FK_Insurances_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
-		constraint [FK_Insurances_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
-		constraint [FK_Insurances_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
-	);
-end;
-
 -- Sports Courses Tables
+/*
 if not exists (
 	select * from sys.objects
 		where name = 'SportsCourseGrades' and type = 'U'
@@ -715,6 +525,29 @@ begin
 		constraint [FK_SportsCourseCourseParticipants_SportsCourseParticipants_ParticipantsId] foreign key ([ParticipantId]) references [SportsCourseParticipants]([Id])
 	);
 end;
+*/
+
+-- Registered Athletes Tables
+if not exists (
+	select * from sys.objects
+		where name = 'Insurances' and type = 'U'
+)
+begin
+	create table [Insurances] (
+		[Id] uniqueidentifier default newid() not null,
+		[CityId] int not null,
+		[FederationId] int not null,
+		[GenderId] int not null,
+		[Year] int not null,
+		[Month] int not null,
+		[Count] int not null,
+		constraint [PK_Insurances] primary key ([Id]),
+		constraint [IX_Insurances] unique ([CityId], [FederationId], [GenderId], [Year], [Month]),
+		constraint [FK_Insurances_Cities_CityId] foreign key ([CityId]) references [Cities]([Id]),
+		constraint [FK_Insurances_Federations_FederationId] foreign key ([FederationId]) references [Federations]([Id]),
+		constraint [FK_Insurances_Genders_GenderId] foreign key ([GenderId]) references [Genders]([Id])
+	);
+end;
 
 -- Champions Tables
 if not exists (
@@ -762,6 +595,7 @@ begin
 		('Veterans', 'پیشکسوتان');
 end;
 
+/*
 if not exists (
 	select * from sys.objects
 		where name = 'CampTypes' and type = 'U'
@@ -841,6 +675,7 @@ begin
 		constraint [FK_CampInvitees_InviteeRoles_RoleId] foreign key ([RoleId]) references [InviteeRoles]([Id])
 	);
 end;
+*/
 
 if not exists (
 	select * from sys.objects
@@ -945,6 +780,7 @@ begin
 	);
 end;
 
+/*
 if not exists (
 	select * from sys.objects
 		where name = 'Records' and type = 'U'
@@ -966,6 +802,7 @@ begin
 		constraint [FK_Records_AgeGroups_AgeGroupId] foreign key ([AgeGroupId]) references [AgeGroups]([Id])
 	);
 end;
+*/
 
 -- Construction Projects Tables
 if not exists (
