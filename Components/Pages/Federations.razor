@@ -26,9 +26,9 @@
 			{
 				<QuickGrid Pagination="pagination" Items="federations" Theme="" Class="federations-table">
 					<PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
-					<PropertyColumn Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
-					@if(cityId != 0)
+					@if (cityId != 0)
 					{
+						<PropertyColumn Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
 						<PropertyColumn Sortable="true" Title="بخش" Property="@(federation => federation.District)" />
 					}
 					<PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
