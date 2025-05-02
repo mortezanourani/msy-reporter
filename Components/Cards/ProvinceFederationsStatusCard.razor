@@ -238,7 +238,7 @@
     {
         var citiesFederations = context.LocalFederations!
             .Include(federation => federation.LocalFederationPresidents)
-            .Where(federation => federation.City.Id == 0)
+            .Where(federation => federation.City.Id != 0)
             .OrderBy(federation => federation.City);
 
         cities = citiesFederations!

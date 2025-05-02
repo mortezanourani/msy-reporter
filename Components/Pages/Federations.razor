@@ -24,9 +24,13 @@
 		<div class="federations-list">
 			@if (federations is not null)
 			{
-				<QuickGrid Items="federations" Theme="" Class="federations-table">
+				<QuickGrid Pagination="pagination" Items="federations" Theme="" Class="federations-table">
 					<PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
 					<PropertyColumn Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
+					@if(cityId != 0)
+					{
+						<PropertyColumn Sortable="true" Title="بخش" Property="@(federation => federation.District)" />
+					}
 					<PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
 					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.FirstOrDefault()!.Name)" />
 					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
@@ -36,6 +40,27 @@
 						</a>
 					</TemplateColumn>
 				</QuickGrid>
+
+				<div class="paginator">
+					<nav role="navigation">
+					@if (pagination.TotalItemCount.HasValue)
+					{
+						for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
+						{
+							var capturedIndex = pageIndex;
+							<button @onclick="@(() => GoToPageAsync(capturedIndex))"
+							class="btn @PageButtonClass(capturedIndex)"
+							aria-current="@AriaCurrentValue(capturedIndex)"
+							aria-label="@(pageIndex + 1)">
+								@(pageIndex + 1)
+							</button>
+						}
+					}
+					</nav>
+					<div class="total">
+						@string.Format("{0} هیات", pagination.TotalItemCount)
+					</div>
+				</div>
 			}
 		</div>
 	</div>
@@ -79,8 +104,24 @@
 			.Include(federation => federation.City)
 			.Include(federation => federation.Federation)
 			.Include(federation => federation.LocalFederationPresidents)
-			.Where(federation => federation.City!.Id == cityId);
+			.Where(federation => federation.City!.Id == cityId)
+			.OrderBy(federation => federation.Federation.PersianName);
+
+		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
 	}
 
 	public async ValueTask DisposeAsync() => await context.DisposeAsync();
+
+	private PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+
+	private async Task GoToPageAsync(int pageIndex)
+	{
+		await pagination.SetCurrentPageIndexAsync(pageIndex);
+	}
+
+	private string? PageButtonClass(int pageIndex)
+		=> pagination.CurrentPageIndex == pageIndex ? "current" : null;
+
+	private string? AriaCurrentValue(int pageIndex)
+		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;
 }

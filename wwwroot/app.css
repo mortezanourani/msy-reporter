@@ -172,6 +172,50 @@ body {
             color: #fff;
         }
 
+.paginator {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    margin: 8px 0 16px;
+    border-top: 1px solid var(--secondary-color);
+}
+
+    .paginator nav,
+    .paginator .total {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .paginator .total,
+        .paginator nav .btn {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            line-height: 1px;
+            border: 1px solid gray;
+            height: 28px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .paginator nav .btn {
+            width: 28px;
+            aspect-ratio: 1;
+        }
+
+            .paginator nav .btn.current {
+                border: none;
+                background-color: var(--primary-color);
+                color: var(--light-color);
+            }
+
 a {
     text-decoration: none;
 }
