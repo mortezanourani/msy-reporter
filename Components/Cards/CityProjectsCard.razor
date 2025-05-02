@@ -8,7 +8,7 @@
         <div class="projects-list">
             @if(projects is not null)
             {
-                <QuickGrid Items="projects" Theme="" Class="projects-table">
+                <QuickGrid Items="projects" Pagination="pagination" Theme="" Class="projects-table">
                     <PropertyColumn Sortable="true" Title="عنوان پروژه" Property="@(project => project.Title)" />
                     <PropertyColumn Sortable="true" Title="شهرستان" Property="@(project => project.City.PersianName)" />
                     @* <PropertyColumn Sortable="true" Title="موقعیت" Property="@(project => project.IsRural == true ? "روستایی" : "شهری")" /> *@
@@ -22,6 +22,7 @@
                         </a>
                     </TemplateColumn>
                 </QuickGrid>
+                <Paginator State="pagination" />
             }
         </div>
     </div>
@@ -33,6 +34,8 @@
 @code {
     [Parameter]
     public City? City { get; set; }
+
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
 
     private AppDbContext context = default!;
     private IQueryable<ConstructionProject>? projects;
