@@ -1,0 +1,119 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid;
+
+@page "/Projects/{ProjectId:guid}"
+
+<PageTitle>Construction Projects</PageTitle>
+
+<h2 class="page-title mb-0">پروژه @project?.Title</h2>
+<p class="small text-muted">شهرستان @project!.City.PersianName</p>
+
+<div class="row">
+    <div class="col1-3">
+        <div class="card color-card project-properties">
+            <div class="card-header">
+                <h6>مشخصات پروژه</h6>
+            </div>
+            <div class="card-body">
+                <div class="progressPrecentage">
+                    <h1>@string.Format("%{0}", projectProgressPercentage)</h1>
+                </div>
+                <div class="property top">
+                    <h6>مجموع اعتبار هزینه شده:</h6>
+                    <p>@string.Format("{0:N0}", totalPaid)</p>
+                </div>
+                <div class="property">
+                    <h6>مطالبات پیمانکار:</h6>
+                    <p>@string.Format("{0:N0}", contractorUnpaid)</p>
+                </div>
+                <div class="property">
+                    <h6>اعتبار مورد نیاز جهت اتمام:</h6>
+                    <p>@string.Format("{0:N0}", completionEstimate)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col2-3">
+        <div class="card budgets-card cornered1">
+            <div class="card-header pb-0">
+                <h6>جدول اعتبارات پروژه</h6>
+            </div>
+            <div class="card-body">
+                <QuickGrid Items="@projectBudgets" Theme="" Class="budgets-table">
+                    <PropertyColumn Title="سال" Property="@(budget => budget.Year)" />
+                    <PropertyColumn Title="کد پروژه" Property="@(budget => budget.Code)" />
+                    <PropertyColumn Title="اعتبار مصوب" Property="@(budget => string.Format("{0:N0}",budget.Approved))" />
+                    <PropertyColumn Title="منبع اعتبار" Property="@(budget => budget.Source!.PersianTitle)" />
+                </QuickGrid>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div calss="col1-1">
+        <div class="card progress-card">
+            <div class="card-header mb-0">
+                <h6>روند پیشرفت پروژه</h6>
+            </div>
+            <div class="card-body">
+                <QuickGrid Items="@projectProgress" Theme="" Class="progress-table">
+                    <PropertyColumn Title="سال" Property="@(budget => budget.Year)" />
+                    <PropertyColumn Title="ماه" Property="@(budget => budget.Month)" />
+                    <PropertyColumn Title="درصد پیشرفت" Property="@(budget => string.Format("%{0}", budget.Percentage))" />
+                    <PropertyColumn Title="اعتبار مورد نیاز جهت اتمام" Property="@(budget => string.Format("{0:N0}",budget.CompletionBudget))" />
+                </QuickGrid>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid? ProjectId { get; set; }
+
+    private AppDbContext context = default!;
+
+    private ConstructionProject? project { get; set; }
+
+    private IQueryable<ProjectBudget>? projectBudgets { get; set; }
+
+    private IQueryable<ProjectProgress>? projectProgress { get; set; }
+
+    private int projectProgressPercentage { get; set; }
+    private int totalPaid { get; set; }
+    private int contractorUnpaid { get; set; }
+    private int completionEstimate { get; set; }
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+
+        project = context.ConstructionProjects
+            .Include(project => project.City)
+            .Include(project => project.ProjectBudgets)
+                .ThenInclude(budget => budget.Source)
+            .Include(project => project.ProjectProgresses)
+            .FirstOrDefault(project => project.Id == ProjectId);
+
+        projectBudgets = project!.ProjectBudgets
+            .OrderByDescending(budget => budget.Year)
+            .AsQueryable();
+
+        projectProgressPercentage = project!.ProjectProgresses
+            .Max(progress => progress.Percentage);
+
+        totalPaid = project!.ProjectBudgets
+            .Sum(budget => budget.Approved);
+
+        contractorUnpaid = project!.ProjectProgresses
+            .Max(progress => progress.ContractorUnpaid) ?? 0;
+
+        completionEstimate = project!.ProjectProgresses
+            .Max(progress => progress.CompletionBudget) ?? 0;
+
+        projectProgress = project!.ProjectProgresses
+            .OrderByDescending(progress => progress.Percentage)
+            .OrderByDescending(progress => progress.Month)
+            .OrderByDescending(progress => progress.Year)
+            .AsQueryable();
+    }
+}

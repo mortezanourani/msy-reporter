@@ -47,14 +47,14 @@
                 content: "";
             }
 
-        .legend .legend-row.hall h6:before {
+        .legend .legend-row.build h6:before {
             background: var(--secondary-color);
         }
 
-        .legend .legend-row.land h6:before {
+        .legend .legend-row.completion h6:before {
             background: #95bdf2;
         }
 
-        .legend .legend-row.complex h6:before {
+        .legend .legend-row.maintenance h6:before {
             background: var(--light-color);
         }

@@ -9,20 +9,20 @@
         <canvas id="projectsTypesChart" class=""></canvas>
     </div>
     <div class="card-footer legend">
-        <div class="legend-row hall">
-            <h6>سرپوشیده</h6>
-            <p>@hallProjectsCount</p>
-            <p>%@hallProjectsPercentage</p>
+        <div class="legend-row build">
+            <h6>احداث</h6>
+            <p>@buildProjectsCount</p>
+            <p>%@buildProjectsPercentage</p>
         </div>
-        <div class="legend-row land">
-            <h6>روباز</h6>
-            <p>@landProjectsCount</p>
-            <p>%@landProjectsPercentage</p>
+        <div class="legend-row completion">
+            <h6>تکمیل</h6>
+            <p>@completionProjectsCount</p>
+            <p>%@completionProjectsPercentage</p>
         </div>
-        <div class="legend-row complex">
-            <h6>مجموعه ورزشی</h6>
-            <p>@complexProjectsCount</p>
-            <p>%@complexProjectsPercentage</p>
+        <div class="legend-row maintenance">
+            <h6>تعمیر و بهسازی</h6>
+            <p>@maintenanceProjectsCount</p>
+            <p>%@maintenanceProjectsPercentage</p>
         </div>
     </div>
 </div>
@@ -88,14 +88,14 @@
     private IQueryable<ConstructionProject> projects;
     private List<decimal> chartCounts = new List<decimal>();
 
-    private int hallProjectsCount;
-    private decimal hallProjectsPercentage;
+    private int buildProjectsCount;
+    private decimal buildProjectsPercentage;
 
-    private int landProjectsCount;
-    private decimal landProjectsPercentage;
+    private int completionProjectsCount;
+    private decimal completionProjectsPercentage;
 
-    private int complexProjectsCount;
-    private decimal complexProjectsPercentage;
+    private int maintenanceProjectsCount;
+    private decimal maintenanceProjectsPercentage;
 
     protected override void OnInitialized()
     {
@@ -118,32 +118,32 @@
  
         var projectsCount = projects.Count();
 
-        hallProjectsCount = projects
+        buildProjectsCount = projects
             .Where(project => project.TypeId == 1)
             .Count();
 
-        landProjectsCount = projects
+        completionProjectsCount = projects
             .Where(project => project.TypeId == 2)
             .Count();
 
-        complexProjectsCount = projects
+        maintenanceProjectsCount = projects
             .Where(project => project.TypeId == 3)
             .Count();
 
-        hallProjectsPercentage = 0;
-        landProjectsPercentage = 0;
-        complexProjectsPercentage = 0;
+        buildProjectsPercentage = 0;
+        completionProjectsPercentage = 0;
+        maintenanceProjectsPercentage = 0;
         if (projectsCount > 0)
         {
-            hallProjectsPercentage = Math.Round(decimal.Divide(hallProjectsCount * 100, projectsCount));
-            landProjectsPercentage = Math.Round(decimal.Divide(landProjectsCount * 100, projectsCount));
-            complexProjectsPercentage = Math.Round(decimal.Divide(complexProjectsCount * 100, projectsCount));
+            buildProjectsPercentage = Math.Round(decimal.Divide(buildProjectsCount * 100, projectsCount));
+            completionProjectsPercentage = Math.Round(decimal.Divide(completionProjectsCount * 100, projectsCount));
+            maintenanceProjectsPercentage = Math.Round(decimal.Divide(maintenanceProjectsCount * 100, projectsCount));
         }
 
         chartCounts.Clear();
-        chartCounts.Add(hallProjectsCount);
-        chartCounts.Add(landProjectsCount);
-        chartCounts.Add(complexProjectsCount);
+        chartCounts.Add(buildProjectsCount);
+        chartCounts.Add(completionProjectsCount);
+        chartCounts.Add(maintenanceProjectsCount);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

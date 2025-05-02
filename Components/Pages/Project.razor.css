@@ -1,0 +1,166 @@
+﻿.project-properties .progressPrecentage {
+    margin-bottom: 24px;
+}
+
+    .project-properties .progressPrecentage h1 {
+        font-weight: 300;
+        font-size: 48px;
+        margin: 0;
+        color: var(--secondary-color);
+    }
+
+.project-properties .property {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+    .project-properties .property.top {
+        margin-top: auto;
+    }
+
+    .project-properties .property h6,
+    .project-properties .property p {
+        font-size: 13px;
+        color: var(--light-color);
+    }
+
+    .budgets-card ::deep.budgets-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 1px;
+        margin-bottom: -8px;
+    }
+
+        .budgets-card ::deep.budgets-table thead tr {
+            background: var(--light-color);
+        }
+        
+        .budgets-card ::deep.budgets-table thead tr,
+        .budgets-card ::deep.budgets-table tbody tr {
+            transition: all ease-in-out 100ms;
+            box-shadow: 0 1px 1px -1px var(--dark-color);
+        }
+        .budgets-card ::deep.budgets-table tbody tr:last-child {
+            box-shadow: none;
+        }
+
+            .budgets-card ::deep.budgets-table tbody tr:hover {
+                background: var(--secondary-color);
+            }
+
+        .budgets-card ::deep.budgets-table thead tr th {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .budgets-card ::deep.budgets-table thead tr th .col-title {
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .budgets-card ::deep.budgets-table thead tr th:first-child .col-title {
+            justify-content: right;
+        }
+
+        .budgets-card ::deep.budgets-table thead tr th:last-child .col-title {
+            justify-content: left;
+        }
+
+        .budgets-card ::deep.budgets-table tbody tr td {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+            .budgets-card ::deep.budgets-table tbody tr td:first-child {
+                font-weight: 500;
+                text-align: right;
+            }
+
+            .budgets-card ::deep.budgets-table tbody tr td:last-child {
+                font-weight: 500;
+                text-align: left;
+            }
+
+.progress-card {
+    background: none;
+    box-shadow: none;
+}
+
+    .progress-card .card-header,
+    .progress-card .card-body {
+        padding: var(--spacing-y) 0;
+    }
+
+    .progress-card .card-header {
+        box-shadow: var(--card-box-shadow);
+        background-color: white;
+        padding: var(--spacing-y) var(--spacing-x);
+    }
+
+        .progress-card .card-header .title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+    .progress-card ::deep.progress-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+        .progress-card ::deep.progress-table thead tr th {
+            padding: 4px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+            .progress-card ::deep.progress-table thead tr th .col-title {
+                justify-content: center;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .progress-card ::deep.progress-table thead tr th:first-child .col-title {
+                justify-content: right;
+            }
+
+            .progress-card ::deep.progress-table thead tr th:last-child .col-title {
+                justify-content: left;
+            }
+
+        .progress-card ::deep.progress-table tbody tr {
+            background: #ffffff;
+            box-shadow: var(--card-box-shadow);
+            transition: all ease-in-out 100ms;
+        }
+
+            .progress-card ::deep.progress-table tbody tr:hover {
+                background: var(--secondary-color);
+            }
+
+            .progress-card ::deep.progress-table tbody tr td {
+                padding: 16px 12px;
+                text-align: center;
+                font-size: 13px;
+                font-weight: 400;
+            }
+
+                .progress-card ::deep.progress-table tbody tr td:first-child {
+                    font-weight: 500;
+                    text-align: right;
+                }
+
+                .progress-card ::deep.progress-table tbody tr td:last-child {
+                    font-weight: 500;
+                    text-align: left;
+                }
