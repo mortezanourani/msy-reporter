@@ -7,15 +7,15 @@ public partial class ProjectBudget
 {
     public Guid ProjectId { get; set; }
 
+    public string? Code { get; set; }
+
     public int Year { get; set; }
 
-    public string? FundingSource { get; set; }
+    public int SourceId { get; set; }
 
-    public int ApprovedBudgets { get; set; }
-
-    public int? ContractorUnpaid { get; set; }
-
-    public int? CompletionBudget { get; set; }
+    public int Approved { get; set; }
 
     public virtual ConstructionProject Project { get; set; } = null!;
+
+    public virtual FundingSource Source { get; set; } = null!;
 }

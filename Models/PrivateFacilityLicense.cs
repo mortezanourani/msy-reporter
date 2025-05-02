@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class M5license
+public partial class PrivateFacilityLicense
 {
     public Guid Id { get; set; }
 
     public Guid FacilityId { get; set; }
 
-    public int? LegalTitleId { get; set; }
+    public bool? IsBeneficial { get; set; }
 
     public bool? IsOwner { get; set; }
 
@@ -19,6 +19,8 @@ public partial class M5license
 
     public DateOnly? ExpireDate { get; set; }
 
+    public int UsersGenderId { get; set; }
+
     public string? Company { get; set; }
 
     public string Name { get; set; } = null!;
@@ -27,9 +29,7 @@ public partial class M5license
 
     public string? Phone { get; set; }
 
-    public virtual AthleticFacility Facility { get; set; } = null!;
+    public virtual PrivateFacility Facility { get; set; } = null!;
 
-    public virtual LegalTitle? LegalTitle { get; set; }
-
-    public virtual ICollection<M88contract> M88contracts { get; set; } = new List<M88contract>();
+    public virtual UsersGender UsersGender { get; set; } = null!;
 }

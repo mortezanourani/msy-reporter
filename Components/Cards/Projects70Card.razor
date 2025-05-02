@@ -7,7 +7,7 @@
         <div class="count-bars">
            @foreach (ConstructionProject project in projects)
             {
-                <span class="count-bar" style="height: @project.ProjectCompletionProgresses.Max(m => m.Percentage)%;" @onmouseover="() => UpdateProject(project)"></span>
+                <span class="count-bar" style="height: @project.ProjectProgresses.Max(m => m.Percentage)%;" @onmouseover="() => UpdateProject(project)"></span>
             }
         </div>
         <div class="card-footer project-info">
@@ -42,9 +42,9 @@
 
         projects = context.ConstructionProjects
             .Include(m => m.City)
-            .Include(m => m.ProjectCompletionProgresses)
+            .Include(m => m.ProjectProgresses)
             .OrderBy(m => m.Title)
-            .Where(m => m.ProjectCompletionProgresses
+            .Where(m => m.ProjectProgresses
                 .Where(m => m.Percentage >= 70).Count() > 0)
             .ToList();
 
@@ -55,8 +55,8 @@
     {
         projectTitle = project.Title;
         projectCity = project.City.PersianName;
-        projectStart = project.StartYear;
-        projectProgress = project.ProjectCompletionProgresses
+        projectStart = project.Year;
+        projectProgress = project.ProjectProgresses
             .Max(m => m.Percentage);
     }
 }

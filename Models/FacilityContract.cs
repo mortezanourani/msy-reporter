@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class M88contract
+public partial class FacilityContract
 {
     public Guid Id { get; set; }
 
@@ -15,15 +15,19 @@ public partial class M88contract
 
     public DateOnly ExpireDate { get; set; }
 
+    public Guid? LegalContractorId { get; set; }
+
     public string Name { get; set; } = null!;
 
     public string SeenCode { get; set; } = null!;
 
     public string Phone { get; set; } = null!;
 
-    public Guid? M5licenseId { get; set; }
+    public string? LicenseSerial { get; set; }
 
-    public virtual AthleticFacility Facility { get; set; } = null!;
+    public DateOnly? LicenseDate { get; set; }
 
-    public virtual M5license? M5license { get; set; }
+    public virtual Facility Facility { get; set; } = null!;
+
+    public virtual LocalFederation? LegalContractor { get; set; }
 }

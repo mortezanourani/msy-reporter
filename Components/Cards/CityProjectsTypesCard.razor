@@ -105,8 +105,8 @@
     protected override void OnParametersSet()
     {
         projects = context.ConstructionProjects
-            .Include(project => project.ProjectCompletionProgresses)
-            .Where(project => project.ProjectCompletionProgresses
+            .Include(project => project.ProjectProgresses)
+            .Where(project => project.ProjectProgresses
                 .Max(progress => progress.Percentage) < 100);
 
         if (City!.Id != 0)

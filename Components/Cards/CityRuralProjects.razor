@@ -97,8 +97,8 @@
     protected override void OnParametersSet()
     {
         projects = context.ConstructionProjects
-            .Include(project => project.ProjectCompletionProgresses)
-            .Where(project => project.ProjectCompletionProgresses
+            .Include(project => project.ProjectProgresses)
+            .Where(project => project.ProjectProgresses
                 .Max(progress => progress.Percentage) < 100);
 
         if (City!.Id != 0)
@@ -109,13 +109,13 @@
 
         var projectsCount = projects.Count();
 
-        urbanProjectsCount = projects
-            .Where(project => project.IsRural == false)
-            .Count();
+        // urbanProjectsCount = projects
+        //     .Where(project => project.IsRural == false)
+        //     .Count();
 
-        ruralProjectsCount = projects
-            .Where(project => project.IsRural == true)
-            .Count();
+        // ruralProjectsCount = projects
+        //     .Where(project => project.IsRural == true)
+        //     .Count();
 
         urbanProjectsPercentage = 0;
         ruralProjectsPercentage = 0;

@@ -45,50 +45,50 @@
     let cityFacilitiesChart;
 
     function renderCityFacilitiesChart(data) {
-        const ctx = document.getElementById('cityFacilitiesChart').getContext('2d');
+    const ctx = document.getElementById('cityFacilitiesChart').getContext('2d');
 
-        if (cityFacilitiesChart) {
-            cityFacilitiesChart.destroy();
-        }
+    if (cityFacilitiesChart) {
+    cityFacilitiesChart.destroy();
+    }
 
-        cityFacilitiesChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['اماکن ورزشی وزارت ورزش و جوانان', 'اماکن ورزشی سایر ارگان ها', 'باشگاه های خصوصی'],
-                datasets: [{
-                    data: data,
-                    backgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b'],
-                    hoverBackgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false,
-                        position: 'top'
-                    },
-                    tooltip: {
-                        bodyFont: {
-                            family: 'IRANSans',
-                            size: 11,
-                        },
-                        titleFont: {
-                            family: 'IRANSans',
-                            size: 12,
-                        }
-                    }
-                },
-                cutout: '65%'
-            }
-        });
+    cityFacilitiesChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+    labels: ['اماکن ورزشی وزارت ورزش و جوانان', 'اماکن ورزشی سایر ارگان ها', 'باشگاه های خصوصی'],
+    datasets: [{
+    data: data,
+    backgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b'],
+    hoverBackgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b']
+    }]
+    },
+    options: {
+    responsive: true,
+    plugins: {
+    legend: {
+    display: false,
+    position: 'top'
+    },
+    tooltip: {
+    bodyFont: {
+    family: 'IRANSans',
+    size: 11,
+    },
+    titleFont: {
+    family: 'IRANSans',
+    size: 12,
+    }
+    }
+    },
+    cutout: '65%'
+    }
+    });
     }
 
     function updateCityFacilitiesChart (data) {
-        if (cityFacilitiesChart) {
-            cityFacilitiesChart.data.datasets[0].data = data;
-            cityFacilitiesChart.update();
-        }
+    if (cityFacilitiesChart) {
+    cityFacilitiesChart.data.datasets[0].data = data;
+    cityFacilitiesChart.update();
+    }
     }
 </script>
 
@@ -125,22 +125,18 @@
     private void SelectCity()
     {
         city = context.Cities
-            .Include(c => c.AthleticFacilities)
+            .Include(c => c.Facilities)
+            .Include(c => c.GovernmentFacilities)
+            .Include(c => c.PrivateFacilities)
             .FirstOrDefault(c => c.Id == cityId);
 
-        var totalFacilities = city!.AthleticFacilities.Count();
+        msyFacilities = city!.Facilities.Count();
 
-        msyFacilities = city!.AthleticFacilities
-            .Where(m => m.OwnershipId == 1)
-            .Count();
+        govFacilities = city!.GovernmentFacilities.Count();
 
-        govFacilities = city!.AthleticFacilities
-            .Where(m => m.OwnershipId == 2)
-            .Count();
+        privateFacilities = city!.PrivateFacilities.Count();
 
-        privateFacilities = city!.AthleticFacilities
-            .Where(m => { return m.OwnershipId == 3 || m.OwnershipId == 4; })
-            .Count();
+        var totalFacilities = msyFacilities + govFacilities + privateFacilities;
 
         msyFacilitiesPercent = 0;
         govFacilitiesPercent = 0;

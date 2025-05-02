@@ -174,14 +174,14 @@
 
 	private AppDbContext context = default!;
 
-	private IQueryable<CityFederation>? federations;
+	private IQueryable<LocalFederation>? federations;
 
 	private int activesCount;
     private int hasIdFederationsCount;
     private int presidentsCount;
 	private int interimPresidentsCount;
 
-	private IQueryable<FederationMeeting>? federationMeetings;
+	// private IQueryable<FederationMeeting>? federationMeetings;
 
 	private int meetingsCount;
 	private int generalMeetingsCount;
@@ -197,47 +197,47 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		federations = context.CityFederations
-			.Include(federation => federation.FederationPresidents)
+		federations = context.LocalFederations
+			.Include(federation => federation.LocalFederationPresidents)
 			.Where(federation => federation.City.Id == 0);
 
 
 		activesCount = federations!
-			.Count(federation => federation.FederationPresidents.Any());
+			.Count(federation => federation.LocalFederationPresidents.Any());
 
 		hasIdFederationsCount = federations!
 			.Count(federation => !string.IsNullOrEmpty(federation.NationalId));
 
 		presidentsCount = federations!
-			.Count(federation => federation.FederationPresidents
+			.Count(federation => federation.LocalFederationPresidents
 				.Any(president => president.IsPresident));
 
 		interimPresidentsCount = federations!
-			.Count(federation => federation.FederationPresidents
+			.Count(federation => federation.LocalFederationPresidents
 				.Any(president => !president.IsPresident));
 
-		federationMeetings = context.FederationMeetings
-			.Include(meeting => meeting.Type)
-			.Where(meeting => meeting.Year == 1403);
+		// federationMeetings = context.FederationMeetings
+		// 	.Include(meeting => meeting.Type)
+		// 	.Where(meeting => meeting.Year == 1403);
 
-		meetingsCount = federationMeetings.Count();
+		// meetingsCount = federationMeetings.Count();
 
-		generalMeetingsCount = federationMeetings
-			.Count(meeting => meeting.Type.Type == "General");
+		// generalMeetingsCount = federationMeetings
+		// 	.Count(meeting => meeting.Type.Type == "General");
 
-		electiveMeetingsCount = federationMeetings
-			.Count(meeting => meeting.Type.Type == "Elective");
+		// electiveMeetingsCount = federationMeetings
+		// 	.Count(meeting => meeting.Type.Type == "Elective");
 
-		extraOrdinaryMeetingsCount = federationMeetings
-			.Count(meeting => meeting.Type.Type == "ExtraOrdinary");
+		// extraOrdinaryMeetingsCount = federationMeetings
+		// 	.Count(meeting => meeting.Type.Type == "ExtraOrdinary");
 
         UpdateChart();
 	}
 
     private async void UpdateChart()
     {
-        var citiesFederations = context.CityFederations!
-            .Include(federation => federation.FederationPresidents)
+        var citiesFederations = context.LocalFederations!
+            .Include(federation => federation.LocalFederationPresidents)
             .Where(federation => federation.City.Id == 0)
             .OrderBy(federation => federation.City);
 
@@ -249,14 +249,14 @@
         activeFederationsCount = citiesFederations!
             .GroupBy(federation => federation.City)
                 .Select(group => group
-                    .Where(federation => federation.FederationPresidents != null)
+                    .Where(federation => federation.LocalFederationPresidents != null)
                     .Count())
             .ToList();
 
         hasPresidentFederationsCount = citiesFederations!
             .GroupBy(federation => federation.City)
             .Select(group => group
-                .Where(federation => federation.FederationPresidents
+                .Where(federation => federation.LocalFederationPresidents
                     .Any(president => president.IsPresident)))
             .ToList()
             .Select(t => t.Count())
@@ -265,7 +265,7 @@
         hasInterimPresidentFederationsCount = citiesFederations!
             .GroupBy(federation => federation.City)
             .Select(group => group
-                .Where(federation => federation.FederationPresidents
+                .Where(federation => federation.LocalFederationPresidents
                     .Any(president => !president.IsPresident)))
             .ToList()
             .Select(t => t.Count())

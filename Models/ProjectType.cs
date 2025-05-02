@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class LegalTitle
+public partial class ProjectType
 {
     public int Id { get; set; }
 
@@ -13,5 +13,5 @@ public partial class LegalTitle
 
     public string PersianTitle { get; set; } = null!;
 
-    public virtual ICollection<M5license> M5licenses { get; set; } = new List<M5license>();
+    public virtual ICollection<ConstructionProject> ConstructionProjects { get; set; } = new List<ConstructionProject>();
 }

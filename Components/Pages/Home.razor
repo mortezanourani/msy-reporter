@@ -11,7 +11,7 @@
 @code {
 	private AppDbContext context = default!;
 
-	private DbSet<AthleticFacility> sportFacilities;
+	private DbSet<Facility> sportFacilities;
 
 	private int coachesCount;
 	private int refereesCount;
@@ -23,28 +23,28 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		sportFacilities = context.AthleticFacilities;
+		sportFacilities = context.Facilities;
 
-		var sportCourseParticipants = context.SportsCourses
-			.Include(scp => scp.Participants)
-			.Select(scp => scp.Participants);
+		// var sportCourseParticipants = context.SportsCourses
+		// 	.Include(scp => scp.Participants)
+		// 	.Select(scp => scp.Participants);
 
-		coachesCount = context.SportsCourses
-			.Include(sc => sc.Participants).Count();
+		// coachesCount = context.SportsCourses
+		// 	.Include(sc => sc.Participants).Count();
 
-		refereesCount = context.SportsCourses
-			.Include(sc => sc.Participants).Count();
+		// refereesCount = context.SportsCourses
+		// 	.Include(sc => sc.Participants).Count();
 
-		provinceFederationsCount = context.CityFederations
-			.Include(f => f.FederationPresidents)
-			.Where(f => f.City.Id == 0)
-			.Where(f => f.FederationPresidents != null)
-			.Count();
+		// provinceFederationsCount = context.CityFederations
+		// 	.Include(f => f.FederationPresidents)
+		// 	.Where(f => f.City.Id == 0)
+		// 	.Where(f => f.FederationPresidents != null)
+		// 	.Count();
 
-		citiesFederationsCount = context.CityFederations
-			.Include(f => f.FederationPresidents)
-			.Where(f => f.City.Id != 0)
-			.Where(f => f.FederationPresidents != null)
-			.Count();
+		// citiesFederationsCount = context.CityFederations
+		// 	.Include(f => f.FederationPresidents)
+		// 	.Where(f => f.City.Id != 0)
+		// 	.Where(f => f.FederationPresidents != null)
+		// 	.Count();
 	}
 }

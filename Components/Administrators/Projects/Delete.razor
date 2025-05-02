@@ -26,12 +26,8 @@
             <dd class="col-sm-10">@constructionproject.CityId</dd>
         </dl>
         <dl class="row">
-            <dt class="col-sm-2">IsRural</dt>
-            <dd class="col-sm-10">@constructionproject.IsRural</dd>
-        </dl>
-        <dl class="row">
             <dt class="col-sm-2">IsRenovation</dt>
-            <dd class="col-sm-10">@constructionproject.IsRenovation</dd>
+            <dd class="col-sm-10">@constructionproject.TypeId</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">TypeId</dt>
@@ -39,15 +35,7 @@
         </dl>
         <dl class="row">
             <dt class="col-sm-2">StartYear</dt>
-            <dd class="col-sm-10">@constructionproject.StartYear</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Area</dt>
-            <dd class="col-sm-10">@constructionproject.Area</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">SportArea</dt>
-            <dd class="col-sm-10">@constructionproject.SportArea</dd>
+            <dd class="col-sm-10">@constructionproject.Year</dd>
         </dl>
         <EditForm method="post" Model="constructionproject" OnValidSubmit="DeleteConstructionProject" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(constructionproject is null)">Delete</button> |

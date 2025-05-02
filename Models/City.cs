@@ -15,11 +15,15 @@ public partial class City
 
     public virtual ICollection<Athlete> Athletes { get; set; } = new List<Athlete>();
 
-    public virtual ICollection<AthleticFacility> AthleticFacilities { get; set; } = new List<AthleticFacility>();
-
-    public virtual ICollection<CityFederation> CityFederations { get; set; } = new List<CityFederation>();
-
     public virtual ICollection<ConstructionProject> ConstructionProjects { get; set; } = new List<ConstructionProject>();
 
+    public virtual ICollection<Facility> Facilities { get; set; } = new List<Facility>();
+
+    public virtual ICollection<GovernmentFacility> GovernmentFacilities { get; set; } = new List<GovernmentFacility>();
+
     public virtual ICollection<Insurance> Insurances { get; set; } = new List<Insurance>();
+
+    public virtual ICollection<LocalFederation> LocalFederations { get; set; } = new List<LocalFederation>();
+
+    public virtual ICollection<PrivateFacility> PrivateFacilities { get; set; } = new List<PrivateFacility>();
 }

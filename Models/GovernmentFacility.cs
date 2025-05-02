@@ -3,25 +3,31 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class AthleticFacility
+public partial class GovernmentFacility
 {
     public Guid Id { get; set; }
 
     public string Name { get; set; } = null!;
 
-    public int OwnershipId { get; set; }
+    public string Owner { get; set; } = null!;
 
     public int? TypeId { get; set; }
-
-    public bool? IsRural { get; set; }
 
     public int CityId { get; set; }
 
     public string? District { get; set; }
 
+    public bool? IsRural { get; set; }
+
     public int? Area { get; set; }
 
+    public int? SportHallArea { get; set; }
+
+    public int? SportLandArea { get; set; }
+
     public bool IsActive { get; set; }
+
+    public int UsersGenderId { get; set; }
 
     public string? Sports { get; set; }
 
@@ -33,13 +39,9 @@ public partial class AthleticFacility
 
     public virtual City City { get; set; } = null!;
 
-    public virtual ICollection<M5license> M5licenses { get; set; } = new List<M5license>();
-
-    public virtual ICollection<M88contract> M88contracts { get; set; } = new List<M88contract>();
-
-    public virtual Ownership Ownership { get; set; } = null!;
+    public virtual ICollection<GovernmentFacilityLicense> GovernmentFacilityLicenses { get; set; } = new List<GovernmentFacilityLicense>();
 
     public virtual FacilityType? Type { get; set; }
 
-    public virtual ICollection<Gender> Genders { get; set; } = new List<Gender>();
+    public virtual UsersGender UsersGender { get; set; } = null!;
 }

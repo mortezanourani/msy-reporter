@@ -28,8 +28,8 @@
 					<PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
 					<PropertyColumn Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
 					<PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
-					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.FederationPresidents.FirstOrDefault().Name)" />
-					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.FederationPresidents.FirstOrDefault().IsPresident ? "رئیس" : "سرپرست")" />
+					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.FirstOrDefault()!.Name)" />
+					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
 					<TemplateColumn>
 						<a class="info-link" href="/Federation?Federation=@context.FederationId&City=@context.CityId">
 							<span class="material-symbols-rounded">info</span>
@@ -49,13 +49,13 @@
 	private City? city;
 	private List<City> cities = new List<City>();
 
-	private IQueryable<CityFederation> federations;
+	private IQueryable<LocalFederation> federations;
 
 	private int activesCount;
 	private int presidentsCount;
 	private int interimPresidentsCount;
 
-	private IQueryable<FederationMeeting> federationMeetings;
+	// private IQueryable<FederationMeeting> federationMeetings;
 
 	private int meetingsCount;
 	private int generalMeetingsCount;
@@ -75,10 +75,10 @@
 	{
 		city = cities.FirstOrDefault(city => city.Id == cityId);
 
-		federations = context.CityFederations
+		federations = context.LocalFederations
 			.Include(federation => federation.City)
 			.Include(federation => federation.Federation)
-			.Include(federation => federation.FederationPresidents)
+			.Include(federation => federation.LocalFederationPresidents)
 			.Where(federation => federation.City!.Id == cityId);
 	}
 

@@ -54,8 +54,6 @@
 @code {
 	private AppDbContext context = default!;
 
-	private DbSet<AthleticFacility>? sportFacilities;
-
 	private int msyFacilitiesCount { get; set; } = 0;
 	private int documentedMsyFacilitiesCount { get; set; } = 0;
 	private int contractedMsyFacilitiesCount { get; set; } = 0;
@@ -72,34 +70,31 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		sportFacilities = context.AthleticFacilities;
-
-		var msyFacilities = sportFacilities.Where(m => m.OwnershipId == 1);
+		var msyFacilities = context.Facilities;
 		msyFacilitiesCount = msyFacilities.Count();
-		documentedMsyFacilitiesCount = msyFacilities
-			.Where(m => m.M88contracts
-				.Where(m => m.ExpireDate >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
-			.Count();
+		// documentedMsyFacilitiesCount = msyFacilities
+		// 	.Where(m => m.HasDocuments)
+		// 	.Count();
 		contractedMsyFacilitiesCount = msyFacilities
-			.Where(m => m.M88contracts
+			.Where(m => m.FacilityContracts
 				.Where(m => m.ExpireDate >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
 			.Count();
 
-		var govFacilities = sportFacilities.Where(m => m.OwnershipId == 2);
+		var govFacilities = context.GovernmentFacilities;
 		govFacilitiesCount = govFacilities.Count();
 		licensedGovFacilitiesCount = govFacilities
-			.Where(m => m.M5licenses
+			.Where(m => m.GovernmentFacilityLicenses
 				.Where(m => m.ExpireDate >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
 			.Count();
 
-		var privateFacilities = sportFacilities.Where(m => m.OwnershipId == 3 || m.OwnershipId == 4);
+		var privateFacilities = context.PrivateFacilities;
 		privateFacilitiesCount = privateFacilities.Count();
 		beneficalPrivateFacilitiesCount = privateFacilities
-			.Where(m => m.M5licenses
-				.Where(m => m.LegalTitleId == 1).Count() > 0)
+			.Where(m => m.PrivateFacilityLicenses
+				.Any(m => m.IsBeneficial == true))
 			.Count();
 		ownedPrivateFacilitiesCount = privateFacilities
-			.Where(m => m.M5licenses
+			.Where(m => m.PrivateFacilityLicenses
 				.Where(m => m.IsOwner == true).Count() > 0)
 			.Count();
 	}

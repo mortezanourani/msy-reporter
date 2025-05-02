@@ -3,13 +3,11 @@ using System.Collections.Generic;
 
 namespace Reporter.Models;
 
-public partial class FederationPresident
+public partial class LocalFederationPresident
 {
     public Guid Id { get; set; }
 
-    public int FederationId { get; set; }
-
-    public int CityId { get; set; }
+    public Guid FederationId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -31,5 +29,5 @@ public partial class FederationPresident
 
     public bool IsPresident { get; set; }
 
-    public virtual CityFederation CityFederation { get; set; } = null!;
+    public virtual LocalFederation Federation { get; set; } = null!;
 }

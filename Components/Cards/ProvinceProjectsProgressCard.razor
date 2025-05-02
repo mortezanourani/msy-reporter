@@ -131,7 +131,7 @@
 
         projects = context.ConstructionProjects
             .Include(project => project.City)
-            .Include(project => project.ProjectCompletionProgresses);
+            .Include(project => project.ProjectProgresses);
 
         UpdateChart();
     }
@@ -154,7 +154,7 @@
         unfinishedProjectsCount = projects
             .OrderBy(project => project.City)
             .GroupBy(project => project.City)
-                .Select(group => group.Where(project => project.ProjectCompletionProgresses
+                .Select(group => group.Where(project => project.ProjectProgresses
                     .Max(progress => progress.Percentage) < 100 == true))
             .ToList()
             .Select(project => project.Count())
@@ -164,9 +164,9 @@
             .OrderBy(project => project.City)
             .GroupBy(project => project.City)
             .Select(group => group.Where(project => 
-                project.ProjectCompletionProgresses
+                project.ProjectProgresses
                     .Max(progress => progress.Percentage) < 100 == true && 
-                project.ProjectCompletionProgresses
+                project.ProjectProgresses
                     .Max(progress => progress.Percentage) >= 70 == true))
             .ToList()
             .Select(project => project.Count())
