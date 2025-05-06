@@ -1,7 +1,5 @@
 ﻿@page "/Federations"
 
-@implements IAsyncDisposable
-
 @using Microsoft.AspNetCore.Components.QuickGrid
 
 <PageTitle>Federations</PageTitle>
@@ -109,8 +107,6 @@
 
 		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
 	}
-
-	public async ValueTask DisposeAsync() => await context.DisposeAsync();
 
 	private PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
 

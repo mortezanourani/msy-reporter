@@ -1,5 +1,4 @@
 ﻿@inject IJSRuntime JSRuntime
-@implements IAsyncDisposable
 
 <div class="row">
     <div class="col1-1">
@@ -45,50 +44,50 @@
     let cityFacilitiesChart;
 
     function renderCityFacilitiesChart(data) {
-    const ctx = document.getElementById('cityFacilitiesChart').getContext('2d');
+        const ctx = document.getElementById('cityFacilitiesChart').getContext('2d');
 
-    if (cityFacilitiesChart) {
-    cityFacilitiesChart.destroy();
-    }
+        if (cityFacilitiesChart) {
+            cityFacilitiesChart.destroy();
+        }
 
-    cityFacilitiesChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-    labels: ['اماکن ورزشی وزارت ورزش و جوانان', 'اماکن ورزشی سایر ارگان ها', 'باشگاه های خصوصی'],
-    datasets: [{
-    data: data,
-    backgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b'],
-    hoverBackgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b']
-    }]
-    },
-    options: {
-    responsive: true,
-    plugins: {
-    legend: {
-    display: false,
-    position: 'top'
-    },
-    tooltip: {
-    bodyFont: {
-    family: 'IRANSans',
-    size: 11,
-    },
-    titleFont: {
-    family: 'IRANSans',
-    size: 12,
-    }
-    }
-    },
-    cutout: '65%'
-    }
-    });
+        cityFacilitiesChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['اماکن ورزشی وزارت ورزش و جوانان', 'اماکن ورزشی سایر ارگان ها', 'باشگاه های خصوصی'],
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b'],
+                    hoverBackgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        bodyFont: {
+                            family: 'IRANSans',
+                            size: 11,
+                        },
+                        titleFont: {
+                            family: 'IRANSans',
+                            size: 12,
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
     }
 
     function updateCityFacilitiesChart (data) {
-    if (cityFacilitiesChart) {
-    cityFacilitiesChart.data.datasets[0].data = data;
-    cityFacilitiesChart.update();
-    }
+        if (cityFacilitiesChart) {
+            cityFacilitiesChart.data.datasets[0].data = data;
+            cityFacilitiesChart.update();
+        }
     }
 </script>
 
@@ -117,7 +116,8 @@
 
         context = DbFactory.CreateDbContext();
 
-        cities = context.Cities;
+        cities = context.Cities
+            .Where(city => city.Id != 0);
 
         SelectCity();
     }
@@ -163,6 +163,4 @@
 
         await JSRuntime.InvokeVoidAsync("renderCityFacilitiesChart", chartCounts);
     }
-
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

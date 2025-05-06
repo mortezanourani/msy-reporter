@@ -69,6 +69,9 @@
 </div>
 
 @code {
+	[Parameter]
+	public int Year { get; set; }
+
 	private AppDbContext context = default!;
 
 	private int championsCount;
@@ -86,9 +89,16 @@
 	{
 		context = DbFactory.CreateDbContext();
 
+		OnParametersSet();
+	}
+
+	protected override void OnParametersSet()
+	{
 		var champions = context.Athletes
 			.Include(athlete => athlete.Gender)
 			.Include(athlete => athlete.Champions)
+			.Where(athlete => athlete.Champions
+				.Any(champion => champion.Tournament.Year == Year))
 			.Where(athlete => athlete.Champions
 				.Any(champion => champion.Medal != null));
 
@@ -102,25 +112,33 @@
 
 		medalsCount = context.Champions
 			.Include(champion => champion.Athlete)
+			.Count(champion => champion.Medal != null);
+
+		var medals = context.Champions
+			.Include(champion => champion.Tournament)
+			.Where(champion => champion.Tournament.Year == Year);
+
+		medalsCount = medals
 			.Sum(champion => champion.MedalsCount!.Value);
 
-		menMedalsCount = context.Champions
-			.Include(champion => champion.Athlete)
+		menMedalsCount = medals
 			.Where(champion => champion.Athlete.GenderId == 1)
 			.Sum(champion => champion.MedalsCount!.Value);
 
-		womenMedalsCount = context.Champions
-			.Include(champion => champion.Athlete)
+		womenMedalsCount = medals
 			.Where(champion => champion.Athlete.GenderId == 2)
 			.Sum(champion => champion.MedalsCount!.Value);
 
-		goldMedalsCount = context.Champions
-			.Count(champion => champion.Medal!.Color == "Gold");
+		goldMedalsCount = medals
+			.Where(champion => champion.Medal!.Color == "Gold")
+			.Sum(champion => champion.MedalsCount!.Value);
 
-		silverMedalsCount = context.Champions
-			.Count(champion => champion.Medal!.Color == "Silver");
+		silverMedalsCount = medals
+			.Where(champion => champion.Medal!.Color == "Silver")
+			.Sum(champion => champion.MedalsCount!.Value);
 
-		bronzeMedalsCount = context.Champions
-			.Count(champion => champion.Medal!.Color == "Bronze");
+		bronzeMedalsCount = medals
+			.Where(champion => champion.Medal!.Color == "Bronze")
+			.Sum(champion => champion.MedalsCount!.Value);
 	}
 }

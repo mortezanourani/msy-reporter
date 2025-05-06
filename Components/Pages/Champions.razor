@@ -1,20 +1,51 @@
 ﻿@page "/Champions"
 
-@implements IAsyncDisposable
-
 <PageTitle>Champions</PageTitle>
 
 <h2 class="page-title mb-3">مدال آوران و قهرمانان</h2>
 
-<ChampionsSummaryCards />
+<div class="row">
+    <div class="col1-1">
+        <ChampionsApproachCard />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col1-1">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="title">ورزش قهرمانی در سال @year</h6>
+                <InputSelect class="select" @bind-Value="year">
+                    @foreach (int year in years)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ChampionsYearSummaryCards Year="@year" />
 
 @code {
-	private AppDbContext context = default!;
+    private AppDbContext context = default!;
 
-	protected override void OnInitialized()
-	{
-		context = DbFactory.CreateDbContext();
-	}
+    private int year;
+    private List<int> years = new List<int>();
 
-	public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+
+        years = context.Champions
+            .Include(champion => champion.Tournament)
+            .GroupBy(champion => champion.Tournament.Year)
+                .Select(group => group.Key)
+            .OrderByDescending(year => year)
+            .ToList();
+
+        year = years.FirstOrDefault();
+    }
+
 }

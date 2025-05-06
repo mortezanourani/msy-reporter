@@ -1,0 +1,163 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="title">روند مقایسه ای مدال آوران استان گیلان</h6>
+    </div>
+    <div class="card-body">
+        <canvas id="championsApproachChart"></canvas>
+    </div>
+    <div class="card-footer legend">
+        <div class="legend-row total">
+            <h6>تعداد مدال آوران آقایان</h6>
+        </div>
+        <div class="legend-row unfinished">
+            <h6>تعداد مدال آوران بانوان</h6>
+        </div>
+    </div>
+</div>
+
+<script>
+    let championsApproachChart;
+
+    function renderChampionsApproachChart (labels, data1, data2) {
+    const ctx = document.getElementById('championsApproachChart').getContext('2d');
+    championsApproachChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+    labels: labels,
+    datasets: [{
+    label: 'مدال آوران آقا',
+    data: data1,
+    backgroundColor: '#95bdf2',
+    order: 1,
+    barPercentage: 0.5
+    },
+    {
+    label: 'مدال آوران خانم',
+    data: data2,
+    backgroundColor: '#2e77ae',
+    order: 2,
+    barPercentage: 0.5
+    }]
+    },
+    options: {
+    responsive: true,
+    plugins: {
+    legend: {
+    display: false,
+    labels: {
+    font: {
+    family: 'IRANSans',
+    size: 13,
+    weight: 500
+    }
+    },
+    position: 'bottom'
+    },
+    tooltip: {
+    bodyFont: {
+    family: 'IRANSans',
+    size: 11,
+    },
+    titleFont: {
+    family: 'IRANSans',
+    size: 12,
+    }
+    }
+    },
+    scales: {
+    x: {
+    stacked: true,
+    ticks: {
+    font: {
+    family: 'IRANSans',
+    size: 12,
+    weight: 600,
+    }
+    }
+    },
+    y: {
+    stacked: true,
+    beginAtZero: true,
+    ticks: {
+    font: {
+    family: 'IRANSans',
+    size: 12
+    }
+    }
+    }
+    }
+    }
+    });
+    }
+
+    function updateChampionsApproachChart (labels, data1, data2) {
+    if (championsApproachChart) {
+    championsApproachChart.data.labels = labels;
+    championsApproachChart.data.datasets[0].data = data1;
+    championsApproachChart.data.datasets[1].data = data2;
+    championsApproachChart.update();
+    }
+    }
+</script>
+
+@code {
+    private AppDbContext context = default!;
+
+    private int year;
+
+    private IQueryable<Champion> champions;
+    private List<int> years;
+    private List<int> menChampionsCount;
+    private List<int> womenChampionsCount;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+
+        champions = context.Champions
+            .Include(champion => champion.Athlete)
+            .Include(champion => champion.Tournament)
+            .Where(champion => champion.Medal != null);
+
+        UpdateChart();
+    }
+
+    private async void UpdateChart()
+    {
+        years = champions
+            .GroupBy(champion => champion.Tournament.Year)
+                .Select(group => group.Key)
+            .OrderBy(year => year)
+            .ToList();
+
+        menChampionsCount = champions
+            .OrderBy(champion => champion.Tournament.Year)
+            .GroupBy(champion => champion.Tournament.Year)
+                .Select(group => group
+                    .Select(champion => champion.Athlete)
+                    .Distinct()
+                    .Count(athlete => athlete.GenderId == 1))
+            .ToList();
+
+        womenChampionsCount = champions
+            .OrderBy(champion => champion.Tournament.Year)
+            .GroupBy(champion => champion.Tournament.Year)
+                .Select(group => group
+                    .Select(champion => champion.Athlete)
+                    .Distinct()
+                    .Count(athlete => athlete.GenderId == 2))
+            .ToList();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("renderChampionsApproachChart", years, menChampionsCount, womenChampionsCount);
+        }
+
+        await JSRuntime.InvokeVoidAsync("updateChampionsApproachChart", years, menChampionsCount, womenChampionsCount);
+    }
+}
