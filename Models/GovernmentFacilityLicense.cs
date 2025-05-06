@@ -11,9 +11,15 @@ public partial class GovernmentFacilityLicense
 
     public string? Serial { get; set; }
 
-    public DateOnly? StartDate { get; set; }
+    public string? StartDate { get; set; }
 
-    public DateOnly? ExpireDate { get; set; }
+    public string? ExpireDate { get; set; }
+
+    public int UsersGenderId { get; set; }
+
+    public string? MenSports { get; set; }
+
+    public string? WomenSports { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -22,4 +28,6 @@ public partial class GovernmentFacilityLicense
     public string? Phone { get; set; }
 
     public virtual GovernmentFacility Facility { get; set; } = null!;
+
+    public virtual UsersGender UsersGender { get; set; } = null!;
 }

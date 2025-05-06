@@ -13,13 +13,19 @@ public partial class PrivateFacilityLicense
 
     public bool? IsOwner { get; set; }
 
+    public bool? IsRenewal { get; set; }
+
     public string? Serial { get; set; }
 
-    public DateOnly? StartDate { get; set; }
+    public string? StartDate { get; set; }
 
-    public DateOnly? ExpireDate { get; set; }
+    public string? ExpireDate { get; set; }
 
     public int UsersGenderId { get; set; }
+
+    public string? MenSports { get; set; }
+
+    public string? WomenSports { get; set; }
 
     public string? Company { get; set; }
 

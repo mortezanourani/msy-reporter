@@ -9,7 +9,7 @@ public partial class GovernmentFacility
 
     public string Name { get; set; } = null!;
 
-    public string Owner { get; set; } = null!;
+    public string? Owner { get; set; }
 
     public int? TypeId { get; set; }
 
@@ -27,10 +27,6 @@ public partial class GovernmentFacility
 
     public bool IsActive { get; set; }
 
-    public int UsersGenderId { get; set; }
-
-    public string? Sports { get; set; }
-
     public string? ZipCode { get; set; }
 
     public string? Address { get; set; }
@@ -42,6 +38,4 @@ public partial class GovernmentFacility
     public virtual ICollection<GovernmentFacilityLicense> GovernmentFacilityLicenses { get; set; } = new List<GovernmentFacilityLicense>();
 
     public virtual FacilityType? Type { get; set; }
-
-    public virtual UsersGender UsersGender { get; set; } = null!;
 }

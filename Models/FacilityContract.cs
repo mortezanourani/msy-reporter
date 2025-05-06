@@ -9,11 +9,11 @@ public partial class FacilityContract
 
     public Guid FacilityId { get; set; }
 
-    public string Serial { get; set; } = null!;
+    public string? Serial { get; set; }
 
-    public DateOnly StartDate { get; set; }
+    public string? StartDate { get; set; }
 
-    public DateOnly ExpireDate { get; set; }
+    public string? ExpireDate { get; set; }
 
     public Guid? LegalContractorId { get; set; }
 
@@ -25,7 +25,7 @@ public partial class FacilityContract
 
     public string? LicenseSerial { get; set; }
 
-    public DateOnly? LicenseDate { get; set; }
+    public string? LicenseDate { get; set; }
 
     public virtual Facility Facility { get; set; } = null!;
 

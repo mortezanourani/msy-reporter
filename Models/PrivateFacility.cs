@@ -25,8 +25,6 @@ public partial class PrivateFacility
 
     public bool IsActive { get; set; }
 
-    public string? Sports { get; set; }
-
     public string? ZipCode { get; set; }
 
     public string? Address { get; set; }

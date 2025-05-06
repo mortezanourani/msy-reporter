@@ -76,16 +76,22 @@
 		// 	.Where(m => m.HasDocuments)
 		// 	.Count();
 		contractedMsyFacilitiesCount = msyFacilities
-			.Where(m => m.FacilityContracts
-				.Where(m => m.ExpireDate >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
+			.Where(m => m.FacilityContracts.Count() > 0)
 			.Count();
+		// contractedMsyFacilitiesCount = msyFacilities
+		// 	.Where(m => m.FacilityContracts
+		// 		.Where(m => DateOnly.Parse(m.ExpireDate) >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
+		// 	.Count();
 
 		var govFacilities = context.GovernmentFacilities;
 		govFacilitiesCount = govFacilities.Count();
 		licensedGovFacilitiesCount = govFacilities
-			.Where(m => m.GovernmentFacilityLicenses
-				.Where(m => m.ExpireDate >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
+			.Where(m => m.GovernmentFacilityLicenses.Count() > 0)
 			.Count();
+		// licensedGovFacilitiesCount = govFacilities
+		// 	.Where(m => m.GovernmentFacilityLicenses
+		// 		.Where(m => DateOnly.Parse(m.ExpireDate) >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
+		// 	.Count();
 
 		var privateFacilities = context.PrivateFacilities;
 		privateFacilitiesCount = privateFacilities.Count();

@@ -167,8 +167,11 @@ public partial class AppDbContext : DbContext
                 .HasFilter("([Serial] IS NOT NULL)");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ExpireDate).HasMaxLength(10);
+            entity.Property(e => e.LicenseDate).HasMaxLength(10);
             entity.Property(e => e.LicenseSerial).HasMaxLength(256);
             entity.Property(e => e.Serial).HasMaxLength(256);
+            entity.Property(e => e.StartDate).HasMaxLength(10);
 
             entity.HasOne(d => d.Facility).WithMany(p => p.FacilityContracts)
                 .HasForeignKey(d => d.FacilityId)
@@ -233,10 +236,6 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.Type).WithMany(p => p.GovernmentFacilities).HasForeignKey(d => d.TypeId);
-
-            entity.HasOne(d => d.UsersGender).WithMany(p => p.GovernmentFacilities)
-                .HasForeignKey(d => d.UsersGenderId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<GovernmentFacilityLicense>(entity =>
@@ -246,12 +245,18 @@ public partial class AppDbContext : DbContext
                 .HasFilter("([Serial] IS NOT NULL)");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ExpireDate).HasMaxLength(10);
             entity.Property(e => e.Serial).HasMaxLength(256);
+            entity.Property(e => e.StartDate).HasMaxLength(10);
 
             entity.HasOne(d => d.Facility).WithMany(p => p.GovernmentFacilityLicenses)
                 .HasForeignKey(d => d.FacilityId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.UsersGender).WithMany(p => p.GovernmentFacilityLicenses)
+                .HasForeignKey(d => d.UsersGenderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_GovernmentFacilityLicenses_FacilityContracts_ContractId");
+                .HasConstraintName("FK_GovernmentFacilities_UsersGenders_UsersGenderId");
         });
 
         modelBuilder.Entity<Insurance>(entity =>
@@ -336,8 +341,10 @@ public partial class AppDbContext : DbContext
                 .HasFilter("([Serial] IS NOT NULL)");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ExpireDate).HasMaxLength(10);
             entity.Property(e => e.IsBeneficial).HasDefaultValue(true);
             entity.Property(e => e.Serial).HasMaxLength(256);
+            entity.Property(e => e.StartDate).HasMaxLength(10);
 
             entity.HasOne(d => d.Facility).WithMany(p => p.PrivateFacilityLicenses)
                 .HasForeignKey(d => d.FacilityId)

@@ -15,7 +15,7 @@ public partial class UsersGender
 
     public virtual ICollection<Facility> Facilities { get; set; } = new List<Facility>();
 
-    public virtual ICollection<GovernmentFacility> GovernmentFacilities { get; set; } = new List<GovernmentFacility>();
+    public virtual ICollection<GovernmentFacilityLicense> GovernmentFacilityLicenses { get; set; } = new List<GovernmentFacilityLicense>();
 
     public virtual ICollection<PrivateFacilityLicense> PrivateFacilityLicenses { get; set; } = new List<PrivateFacilityLicense>();
 }
