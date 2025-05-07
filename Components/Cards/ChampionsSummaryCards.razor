@@ -115,12 +115,15 @@
 			.Sum(champion => champion.MedalsCount!.Value);
 
 		goldMedalsCount = context.Champions
-			.Count(champion => champion.Medal!.Color == "Gold");
+			.Where(champion => champion.Medal!.Color == "Gold")
+			.Sum(champion => champion.MedalsCount!.Value);
 
 		silverMedalsCount = context.Champions
-			.Count(champion => champion.Medal!.Color == "Silver");
+			.Where(champion => champion.Medal!.Color == "Silver")
+			.Sum(champion => champion.MedalsCount!.Value);
 
 		bronzeMedalsCount = context.Champions
-			.Count(champion => champion.Medal!.Color == "Bronze");
+			.Where(champion => champion.Medal!.Color == "Bronze")
+			.Sum(champion => champion.MedalsCount!.Value);
 	}
 }
