@@ -86,21 +86,21 @@
                 datasets: [{
                     label: 'هیات های فعال',
                     data: data1,
-                    backgroundColor: '#ff8e2b',
+                    backgroundColor: '#2e77ae',
                     order: 1,
                     fill: true
                 },
                 {
-                    label: 'احکام ریاست هیات ها',
+                    label: 'احکام سرپرستی هیات ها',
                     data: data2,
-                    backgroundColor: '#2e77ae',
+                    backgroundColor: '#95bdf2',
                     order: 2,
                     fill: true
                 },
                 {
-                    label: 'احکام سرپرستی هیات ها',
+                    label: 'هیات های فاقد شناسه',
                     data: data3,
-                    backgroundColor: '#95bdf2',
+                    backgroundColor: '#ff8e2b',
                     order: 3,
                     fill: true
                 }]
@@ -189,8 +189,8 @@
 
     private List<string> cities;
     private List<int> activeFederationsCount;
-    private List<int> hasPresidentFederationsCount;
     private List<int> hasInterimPresidentFederationsCount;
+    private List<int> noNationalIdFederationsCount;
 
 	protected override void OnInitialized()
 	{
@@ -252,20 +252,19 @@
                     .Count())
             .ToList();
 
-        hasPresidentFederationsCount = citiesFederations!
-            .GroupBy(federation => federation.City)
-            .Select(group => group
-                .Where(federation => federation.LocalFederationPresidents
-                    .Any(president => president.IsPresident)))
-            .ToList()
-            .Select(t => t.Count())
-            .ToList();
-
         hasInterimPresidentFederationsCount = citiesFederations!
             .GroupBy(federation => federation.City)
             .Select(group => group
                 .Where(federation => federation.LocalFederationPresidents
                     .Any(president => !president.IsPresident)))
+            .ToList()
+            .Select(t => t.Count())
+            .ToList();
+
+        noNationalIdFederationsCount = citiesFederations!
+            .GroupBy(federation => federation.City)
+            .Select(group => group
+                .Where(federation => federation.NationalId == null))
             .ToList()
             .Select(t => t.Count())
             .ToList();
@@ -275,9 +274,9 @@
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("renderProvinceFederationsStatusChart", cities, activeFederationsCount, hasPresidentFederationsCount, hasInterimPresidentFederationsCount);
+            await JSRuntime.InvokeVoidAsync("renderProvinceFederationsStatusChart", cities, activeFederationsCount, hasInterimPresidentFederationsCount, noNationalIdFederationsCount);
         }
 
-        await JSRuntime.InvokeVoidAsync("updateProvinceFederationsStatusChart", cities, activeFederationsCount, hasPresidentFederationsCount, hasInterimPresidentFederationsCount);
+        await JSRuntime.InvokeVoidAsync("updateProvinceFederationsStatusChart", cities, activeFederationsCount, hasInterimPresidentFederationsCount, noNationalIdFederationsCount);
     }
 }
