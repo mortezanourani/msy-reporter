@@ -60,11 +60,13 @@
                     </form>
                     *@
                     <ul class="nav align-items-center">
+                        @*
                         <li class="nav-item">
                             <a href="/Account/Manage" class="btn-settings">
                                 <span class="material-symbols-rounded">apps</span>
                             </a>
                         </li>
+                        *@
                         <li class="nav-item">
                             <a href="/Account/SignOut" class="btn-signout">
                                 <span class="material-symbols-rounded">mode_off_on</span>
@@ -86,11 +88,11 @@
 
 <script>
     window.scrollHelper = {
-    onScroll: function (dotNetHelper) {
-    window.addEventListener('scroll', () => {
-    dotNetHelper.invokeMethodAsync('OnScroll', window.scrollY);
-    });
-    }
+        onScroll: function (dotNetHelper) {
+            window.addEventListener('scroll', () => {
+                dotNetHelper.invokeMethodAsync('OnScroll', window.scrollY);
+            });
+        }
     };
 </script>
 

@@ -1,0 +1,92 @@
+﻿@page "/Federations/{Id:guid}/President/Add"
+@using Microsoft.EntityFrameworkCore
+@using Reporter.Models
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>LocalFederationPresident</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="LocalFederationPresident" OnValidSubmit="AddLocalFederationPresident" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="LocalFederationPresident.Name" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="seencode" class="form-label">SeenCode:</label> 
+                <InputText id="seencode" @bind-Value="LocalFederationPresident.SeenCode" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.SeenCode" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="birthdate" class="form-label">BirthDate:</label> 
+                <InputText id="birthdate" @bind-Value="LocalFederationPresident.BirthDate" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.BirthDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone:</label> 
+                <InputText id="phone" @bind-Value="LocalFederationPresident.Phone" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.Phone" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="educationalqualification" class="form-label">EducationalQualification:</label> 
+                <InputText id="educationalqualification" @bind-Value="LocalFederationPresident.EducationalQualification" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.EducationalQualification" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="educationalmajor" class="form-label">EducationalMajor:</label> 
+                <InputText id="educationalmajor" @bind-Value="LocalFederationPresident.EducationalMajor" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.EducationalMajor" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="appointmentorder" class="form-label">AppointmentOrder:</label> 
+                <InputText id="appointmentorder" @bind-Value="LocalFederationPresident.AppointmentOrder" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.AppointmentOrder" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="appointmentdate" class="form-label">AppointmentDate:</label> 
+                <InputText id="appointmentdate" @bind-Value="LocalFederationPresident.AppointmentDate" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.AppointmentDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="termend" class="form-label">TermEnd:</label> 
+                <InputText id="termend" @bind-Value="LocalFederationPresident.TermEnd" class="form-control" /> 
+                <ValidationMessage For="() => LocalFederationPresident.TermEnd" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="ispresident" class="form-label">IsPresident:</label> 
+                <InputCheckbox id="ispresident" @bind-Value="LocalFederationPresident.IsPresident" class="form-check-input" /> 
+                <ValidationMessage For="() => LocalFederationPresident.IsPresident" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Add</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/Federations/@Id">Back to Local Federation</a>
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private LocalFederationPresident LocalFederationPresident { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddLocalFederationPresident()
+    {
+        using var context = DbFactory.CreateDbContext();
+        LocalFederationPresident.FederationId = Id;
+        context.LocalFederationPresidents.Add(LocalFederationPresident);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/Federations/" + Id);
+    }
+}
