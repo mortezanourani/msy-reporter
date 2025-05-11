@@ -209,11 +209,15 @@
 
 		presidentsCount = federations!
 			.Count(federation => federation.LocalFederationPresidents
-				.Any(president => president.IsPresident));
+                .OrderByDescending(president => president.AppointmentDate)
+                .FirstOrDefault()!
+                .IsPresident == true);
 
 		interimPresidentsCount = federations!
 			.Count(federation => federation.LocalFederationPresidents
-				.Any(president => !president.IsPresident));
+                .OrderByDescending(president => president.AppointmentDate)
+                .FirstOrDefault()!
+                .IsPresident == false);
 
 		// federationMeetings = context.FederationMeetings
 		// 	.Include(meeting => meeting.Type)

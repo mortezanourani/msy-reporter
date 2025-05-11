@@ -30,10 +30,10 @@
 						<PropertyColumn Sortable="true" Title="بخش" Property="@(federation => federation.District)" />
 					}
 					<PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
-					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.FirstOrDefault()!.Name)" />
-					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
+					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name)" />
+					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
 					<TemplateColumn>
-						<a class="info-link" href="/Federation?Federation=@context.FederationId&City=@context.CityId">
+						<a class="info-link" href="/Federations/@context.Id">
 							<span class="material-symbols-rounded">info</span>
 						</a>
 					</TemplateColumn>
