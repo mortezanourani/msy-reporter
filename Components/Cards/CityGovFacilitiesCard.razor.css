@@ -1,0 +1,93 @@
+﻿.gov-facilities-card {
+}
+
+    .gov-facilities-card .card-header,
+    .gov-facilities-card .card-body {
+    }
+
+    .gov-facilities-card .card-header .title {
+        font-size: 14px;
+        font-weight: 400;
+        /*color: var(--primary-color);*/
+    }
+
+    .gov-facilities-card .facilities-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+
+        .gov-facilities-card .facilities-list ::deep.facilities-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            .gov-facilities-card .facilities-list ::deep.facilities-table thead tr th {
+                padding: 4px 8px 8px;
+                text-align: center;
+                font-size: 13px;
+                font-weight: 400;
+            }
+
+            .gov-facilities-card .facilities-list ::deep.facilities-table thead tr th:first-child {
+                padding-right: 0px;
+            }
+
+                .gov-facilities-card .facilities-list ::deep.facilities-table thead tr th .col-title {
+                    justify-content: center;
+                }
+                .gov-facilities-card .facilities-list ::deep.facilities-table thead tr th:first-child .col-title {
+                    justify-content: right;
+                    margin-right: 12px;
+                }
+
+            .gov-facilities-card .facilities-list ::deep.facilities-table tbody tr {
+                background: none;
+                /*box-shadow: var(--card-box-shadow);*/
+                transition: all ease-in-out 100ms;
+            }
+
+                .gov-facilities-card .facilities-list ::deep.facilities-table tbody tr:nth-child(2n+1) {
+                    background: var(--primary-color);
+                    transition: all ease-in-out 100ms;
+                }
+
+                .gov-facilities-card .facilities-list ::deep.facilities-table tbody tr:hover {
+                    background: var(--secondary-color);
+                }
+
+                .gov-facilities-card .facilities-list ::deep.facilities-table tbody tr td {
+                    padding: 8px 12px;
+                    text-align: center;
+                    font-size: 13px;
+                    font-weight: 400;
+                }
+
+                .gov-facilities-card .facilities-list ::deep.facilities-table tbody tr td:first-child {
+                    font-weight: 400;
+                    text-align: right;
+                }
+
+                .gov-facilities-card .facilities-list ::deep.facilities-table tbody tr td .info-link {
+                    display: flex;
+                    justify-content: end;
+                }
+
+    .gov-facilities-card .card-footer {
+        justify-content: stretch;
+    }
+
+    .gov-facilities-card .paginator {
+        margin: 0;
+        padding: 0;
+        border: none;
+        width: 100%;
+    }
+
+    .gov-facilities-card .paginator .total,
+    .gov-facilities-card .paginator nav * {
+        color: #ffffff;
+        font-weight: 300;
+    }

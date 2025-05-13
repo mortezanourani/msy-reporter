@@ -4,13 +4,7 @@
     <div class="col1-1">
         <div class="card city-facilities-card">
             <div class="card-header border-bottom">
-                <h6>اماکن ورزشی شهرستان</h6>
-                <InputSelect  class="cities-select" @bind-Value="cityId" @onclick="SelectCity">
-                    @foreach (City city in cities!)
-                    {
-                        <option value="@city.Id">@city.PersianName</option>
-                    }
-                </InputSelect>
+                <h6>خلاصه وضعیت اماکن ورزشی شهرستان</h6>
             </div>
             <div class="card-body">
                 <div class="city-facilities-bar">
@@ -92,12 +86,10 @@
 </script>
 
 @code {
+    [Parameter]
+    public City? City { get; set; }
+
     private AppDbContext context = default!;
-
-    private IQueryable<City>? cities;
-
-    private int cityId { get; set; } = 1;
-    private City? city { get; set; }
 
     private int msyFacilities { get; set; } = 0;
     private decimal msyFacilitiesPercent { get; set; } = 0;
@@ -112,23 +104,18 @@
 
     protected override void OnInitialized()
     {
-        base.OnInitialized();
-
         context = DbFactory.CreateDbContext();
-
-        cities = context.Cities
-            .Where(city => city.Id != 0);
 
         SelectCity();
     }
 
     private void SelectCity()
     {
-        city = context.Cities
+        var city = context.Cities
             .Include(c => c.Facilities)
             .Include(c => c.GovernmentFacilities)
             .Include(c => c.PrivateFacilities)
-            .FirstOrDefault(c => c.Id == cityId);
+            .FirstOrDefault(c => c.Id == City!.Id);
 
         msyFacilities = city!.Facilities.Count();
 

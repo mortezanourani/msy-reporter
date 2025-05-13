@@ -1,0 +1,89 @@
+﻿.msy-facilities-card {
+    /*background: none;*/
+    /*box-shadow: none;*/
+}
+
+    .msy-facilities-card .card-header,
+    .msy-facilities-card .card-body {
+        /*padding: var(--spacing-y) 0;*/
+    }
+
+    .msy-facilities-card .card-header .title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .msy-facilities-card .facilities-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+
+        .msy-facilities-card .facilities-list ::deep.facilities-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            .msy-facilities-card .facilities-list ::deep.facilities-table thead tr th {
+                padding: 4px 8px 8px;
+                text-align: center;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .msy-facilities-card .facilities-list ::deep.facilities-table thead tr th:first-child {
+                padding-right: 0px;
+            }
+
+                .msy-facilities-card .facilities-list ::deep.facilities-table thead tr th .col-title {
+                    justify-content: center;
+                }
+                .msy-facilities-card .facilities-list ::deep.facilities-table thead tr th:first-child .col-title {
+                    justify-content: right;
+                    margin-right: 12px;
+                }
+
+            .msy-facilities-card .facilities-list ::deep.facilities-table tbody tr {
+                background: #ffffff;
+                /*box-shadow: var(--card-box-shadow);*/
+                transition: all ease-in-out 100ms;
+            }
+
+            .msy-facilities-card .facilities-list ::deep.facilities-table tbody tr:nth-child(2n+1) {
+                background: var(--light-color);
+                transition: all ease-in-out 100ms;
+            }
+
+                .msy-facilities-card .facilities-list ::deep.facilities-table tbody tr:hover {
+                    background: var(--secondary-color);
+                }
+
+                .msy-facilities-card .facilities-list ::deep.facilities-table tbody tr td {
+                    padding: 8px 12px;
+                    text-align: center;
+                    font-size: 13px;
+                    font-weight: 400;
+                }
+                .msy-facilities-card .facilities-list ::deep.facilities-table tbody tr td:first-child {
+                    font-weight: 500;
+                    text-align: right;
+                }
+
+                .msy-facilities-card .facilities-list ::deep.facilities-table tbody tr td .info-link {
+                    display: flex;
+                    justify-content: end;
+                }
+
+    .msy-facilities-card .card-footer {
+        justify-content: stretch;
+    }
+
+    .msy-facilities-card .paginator {
+        margin: 0;
+        padding: 0;
+        border: none;
+        width: 100%;
+    }

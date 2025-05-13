@@ -1,0 +1,85 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+<div class="card gov-facilities-card color-card">
+    <div class="card-header">
+        <h6 class="title">اماکن دولتی سایر ارگان های @City!.PersianName</h6>
+    </div>
+    <div class="card-body pt-0">
+        <div class="facilities-list">
+            @if (govFacilities is not null)
+            {
+                <QuickGrid Items="govFacilities" Pagination="pagination" Theme="" Class="facilities-table">
+                    <PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
+                    @* <PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : "نامشخص")" /> *@
+                    <PropertyColumn Title="مالکیت" Property="@(facility => facility.Owner)" />
+                    <TemplateColumn>
+                        <a class="info-link" href="/Facilities/@context.Id">
+                            <span class="material-symbols-rounded">info</span>
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+            }
+        </div>
+    </div>
+    <div class="card-footer pt-0">
+        <div class="paginator border-top pt-2">
+            <nav role="navigation">
+                @if (pagination.TotalItemCount.HasValue)
+                {
+                    for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
+                    {
+                        var capturedIndex = pageIndex;
+                        <button @onclick="@(() => GoToPageAsync(capturedIndex))"
+                                class="btn @PageButtonClass(capturedIndex)"
+                                aria-current="@AriaCurrentValue(capturedIndex)"
+                                aria-label="@(pageIndex + 1)">
+                            @(pageIndex + 1)
+                        </button>
+                    }
+                }
+            </nav>
+            <div class="total">
+                @string.Format("{0} مکان دولتی", pagination.TotalItemCount)
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public City? City { get; set; }
+
+    private AppDbContext context = default!;
+    private IQueryable<GovernmentFacility>? govFacilities;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    protected override void OnParametersSet()
+    {
+        var city = context.Cities
+            .Include(city => city.GovernmentFacilities)
+                .ThenInclude(facility => facility.GovernmentFacilityLicenses)
+            .FirstOrDefault(city => city.Id == City!.Id);
+
+        govFacilities = city!.GovernmentFacilities
+            .AsQueryable();
+
+        pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+    }
+
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+
+    private async Task GoToPageAsync(int pageIndex)
+    {
+        await pagination.SetCurrentPageIndexAsync(pageIndex);
+    }
+
+    private string? PageButtonClass(int pageIndex)
+        => pagination.CurrentPageIndex == pageIndex ? "current" : null;
+
+    private string? AriaCurrentValue(int pageIndex)
+        => pagination.CurrentPageIndex == pageIndex ? "page" : null;
+}
