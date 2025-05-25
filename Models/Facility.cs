@@ -35,11 +35,15 @@ public partial class Facility
 
     public string? Phone { get; set; }
 
+    public bool IsSubFacility { get; set; }
+
     public virtual City City { get; set; } = null!;
 
     public virtual ICollection<ConstructionProject> ConstructionProjects { get; set; } = new List<ConstructionProject>();
 
     public virtual ICollection<FacilityContract> FacilityContracts { get; set; } = new List<FacilityContract>();
+
+    public virtual ICollection<FacilityDocument> FacilityDocuments { get; set; } = new List<FacilityDocument>();
 
     public virtual FacilityType? Type { get; set; }
 

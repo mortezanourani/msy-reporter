@@ -30,6 +30,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<FacilityContract> FacilityContracts { get; set; }
 
+    public virtual DbSet<FacilityDocument> FacilityDocuments { get; set; }
+
     public virtual DbSet<FacilityType> FacilityTypes { get; set; }
 
     public virtual DbSet<Federation> Federations { get; set; }
@@ -181,6 +183,20 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.LegalContractor).WithMany(p => p.FacilityContracts)
                 .HasForeignKey(d => d.LegalContractorId)
                 .HasConstraintName("FK_FacilityContractLicenses_LocalFederations_LegalContractorId");
+        });
+
+        modelBuilder.Entity<FacilityDocument>(entity =>
+        {
+            entity.HasIndex(e => e.Serial, "IX_FacilityDocuments_Serial")
+                .IsUnique()
+                .HasFilter("([Serial] IS NOT NULL)");
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.Date).HasMaxLength(10);
+            entity.Property(e => e.IsNew).HasDefaultValue(true);
+            entity.Property(e => e.Serial).HasMaxLength(32);
+
+            entity.HasOne(d => d.Facility).WithMany(p => p.FacilityDocuments).HasForeignKey(d => d.FacilityId);
         });
 
         modelBuilder.Entity<FacilityType>(entity =>
