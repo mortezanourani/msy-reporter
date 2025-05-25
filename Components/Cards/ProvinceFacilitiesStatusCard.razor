@@ -8,7 +8,7 @@
 				</div>
 				<div class="d-flex justify-content-between">
 					<p>دارای سند:</p>
-					<b>@contractedMsyFacilitiesCount</b>
+					<b>@documentedMsyFacilitiesCount</b>
 				</div>
 				<div class="d-flex justify-content-between">
 					<p>واگذار شده در ماده 88:</p>
@@ -71,7 +71,12 @@
 		context = DbFactory.CreateDbContext();
 
 		var msyFacilities = context.Facilities;
-		msyFacilitiesCount = msyFacilities.Count();
+		msyFacilitiesCount = msyFacilities
+			.Where(facility => facility.IsSubFacility == false)
+			.Count();
+
+		documentedMsyFacilitiesCount = context.FacilityDocuments
+			.Count();
 		// documentedMsyFacilitiesCount = msyFacilities
 		// 	.Where(m => m.HasDocuments)
 		// 	.Count();

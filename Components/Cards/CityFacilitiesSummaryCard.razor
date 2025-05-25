@@ -106,10 +106,10 @@
     {
         context = DbFactory.CreateDbContext();
 
-        SelectCity();
+        OnParametersSet();
     }
 
-    private void SelectCity()
+    protected override void OnParametersSet()
     {
         var city = context.Cities
             .Include(c => c.Facilities)
