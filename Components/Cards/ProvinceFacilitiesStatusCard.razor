@@ -1,50 +1,69 @@
 ﻿<div class="row">
 	<div class="col1-3">
-		<div class="card cornered1">
+		<div class="card card2 cornered1">
+			<div class="card-header pb-0">
+				<h6 class="title">اماکن ورزشی وزارت ورزش و جوانان</h6>
+				<a href="/SportFacilities/">جزئیات بیشتر</a>
+			</div>
 			<div class="card-body">
 				<div>
-					<h6 class="title">اماکن ورزشی وزارت ورزش و جوانان</h6>
-					<h2>@msyFacilitiesCount</h2>
+					<h1>@msyFacilitiesCount</h1>
 				</div>
-				<div class="d-flex justify-content-between">
-					<p>دارای سند:</p>
-					<b>@documentedMsyFacilitiesCount</b>
-				</div>
-				<div class="d-flex justify-content-between">
-					<p>واگذار شده در ماده 88:</p>
-					<b>@contractedMsyFacilitiesCount</b>
+				<div>
+					<div class="d-flex justify-content-between">
+						<p>دارای سند:</p>
+						<b>@documentedMsyFacilitiesCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>فاقد سند:</p>
+						<b>@undocumentedMsyFacilitiesCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>واگذار شده در ماده 88:</p>
+						<b>@contractedMsyFacilitiesCount</b>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col1-3">
-		<div class="card cornered2">
+		<div class="card card2 cornered2">
+			<div class="card-header pb-0">
+				<h6 class="title">اماکن ورزشی سایر ارگان ها</h6>
+				<a href="/SportFacilities/">جزئیات بیشتر</a>
+			</div>
 			<div class="card-body">
 				<div>
-					<h6 class="title">اماکن ورزشی سایر ارگان ها</h6>
-					<h2>@govFacilitiesCount</h2>
+					<h1>@govFacilitiesCount</h1>
 				</div>
-				<div class="d-flex justify-content-between">
-					<p>دارای مجوز ماده 5:</p>
-					<b>@licensedGovFacilitiesCount</b>
+				<div>
+					<div class="d-flex justify-content-between">
+						<p>دارای مجوز ماده 5:</p>
+						<b>@licensedGovFacilitiesCount</b>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col1-3">
-		<div class="card cornered3">
+		<div class="card card2 cornered3">
+			<div class="card-header pb-0">
+				<h6 class="title">باشگاه های خصوصی</h6>
+				<a href="/SportFacilities/">جزئیات بیشتر</a>
+			</div>
 			<div class="card-body">
 				<div>
-					<h6 class="title">باشگاه های خصوصی</h6>
-					<h2>@privateFacilitiesCount</h2>
+					<h1>@privateFacilitiesCount</h1>
 				</div>
-				<div class="d-flex justify-content-between">
-					<p>حقیقی:</p>
-					<b>@beneficalPrivateFacilitiesCount</b>
-				</div>
-				<div class="d-flex justify-content-between">
-					<p>تملیکی:</p>
-					<b>@ownedPrivateFacilitiesCount</b>
+				<div>
+					<div class="d-flex justify-content-between">
+						<p>حقیقی:</p>
+						<b>@beneficalPrivateFacilitiesCount</b>
+					</div>
+					<div class="d-flex justify-content-between">
+						<p>تملیکی:</p>
+						<b>@ownedPrivateFacilitiesCount</b>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -56,6 +75,7 @@
 
 	private int msyFacilitiesCount { get; set; } = 0;
 	private int documentedMsyFacilitiesCount { get; set; } = 0;
+	private int undocumentedMsyFacilitiesCount { get; set; } = 0;
 	private int contractedMsyFacilitiesCount { get; set; } = 0;
 
 	private int govFacilitiesCount { get; set; } = 0;
@@ -77,6 +97,8 @@
 
 		documentedMsyFacilitiesCount = context.FacilityDocuments
 			.Count();
+
+		undocumentedMsyFacilitiesCount = msyFacilitiesCount - documentedMsyFacilitiesCount;
 		// documentedMsyFacilitiesCount = msyFacilities
 		// 	.Where(m => m.HasDocuments)
 		// 	.Count();

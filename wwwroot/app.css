@@ -77,6 +77,14 @@ body {
     border-radius: 8px;
 }
 
+    .card.card2 {
+        aspect-ratio: 2;
+    }
+
+    .card.card3 {
+        aspect-ratio: 3/2;
+    }
+
     .card.color-card {
         background-image: var(--card-color-bg);
     }
@@ -151,7 +159,7 @@ body {
     }
 
         .card .card-body .title {
-            font: 500 13px IRANSans;
+            font: 600 13px IRANSans;
         }
 
         .card .card-body h2 {
@@ -161,7 +169,7 @@ body {
         .card .card-body b,
         .card .card-body p {
             margin: 0;
-            font: 400 12px IRANSans;
+            font: 400 13px IRANSans;
         }
 
         .card .card-body b {
