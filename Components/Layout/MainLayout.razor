@@ -1,6 +1,49 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 
+<nav class="primary-navbar">
+    <div class="container">
+        <ul class="nav">
+            <li>
+                <form class="tn-search">
+                    <input type="text" name="search" placeholder="جستجو..." />
+                </form>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/" Match="NavLinkMatch.All">در یک نگاه</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/SportFacilities">گروه ورزشی</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Projects">دفتر فنی</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Women">امور بانوان</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Youth">امور جوانان</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Accounts">
+                    <img src="/icons/poweroff.svg" />
+                </NavLink>
+            </li>
+            @*
+                        <li class="nav-item">
+                            <a href="/Account/Manage" class="btn-settings">
+                                <span class="material-symbols-rounded">apps</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Account/SignOut" class="btn-signout">
+                                <img src="/icons/search.svg" />
+                            </a>
+                        </li>
+                        *@
+        </ul>
+    </div>
+</nav>
 <main class="main">
     <div class="container">
         @*
@@ -53,27 +96,6 @@
         </nav>
         *@
         <div class="content">
-            <nav class="top-navbar @scrolledClass">
-                <div class="wrapper">
-                    <form class="tn-search">
-                        <input type="text" name="search" placeholder="جستجو..." />
-                    </form>
-                    <ul class="nav align-items-center">
-                        @*
-                        <li class="nav-item">
-                            <a href="/Account/Manage" class="btn-settings">
-                                <span class="material-symbols-rounded">apps</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/Account/SignOut" class="btn-signout">
-                                <img src="/icons/search.svg" />
-                            </a>
-                        </li>
-                        *@
-                    </ul>
-                </div>
-            </nav>
             @Body
         </div>
     </div>
