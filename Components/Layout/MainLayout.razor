@@ -5,15 +5,15 @@
     <div class="container">
         <ul class="nav">
             <li>
-                <form class="tn-search">
-                    <input type="text" name="search" placeholder="جستجو..." />
-                </form>
+                <button class="btn">
+                    <img src="/icons/search.svg" />
+                </button>
             </li>
             <li class="nav-item">
                 <NavLink href="/" Match="NavLinkMatch.All">در یک نگاه</NavLink>
             </li>
             <li class="nav-item">
-                <NavLink href="/SportFacilities">گروه ورزشی</NavLink>
+                <NavLink href="/SportsGroup/Federations">گروه ورزشی</NavLink>
             </li>
             <li class="nav-item">
                 <NavLink href="/Projects">دفتر فنی</NavLink>
@@ -29,19 +29,10 @@
                     <img src="/icons/poweroff.svg" />
                 </NavLink>
             </li>
-            @*
-                        <li class="nav-item">
-                            <a href="/Account/Manage" class="btn-settings">
-                                <span class="material-symbols-rounded">apps</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/Account/SignOut" class="btn-signout">
-                                <img src="/icons/search.svg" />
-                            </a>
-                        </li>
-                        *@
         </ul>
+        <form class="tn-search">
+            <input type="text" name="search" placeholder="جستجو..." />
+        </form>
     </div>
 </nav>
 <main class="main">
