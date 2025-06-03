@@ -1,0 +1,45 @@
+.secondary-navbar {
+    top: 45px;
+    height: 50px;
+    margin: 0 -12px;
+    padding: 0 0px;
+    position: sticky;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    background: var(--light-color);
+    overflow-x: clip;
+    z-index: 999;
+}
+
+    .secondary-navbar .nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0;
+        gap: 32px;
+        border-bottom: 1px solid dimgray;
+    }
+
+::deep.secondary-navbar .nav .nav-item a {
+    padding: 8px 4px;
+    border-radius: 12px;
+    display: flex;
+    gap: 8px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+    font: 500 12px 'IRANSans';
+    color: var(--black-color);
+}
+
+::deep.secondary-navbar .nav .nav-item a.active {
+    color: var(--primary-color);
+    cursor: default;
+}
+
+.content {
+    position: relative;
+}

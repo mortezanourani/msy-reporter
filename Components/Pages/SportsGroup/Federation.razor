@@ -1,46 +1,14 @@
-﻿@page "/Federations/{Id:guid}"
+﻿@page "/SportsGroup/Federations/{Id:guid}"
+
 @using Microsoft.AspNetCore.Components.QuickGrid;
+
+@layout Layout.SportsGroupLayout
 
 <PageTitle>Local Federation</PageTitle>
 
 <h2 class="page-title mb-0">هیات @federation?.Federation.PersianName @federation!.City.PersianName</h2>
 <p class="small text-muted">شناسه ملی: @federation?.NationalId</p>
 
-<div class="row">
-    @*     <div class="col1-3">
-        <div class="card color-card project-properties">
-            <div class="card-header">
-                <h6>مشخصات پروژه</h6>
-            </div>
-            <div class="card-body">
-                <div class="progressPrecentage">
-                    <h1>@string.Format("%{0}", projectProgressPercentage)</h1>
-                </div>
-                <div class="property top">
-                    <h6>مجموع اعتبار هزینه شده:</h6>
-                    <p>@string.Format("{0:N0}", totalPaid)</p>
-                </div>
-                <div class="property">
-                    <h6>مطالبات پیمانکار:</h6>
-                    <p>@string.Format("{0:N0}", contractorUnpaid)</p>
-                </div>
-                <div class="property">
-                    <h6>اعتبار مورد نیاز جهت اتمام:</h6>
-                    <p>@string.Format("{0:N0}", completionEstimate)</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col2-3">
-        <div class="card budgets-card cornered1">
-            <div class="card-header pb-0">
-                <h6>جدول اعتبارات پروژه</h6>
-            </div>
-            <div class="card-body">
-            </div>
-        </div>
-    </div>*@
-</div>
 <div class="row">
     <div calss="col1-1">
         <div class="card presidents-card">

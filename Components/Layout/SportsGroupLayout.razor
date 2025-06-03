@@ -1,0 +1,44 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+
+@layout Layout.MainLayout
+
+<nav class="secondary-navbar">
+    <div class="container">
+        <h2></h2>
+        <ul class="nav">
+            <li class="nav-item">
+                <NavLink href="/" Match="NavLinkMatch.All">در یک نگاه</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/SportsGroup/Federations">گروه ورزشی</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Projects">دفتر فنی</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Women">امور بانوان</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Youth">امور جوانان</NavLink>
+            </li>
+        </ul>
+    </div>
+</nav>
+<article class="content">
+    @Body
+</article>
+
+<script>
+    window.scrollHelper = {
+        onScroll: function (dotNetHelper) {
+            window.addEventListener('scroll', () => {
+                dotNetHelper.invokeMethodAsync('OnScroll', window.scrollY);
+            });
+        }
+    };
+</script>
+
+@code {
+
+}

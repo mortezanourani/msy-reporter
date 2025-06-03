@@ -7,7 +7,7 @@
     padding: 0 12px;
     max-width: 100%;
     position: sticky;
-    background: var(--light-color);
+    background: var(--primary-color);
     overflow-x: clip;
     z-index: 999;
 }
@@ -51,26 +51,21 @@
                 }
 
 ::deep.primary-navbar .nav .nav-item a {
-    padding: 12px 4px;
-    border-radius: 12px;
+    padding: 10px 4px;
     display: flex;
-    gap: 8px;
+    gap: 16px;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    font: 600 13px 'IRANSans';
-    color: var(--black-color);
+    font: 500 13px 'IRANSans';
+    color: whitesmoke;
 }
-
-.primary-navbar .nav .nav-item:has(a.active) {
-    box-shadow: 0 -5px 5px -3px var(--primary-color);
-    border-top: 3px solid var(--primary-color);
-}
-
-::deep.primary-navbar .nav .nav-item a.active {
-    color: var(--primary-color);
-    cursor: default;
-}
+  
+    ::deep.primary-navbar .nav .nav-item a.active {
+        border-bottom: 0px solid var(--light-color);
+        color: var(--light-color);
+        cursor: default;
+    }
 
 .content {
     position: relative;
