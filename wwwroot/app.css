@@ -77,6 +77,27 @@ body {
     border-radius: 8px;
 }
 
+    .card.cornered1 {
+        background-image: url('images/card-corner-4.png');
+    }
+
+    .card.cornered2 {
+        background-image: url('images/card-corner-5.png');
+    }
+
+    .card.cornered3 {
+        background-image: url('images/card-corner-3.png');
+    }
+
+    .card.cornered1,
+    .card.cornered2,
+    .card.cornered3 {
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        background-position: right center;
+        background-size: contain;
+    }
+
     .card.card2 {
         aspect-ratio: 2;
     }
@@ -86,7 +107,7 @@ body {
     }
 
     .card.color-card {
-        background-image: var(--card-color-bg);
+        background: var(--card-color-bg);
     }
 
     .card .card-header,

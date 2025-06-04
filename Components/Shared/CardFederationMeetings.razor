@@ -1,0 +1,55 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div class="card card2 cornered2">
+	<div class="card-body">
+		<div>
+			<h6 class="title">تعداد مجامع برگزار شده</h6>
+			<h2>@federationMeetingsCount</h2>
+		</div>
+		<div>
+			<div class="d-flex justify-content-between">
+				<p>تعداد مجامع عمومی:</p>
+				<b>@generalFederationMeetingsCount</b>
+			</div>
+			<div class="d-flex justify-content-between">
+				<p>تعداد مجامع انتخابی:</p>
+				<b>@electiveFederationMeetingsCount</b>
+			</div>
+			<div class="d-flex justify-content-between">
+				<p>تعداد مجامع فوق العاده:</p>
+				<b>@extraOrdinaryFederationMeetingsCount</b>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	private AppDbContext context = default!;
+
+	private IQueryable<LocalFederation>? federations;
+
+	private int federationMeetingsCount;
+	private int generalFederationMeetingsCount;
+	private int electiveFederationMeetingsCount;
+	private int extraOrdinaryFederationMeetingsCount;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		// var federationMeetings = context.FederationMeetings
+		// 	.Include(meeting => meeting.Type)
+		// 	.Where(meeting => meeting.Year == 1403);
+
+		// federationMeetingsCount = federationMeetings.Count();
+
+		// generalFederationMeetingsCount = federationMeetings
+		// 	.Count(meeting => meeting.Type.Type == "General");
+
+		// electiveFederationMeetingsCount = federationMeetings
+		// 	.Count(meeting => meeting.Type.Type == "Elective");
+
+		// extraOrdinaryFederationMeetingsCount = federationMeetings
+		// 	.Count(meeting => meeting.Type.Type == "ExtraOrdinary");
+	}
+}
