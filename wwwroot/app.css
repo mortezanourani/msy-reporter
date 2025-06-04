@@ -11,8 +11,8 @@
     --card-box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 1px 2px 4px 0 rgba(0, 0, 0, 0.2);
 
     --sidebar-width: 240px;
-    --spacing-x: 12px;
-    --spacing-y: 12px;
+    --spacing-x: 16px;
+    --spacing-y: 16px;
     --card-padding-x: 16px;
     --card-padding-y: 12px;
 }
@@ -208,7 +208,7 @@ body {
     align-items: center;
     padding: 8px 0;
     margin: 8px 0 16px;
-    border-top: 1px solid var(--secondary-color);
+    /*border-top: 1px solid var(--secondary-color);*/
 }
 
     .paginator nav,

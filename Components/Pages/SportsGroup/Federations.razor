@@ -6,70 +6,18 @@
 
 <div class="row">
 	<div class="col1-3">
-		<CardAllFederations />
+		<AllFederationsCard />
 	</div>
 	<div class="col1-3">
-		<CardProvinceFederations />
+		<ProvinceFederationsCard />
 	</div>
 	<div class="col1-3">
-		<CardFederationMeetings />
+		<FederationMeetingsCard />
 	</div>
 </div>
-<ProvinceFederationsStatusCard />
-
-<div class="card city-federations-card">
-	<div class="card-header">
-		<h6 class="title">فهرست هیات های ورزشی @city!.PersianName</h6>
-		<InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
-			@foreach (City city in cities!)
-			{
-				<option value="@city.Id">@city.PersianName</option>
-			}
-		</InputSelect>
-	</div>
-	<div class="card-body">
-		<div class="federations-list">
-			@if (federations is not null)
-			{
-				<QuickGrid Pagination="pagination" Items="federations" Theme="" Class="federations-table">
-					<PropertyColumn Sortable="true" Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
-					@if (cityId != 0)
-					{
-						@* <PropertyColumn Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" /> *@
-						<PropertyColumn Sortable="true" Title="بخش" Property="@(federation => federation.District)" />
-					}
-					<PropertyColumn Sortable="true" Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
-					<PropertyColumn Sortable="true" Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name)" />
-					<PropertyColumn Sortable="true" Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
-					<TemplateColumn>
-						<a class="info-link" href="/Federations/@context.Id">
-							<span class="material-symbols-rounded">info</span>
-						</a>
-					</TemplateColumn>
-				</QuickGrid>
-
-				<div class="paginator">
-					<nav role="navigation">
-					@if (pagination.TotalItemCount.HasValue)
-					{
-						for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
-						{
-							var capturedIndex = pageIndex;
-							<button @onclick="@(() => GoToPageAsync(capturedIndex))"
-							class="btn @PageButtonClass(capturedIndex)"
-							aria-current="@AriaCurrentValue(capturedIndex)"
-							aria-label="@(pageIndex + 1)">
-								@(pageIndex + 1)
-							</button>
-						}
-					}
-					</nav>
-					<div class="total">
-						@string.Format("{0} هیات", pagination.TotalItemCount)
-					</div>
-				</div>
-			}
-		</div>
+<div class="row">
+	<div class="col1-1">
+		<CityFederationsCard />
 	</div>
 </div>
 
