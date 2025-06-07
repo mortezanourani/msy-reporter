@@ -22,6 +22,8 @@
     justify-content: space-between;
     align-items: center;
     margin: 4px 0 16px;
+    background: var(--primary-color);
+    color: var(--light-color);
 }
 
     .summary > div {
@@ -34,8 +36,8 @@
         flex: 0 1 25%;
     }
 
-        .summary > div:first-child {
-            border-right: 1px solid lightgray;
+        .summary > div:last-child {
+            border-left: none;
         }
 
 .federations-list {

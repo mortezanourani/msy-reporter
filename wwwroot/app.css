@@ -110,6 +110,11 @@ body {
         background: var(--card-color-bg);
     }
 
+    .card.empty-card {
+        background: none;
+        box-shadow: none;
+    }
+
     .card .card-header,
     .card .card-footer {
         margin: 0;
@@ -137,7 +142,8 @@ body {
 
     .card .card-header select,
     .card .card-footer select {
-        width: 150px;
+        width: auto;
+        min-width: 160px;
         font: 400 13px IRANSans;
         outline: none;
         border: 1px solid lightgray;
