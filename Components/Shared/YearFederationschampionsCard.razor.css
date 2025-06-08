@@ -1,16 +1,16 @@
-﻿.city-federations-card {
+﻿.federation-champions-card {
     background: none;
     box-shadow: none;
     overflow: visible;
     padding: 0;
 }
 
-    .city-federations-card .card-header {
+    .federation-champions-card .card-header {
         padding-left: 0;
         padding-right: 0;
     }
 
-    .city-federations-card .card-body {
+    .federation-champions-card .card-body {
         padding: var(--spacing-x);
         background: var(--card-bg);
         box-shadow: var(--card-box-shadow);
@@ -40,75 +40,83 @@
             border-left: none;
         }
 
-.federations-list {
+    .summary:first-child {
+        margin-bottom: 6px;
+    }
+
+        .summary:first-child > div {
+            flex: 0 1 33.33333%;
+        }
+
+.medals-list {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
 }
 
-    .federations-list ::deep.federations-table {
+    .medals-list ::deep.champions-table {
         width: 100%;
         border-collapse: separate;
         border-spacing: 0;
     }
 
-        .federations-list ::deep.federations-table thead tr {
+        .medals-list ::deep.champions-table thead tr {
             background-color: lightgray;
         }
-        .federations-list ::deep.federations-table thead tr th {
+        .medals-list ::deep.champions-table thead tr th {
             padding: 12px 12px 8px;
             text-align: center;
             font-size: 13px;
             font-weight: 600;
         }
 
-            .federations-list ::deep.federations-table thead tr th .col-title {
+            .medals-list ::deep.champions-table thead tr th .col-title {
                 justify-content: center;
                 font-size: 13px;
                 font-weight: 600;
             }
 
-            .federations-list ::deep.federations-table thead tr th:first-child .col-title {
+            .medals-list ::deep.champions-table thead tr th:first-child .col-title {
                 justify-content: right;
             }
 
-        .federations-list ::deep.federations-table tbody tr {
+        .medals-list ::deep.champions-table tbody tr {
             background: #ffffff;
         }
 
-            .federations-list ::deep.federations-table tbody tr:nth-child(2n) {
+            .medals-list ::deep.champions-table tbody tr:nth-child(2n) {
                 background: var(--light-color);
             }
 
-            .federations-list ::deep.federations-table tbody tr:hover {
+            .medals-list ::deep.champions-table tbody tr:hover {
                 transform: scale(1.01);
                 box-shadow: 0 0 8px 0px dimgray;
             }
 
-            .federations-list ::deep.federations-table tbody tr td {
+            .medals-list ::deep.champions-table tbody tr td {
                 padding: 8px 12px;
                 text-align: center;
                 font-size: 13px;
                 font-weight: 400;
             }
 
-                .federations-list ::deep.federations-table tbody tr td:first-child {
+                .medals-list ::deep.champions-table tbody tr td:first-child {
                     font-weight: 500;
                     text-align: right;
                 }
 
-                .federations-list ::deep.federations-table tbody tr td .info-link {
+                .medals-list ::deep.champions-table tbody tr td .info-link {
                     opacity: 0;
                     display: flex;
                     justify-content: flex-end;
                 }
 
-            .federations-list ::deep.federations-table tbody tr:hover td .info-link {
+            .medals-list ::deep.champions-table tbody tr:hover td .info-link {
                 opacity: 1;
             }
 
-    .federations-list .paginator {
+    .medals-list .paginator {
         margin: 8px 0 0;
         padding-bottom: 0;
         border-top: 1px solid lightgray;

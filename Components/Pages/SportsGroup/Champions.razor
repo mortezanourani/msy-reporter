@@ -28,14 +28,6 @@
     </div>
 </div>
 
-@* <FederationChampionsSummaryCard Year="@year" Federation="@federation" /> *@
-
-<div class="row">
-    <div class="col1-1">
-        <ChampionsApproachCard />
-    </div>
-</div>
-
 @code {
     private AppDbContext context = default!;
 
@@ -62,7 +54,7 @@
                 .Any(tournament =>
                     tournament.Year == year
                     &&
-                    tournament.Champions.Count() > 0))
+                    tournament.Champions.Count(champion => champion.Medal != null) > 0))
             .Where(federation => federation.IsChampionship)
             .OrderBy(federation => federation.PersianName)
             .ToList();
