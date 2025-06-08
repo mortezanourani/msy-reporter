@@ -1,0 +1,177 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+<div class="card city-federations-card">
+	<div class="card-header border-bottom">
+		<h6 class="title">خلاصه وضعیت قهرمانان هیات @federation!.PersianName در سال @Year</h6>
+		<InputSelect class="select" @bind-Value="federationId" @onclick="Update">
+			@foreach (Federation federation in Federations!)
+			{
+				<option value="@federation.Id">@federation.PersianName</option>
+			}
+		</InputSelect>
+	</div>
+	<div class="card-body">
+		<div class="summary" style="margin-bottom: 1px;">
+			<div class="summary-item">
+				<p>تعداد مدال آوران:</p>
+				<b>@championsCount</b>
+			</div>
+			<div class="summary-item">
+				<p>تعداد مدال آوران آقا:</p>
+				<b>@menChampionsCount</b>
+			</div>
+			<div class="summary-item">
+				<p>تعداد مدال آوران خانم:</p>
+				<b>@womenChampionsCount</b>
+			</div>
+		</div>
+		<div class="summary mt-0">
+			<div class="summary-item">
+				<p>تعداد مدال ها:</p>
+				<b>@championsCount</b>
+			</div>
+			<div class="summary-item">
+				<p>تعداد مدال های طلا:</p>
+				<b>@goldMedalsCount</b>
+			</div>
+			<div class="summary-item">
+				<p>تعداد مدال های نقره:</p>
+				<b>@silverMedalsCount</b>
+			</div>
+			<div class="summary-item">
+				<p>تعداد مدال های برنز:</p>
+				<b>@bronzeMedalsCount</b>
+			</div>
+		</div>
+		<div class="federations-list">
+			@if (Federations is not null)
+			{
+				@*
+				<QuickGrid Items="champions" Theme="" Class="federations-table">
+					<PropertyColumn Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
+					@if (cityId != 0)
+					{
+						<PropertyColumn Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" />
+						<PropertyColumn Title="بخش" Property="@(federation => federation.District)" />
+					}
+					<PropertyColumn Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
+					<PropertyColumn Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name)" />
+					<PropertyColumn Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
+					<TemplateColumn>
+						<a class="info-link" href="/SportsGroup/Federations/@context.Id">
+							<img src="/icons/info.svg" />
+						</a>
+					</TemplateColumn>
+				</QuickGrid>
+				*@
+			}
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public int Year { get; set; }
+
+	[Parameter]
+	public List<Federation>? Federations { get; set; }
+
+	private AppDbContext context = default!;
+
+	private int federationId;
+	private Federation? federation = new Federation();
+
+	private List<Champion> champions = new List<Champion>();
+
+	private int championsCount;
+	private int menChampionsCount;
+	private int womenChampionsCount;
+
+	private int medalsCount;
+	private int menMedalsCount;
+	private int womenMedalsCount;
+	private int goldMedalsCount;
+	private int silverMedalsCount;
+	private int bronzeMedalsCount;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		federationId = Federations
+			.FirstOrDefault()!
+			.Id;
+
+		Update();
+	}
+
+	private void Update()
+	{
+		federation = Federations
+			.FirstOrDefault(federation => federation.Id == federationId);
+
+		var champions = context.Athletes
+			.Include(athlete => athlete.Gender)
+			.Include(athlete => athlete.Champions)
+				.ThenInclude(champion => champion.Tournament)
+			.Include(athlete => athlete.Champions)
+				.ThenInclude(champion => champion.Medal)
+			.Where(athlete => athlete.Champions
+				.Any(champion =>
+					champion.Tournament.FederationId == federation!.Id
+					&&
+					champion.Tournament.Year == Year))
+			.Where(athlete => athlete.Champions
+				.Any(champion => champion.Medal != null));
+
+		championsCount = champions.Count();
+
+		menChampionsCount = champions
+			.Count(champion => champion.Gender.Id == 1);
+
+		womenChampionsCount = champions
+			.Count(champion => champion.Gender.Id == 2);
+
+		medalsCount = champions
+			.Select(athlete => athlete.Champions
+				.Sum(champion => champion.MedalsCount!.Value))
+			.FirstOrDefault();
+
+		goldMedalsCount = champions
+			.Select(athlete => athlete.Champions
+				.Where(champion => champion.Medal!.Color == "Gold")
+				.Sum(champion => champion.MedalsCount!.Value))
+			.FirstOrDefault();
+
+		silverMedalsCount = champions
+			.Select(athlete => athlete.Champions
+				.Where(champion => champion.Medal!.Color == "Silver")
+				.Sum(champion => champion.MedalsCount!.Value))
+			.FirstOrDefault();
+
+		bronzeMedalsCount = champions
+			.Select(athlete => athlete.Champions
+				.Where(champion => champion.Medal!.Color == "Bronze")
+				.Sum(champion => champion.MedalsCount!.Value))
+			.FirstOrDefault();
+
+		// medalsCount = context.Champions
+		// 	.Include(champion => champion.Athlete)
+		// 	.Sum(champion => champion.MedalsCount!.Value);
+
+		// goldMedalsCount = context.Champions
+		// 	.Where(champion => champion.Medal!.Color == "Gold")
+		// 	.Sum(champion => champion.MedalsCount!.Value);
+
+		// menMedalsCount = context.Champions
+		// 	.Include(champion => champion.Athlete)
+		// 	.Where(champion => champion.Athlete.GenderId == 1)
+		// 	.Sum(champion => champion.MedalsCount!.Value);
+
+		// womenMedalsCount = context.Champions
+		// 	.Include(champion => champion.Athlete)
+		// 	.Where(champion => champion.Athlete.GenderId == 2)
+		// 	.Sum(champion => champion.MedalsCount!.Value);
+
+	}
+}

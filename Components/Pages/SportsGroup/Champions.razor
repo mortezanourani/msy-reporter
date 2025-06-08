@@ -9,7 +9,7 @@
         <div class="card color-card">
             <div class="card-header">
                 <h6 class="title">ورزش قهرمانی در سال @year</h6>
-                <InputSelect class="select" @bind-Value="year" @onclick="Update">
+                <InputSelect class="select" @bind-Value="year">
                     @foreach (int year in years)
                     {
                         <option value="@year">@year</option>
@@ -24,21 +24,11 @@
 
 <div class="row">
     <div class="col1-1">
-        <div class="card empty-card">
-            <div class="card-header px-0 pb-0">
-                <h6 class="title">مدال آوران هیات @federation!.PersianName</h6>
-                <InputSelect class="select" @bind-Value="federationId" @onclick="Update">
-                    @foreach (Federation federation in federations)
-                    {
-                        <option value="@federation.Id">@federation.PersianName</option>
-                    }
-                </InputSelect>
-            </div>
-        </div>
+        <YearFederationsChampionsCard Year="@year" Federations="@federations" />
     </div>
 </div>
 
-<FederationChampionsSummaryCard Year="@year" Federation="@federation" />
+@* <FederationChampionsSummaryCard Year="@year" Federation="@federation" /> *@
 
 <div class="row">
     <div class="col1-1">
@@ -50,44 +40,22 @@
     private AppDbContext context = default!;
 
     private int year;
-    private List<int> years = new List<int>();
-
-    private int federationId;
-    private Federation? federation;
-    private List<Federation> federations = new List<Federation>();
-
-    protected override void OnInitialized()
+    [CascadingParameter]
+    private List<int> years
     {
-        context = DbFactory.CreateDbContext();
-
-        years = context.Champions
+        get => context.Champions
             .Include(champion => champion.Tournament)
             .GroupBy(champion => champion.Tournament.Year)
                 .Select(group => group.Key)
             .OrderByDescending(year => year)
             .ToList();
-
-        year = years.FirstOrDefault();
-
-        federationId = context.Federations
-            .Include(federation => federation.Tournaments)
-                .ThenInclude(tournament => tournament.Champions)
-            .Where(federation => federation.Tournaments
-                .Any(tournament =>
-                    tournament.Year == year
-                    &&
-                    tournament.Champions.Count() > 0))
-            .Where(federation => federation.IsChampionship)
-            .OrderBy(federation => federation.PersianName)
-            .ToList()
-            .FirstOrDefault()!.Id;
-
-        Update();
+        set => new List<int>();
     }
 
-    private void Update()
+    [CascadingParameter]
+    private List<Federation> federations
     {
-        federations = context.Federations
+        get => context.Federations
             .Include(federation => federation.Tournaments)
                 .ThenInclude(tournament => tournament.Champions)
             .Where(federation => federation.Tournaments
@@ -98,12 +66,13 @@
             .Where(federation => federation.IsChampionship)
             .OrderBy(federation => federation.PersianName)
             .ToList();
+        set => new List<Federation>();
+    }
 
-        federation = 
-            federations.FirstOrDefault(federation => federation.Id == federationId)
-            ??
-            federations.FirstOrDefault();
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
 
-        federationId = federation.Id;
+        year = years.FirstOrDefault();
     }
 }
