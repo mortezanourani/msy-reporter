@@ -1,53 +1,19 @@
 ﻿@page "/"
 
 
-<PageTitle>Dashboard</PageTitle>
+<PageTitle>آمار مقایسه ای</PageTitle>
 
-<div class="container">
-	<h2 class="page-title my-3">در یک نگاه</h2>
+<div class="container py-3">
 	<ProvinceFacilitiesStatusCard />
-	@* <CityFacilitiesCard /> *@
+	<ChampionsSummaryCard />
+	<div class="row">
+		<div class="col1-1">
+			<ChampionsApproachCard />
+		</div>
+	</div>
 	@* <SportsCoursesCards /> *@
-	<ChampionsSummaryCards />
 </div>
 
 @code {
-	private AppDbContext context = default!;
 
-	private DbSet<Facility> sportFacilities;
-
-	private int coachesCount;
-	private int refereesCount;
-
-	private int provinceFederationsCount;
-	private int citiesFederationsCount;
-
-	protected override void OnInitialized()
-	{
-		context = DbFactory.CreateDbContext();
-
-		sportFacilities = context.Facilities;
-
-		// var sportCourseParticipants = context.SportsCourses
-		// 	.Include(scp => scp.Participants)
-		// 	.Select(scp => scp.Participants);
-
-		// coachesCount = context.SportsCourses
-		// 	.Include(sc => sc.Participants).Count();
-
-		// refereesCount = context.SportsCourses
-		// 	.Include(sc => sc.Participants).Count();
-
-		// provinceFederationsCount = context.CityFederations
-		// 	.Include(f => f.FederationPresidents)
-		// 	.Where(f => f.City.Id == 0)
-		// 	.Where(f => f.FederationPresidents != null)
-		// 	.Count();
-
-		// citiesFederationsCount = context.CityFederations
-		// 	.Include(f => f.FederationPresidents)
-		// 	.Where(f => f.City.Id != 0)
-		// 	.Where(f => f.FederationPresidents != null)
-		// 	.Count();
-	}
 }
