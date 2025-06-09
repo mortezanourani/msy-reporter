@@ -1,0 +1,26 @@
+﻿@inherits LayoutComponentBase
+
+@layout Layout.MainLayout
+
+<nav class="secondary-navbar">
+    <div class="container">
+        <h5 class="sub-title">امور اداری</h5>
+        <ul class="nav">
+            <li class="nav-item">
+                <NavLink href="/HumanResource" Match="NavLinkMatch.All">پرسنل</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/HumanResource/Education">شناسنامه آموزشی</NavLink>
+            </li>
+        </ul>
+    </div>
+</nav>
+<article class="content py-3">
+    <div class="container">
+        @Body
+    </div>
+</article>
+
+@code {
+
+}
