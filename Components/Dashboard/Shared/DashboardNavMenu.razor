@@ -1,19 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Reporter.Data
 
-@inject SignInManager<ApplicationUser> SignInManager
-
 <ul class="nav">
     <li class="nav-item">
         <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">بازگشت به سامانه</NavLink>
     </li>
     <li class="nav-item">
-        <NavLink class="nav-link" href="/Account/Manage/ChangePassword">تغییر رمزعبور</NavLink>
+        <NavLink class="nav-link" href="/Dashboard/ChangePassword">تغییر رمزعبور</NavLink>
     </li>
     <li class="nav-item">
         <form method="post" action="/Account/Logout">
             <input name="returnUrl" value="" hidden />
-            <input type="submit" class="nav-link" value="خروج" />
+            <button type="submit" class="nav-link">
+                <img src="/icons/poweroff.svg" />
+            </button>
         </form>
     </li>
 </ul>

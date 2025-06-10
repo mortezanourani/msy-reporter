@@ -3,10 +3,10 @@
 <PageTitle>پنل کاربری</PageTitle>
 
 <div class="container py-3">
-    @UserId
+    @User?.Id
 </div>
 
 @code {
     [CascadingParameter]
-    private string? UserId { get; set; }
+    private ApplicationUser? User { get; set; }
 }

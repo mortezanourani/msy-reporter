@@ -3,29 +3,29 @@
 
 <nav class="dashboard-navbar">
     <div class="container">
-        <h5 class="nav-user-name">@username</h5>
+        <a href="/Dashboard">
+            <h5 class="nav-user-name">@username</h5>
+        </a>
         <DashboardNavMenu />
     </div>
 </nav>
 <main class="main">
     <div class="content">
-        <CascadingValue Value="@UserId">
+        <CascadingValue Value="@User">
             @Body
         </CascadingValue>
     </div>
 </main>
 
 @code {
-    private string? UserId { get; set; } = default!;
-
-    private ApplicationUser? user = default!;
+    private ApplicationUser? User { get; set; }
+    
     private string? username;
 
     protected override async Task OnInitializedAsync()
     {
         var user = ContextAccessor.HttpContext!.User;
-        var loggedUser = await UserManager.GetUserAsync(user);
-        username = loggedUser!.UserName;
-        UserId = loggedUser!.Id;
+        User = await UserManager.GetUserAsync(user);
+        username = User!.UserName;
     }
 }
