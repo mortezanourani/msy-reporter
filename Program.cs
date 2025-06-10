@@ -39,6 +39,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
@@ -58,14 +60,6 @@ app.UseAntiforgery();
 
 app.Use(async (context, next) =>
 {
-    if(context.Request.Path == "/account/signout")
-    {
-        var signInManager = context.RequestServices.GetRequiredService<SignInManager<ApplicationUser>>();
-        await signInManager.SignOutAsync();
-        context.Response.Redirect("/");
-        return;
-    }
-
     await next.Invoke();
 });
 

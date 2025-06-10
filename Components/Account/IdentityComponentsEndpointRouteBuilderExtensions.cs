@@ -47,7 +47,8 @@ namespace Microsoft.AspNetCore.Routing
             {
                 await signInManager.SignOutAsync();
                 return TypedResults.LocalRedirect($"~/{returnUrl}");
-            });
+            })
+            .DisableAntiforgery();
 
             var manageGroup = accountGroup.MapGroup("/Manage").RequireAuthorization();
 

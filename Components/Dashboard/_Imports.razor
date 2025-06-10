@@ -5,7 +5,9 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IEmailSender<ApplicationUser> EmailSender
+@inject IHttpContextAccessor ContextAccessor
 
 @inject NavigationManager NavigationManager
+
 
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
