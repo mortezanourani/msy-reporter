@@ -1,30 +1,31 @@
 ﻿@inherits LayoutComponentBase
-@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor ContextAccessor
 
 <nav class="dashboard-navbar">
     <div class="container">
-        <h5 class="nav-user-name"></h5>
+        <h5 class="nav-user-name">@username</h5>
         <DashboardNavMenu />
     </div>
 </nav>
 <main class="main">
     <div class="content">
-        @Body
+        <CascadingValue Value="@UserId">
+            @Body
+        </CascadingValue>
     </div>
 </main>
 
 @code {
-    [CascadingParameter]
-    private HttpContext? HttpContext { get; set; }
+    private string? UserId { get; set; } = default!;
 
-    protected override void OnParametersSet()
+    private ApplicationUser? user = default!;
+    private string? username;
+
+    protected override async Task OnInitializedAsync()
     {
-        if (HttpContext is null)
-        {
-            // If this code runs, we're currently rendering in interactive mode, so there is no HttpContext.
-            // The identity pages need to set cookies, so they require an HttpContext. To achieve this we
-            // must transition back from interactive mode to a server-rendered page.
-            NavigationManager.Refresh(forceReload: true);
-        }
+        var user = ContextAccessor.HttpContext!.User;
+        var loggedUser = await UserManager.GetUserAsync(user);
+        username = loggedUser!.UserName;
+        UserId = loggedUser!.Id;
     }
 }

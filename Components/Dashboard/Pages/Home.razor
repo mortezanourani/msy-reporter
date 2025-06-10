@@ -3,20 +3,10 @@
 <PageTitle>پنل کاربری</PageTitle>
 
 <div class="container py-3">
-    @username
+    @UserId
 </div>
 
 @code {
-    private ApplicationUser user = default!;
-    private string? username;
-
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        user = await UserAccessor.GetRequiredUserAsync(HttpContext);
-        username = await UserManager.GetUserNameAsync(user);
-    }
-
+    private string? UserId { get; set; }
 }
