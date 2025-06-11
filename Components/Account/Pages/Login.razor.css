@@ -15,13 +15,14 @@
 }
 
 .login .card {
-    width: 25%;
-    height: auto;
+    width: 277px;
+    height: 277px;
     background: none;
     backdrop-filter: blur(5px);
     box-shadow: 0 0 20px -2px black;
     border: 1px solid gray;
     color: whitesmoke;
+    background-color: rgba(0, 0, 0, 0.25);
 }
 
     .login .card .card-header {
