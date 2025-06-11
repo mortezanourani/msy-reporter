@@ -1,5 +1,7 @@
 ﻿@page "/Account/Login"
 
+@layout Reporter.Components.Layout.MainLayout
+
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
@@ -10,43 +12,42 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>ورود به پنل کاربری</PageTitle>
 
-<div class="row vh-100 justify-content-center align-items-center">
-    <div class="col2-5">
-        <div class="card">
-            <div class="card-header justify-content-center">
-                <h3 class="m-0 my-3">ورود به پنل کاربری</h3>
-            </div>
-            <div class="card-body">
-                <StatusMessage Message="@errorMessage" />
-                <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary class="text-danger" role="alert" />
-                    <div class="form-group mb-3">
-                        <label for="email" class="form-label">نام کاربری</label>
-                        <InputText @bind-Value="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="f.lastname" dir="ltr" />
-                        <ValidationMessage For="() => Input.Username" class="text-danger" />
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="password" class="form-label">رمزعبور</label>
-                        <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" dir="ltr" />
-                        <ValidationMessage For="() => Input.Password" class="text-danger" />
-                    </div>
-                    <div class="checkbox mb-3">
-                        <label class="form-label">
-                            <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                            ذخیره مشخصات در این دستگاه
-                        </label>
-                    </div>
-                    <div>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">ورود</button>
-                    </div>
-                </EditForm>
-            </div>
-            <div class="card-footer border-top mt-2">
-                <a href="Account/ForgotPassword">رمزعبور خود را فراموش کرده اید؟</a>
-            </div>
+<div class="login">
+    <div class="card">
+        <div class="card-header">
+            <h5>ورود به پنل کاربری</h5>
+        </div>
+        <div class="card-body">
+            <StatusMessage Message="@errorMessage" />
+            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        <img src="/icons/username.svg" />
+                    </label>
+                    <InputText @bind-Value="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="f.lastname" dir="ltr" />
+                    <ValidationMessage For="() => Input.Username" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <img src="/icons/fingerprint.svg" />
+                    </label>
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" dir="ltr" />
+                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                </div>
+                <div class="checkbox">
+                    <label class="form-label">
+                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
+                        ذخیره مشخصات در این دستگاه
+                    </label>
+                </div>
+                <div>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">ورود</button>
+                </div>
+            </EditForm>
         </div>
     </div>
 </div>
