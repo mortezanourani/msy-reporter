@@ -15,8 +15,8 @@
 }
 
 .login .card {
-    width: 277px;
-    height: 277px;
+    width: 280px;
+    height: auto;
     background: none;
     backdrop-filter: blur(5px);
     box-shadow: 0 0 20px -2px black;
