@@ -1,31 +1,28 @@
 ﻿@inherits LayoutComponentBase
-@inject IHttpContextAccessor ContextAccessor
 
 <nav class="dashboard-navbar">
     <div class="container">
         <a href="/Dashboard">
-            <h5 class="nav-user-name">@username</h5>
+            <h5 class="nav-user-name">پنل کاربری</h5>
         </a>
         <DashboardNavMenu />
     </div>
 </nav>
 <main class="main">
     <div class="content">
-        <CascadingValue Value="@User">
-            @Body
-        </CascadingValue>
+        @Body
     </div>
 </main>
 
 @code {
-    private ApplicationUser? User { get; set; }
-    
-    private string? username;
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
     {
-        var user = ContextAccessor.HttpContext!.User;
-        User = await UserManager.GetUserAsync(user);
-        username = User!.UserName;
+        if (HttpContext is null)
+        {
+            NavigationManager.Refresh(forceReload: true);
+        }
     }
 }

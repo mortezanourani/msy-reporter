@@ -251,6 +251,31 @@ body {
                 color: var(--light-color);
             }
 
+.form-group {
+    position: relative;
+}
+
+    .form-group .form-control {
+        font-size: 14px;
+        padding: 8px 8px 8px 40px;
+        border: 1px solid #a9a9a9;
+    }
+
+    .form-group .form-label {
+        position: absolute;
+        padding: 9px 8px;
+        margin: 0;
+        left: 0;
+        top: 0;
+    }
+
+    .form-group + button {
+        background: var(--primary-color);
+        font-size: 15px;
+        border: none;
+        height: 42px;
+    }
+
 a {
     text-decoration: none;
 }

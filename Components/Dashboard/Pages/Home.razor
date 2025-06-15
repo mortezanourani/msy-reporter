@@ -1,12 +1,23 @@
 ﻿@page "/Dashboard"
 
+@inject IdentityUserAccessor UserAccessor
+
 <PageTitle>پنل کاربری</PageTitle>
 
 <div class="container py-3">
-    @User?.Id
+    @userName
 </div>
 
 @code {
     [CascadingParameter]
-    private ApplicationUser? User { get; set; }
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private ApplicationUser? User = default!;
+    private string? userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        User = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        userName = await UserManager.GetUserNameAsync(User);
+    }
 }
