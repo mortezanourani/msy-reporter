@@ -26,6 +26,12 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<ConstructionProject> ConstructionProjects { get; set; }
 
+    public virtual DbSet<Course> Courses { get; set; }
+
+    public virtual DbSet<Employee> Employees { get; set; }
+
+    public virtual DbSet<EmploymentType> EmploymentTypes { get; set; }
+
     public virtual DbSet<Facility> Facilities { get; set; }
 
     public virtual DbSet<FacilityContract> FacilityContracts { get; set; }
@@ -143,6 +149,46 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Facility).WithMany(p => p.ConstructionProjects).HasForeignKey(d => d.FacilityId);
 
             entity.HasOne(d => d.Type).WithMany(p => p.ConstructionProjects).HasForeignKey(d => d.TypeId);
+        });
+
+        modelBuilder.Entity<Course>(entity =>
+        {
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+        });
+
+        modelBuilder.Entity<Employee>(entity =>
+        {
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.AccountId).HasMaxLength(450);
+            entity.Property(e => e.BirthDate).HasMaxLength(10);
+            entity.Property(e => e.SeenCode).HasMaxLength(10);
+
+            entity.HasOne(d => d.Type).WithMany(p => p.Employees).HasForeignKey(d => d.TypeId);
+
+            entity.HasMany(d => d.Courses).WithMany(p => p.Employees)
+                .UsingEntity<Dictionary<string, object>>(
+                    "EmployeeCourse",
+                    r => r.HasOne<Course>().WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    l => l.HasOne<Employee>().WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    j =>
+                    {
+                        j.HasKey("EmployeeId", "CourseId");
+                        j.ToTable("EmployeeCourses");
+                    });
+        });
+
+        modelBuilder.Entity<EmploymentType>(entity =>
+        {
+            entity.HasIndex(e => e.NormalizedTitle, "IX_EmploymentTypes").IsUnique();
+
+            entity.Property(e => e.NormalizedTitle)
+                .HasMaxLength(16)
+                .HasComputedColumnSql("(upper([Title]))", false);
+            entity.Property(e => e.Title).HasMaxLength(16);
         });
 
         modelBuilder.Entity<Facility>(entity =>
