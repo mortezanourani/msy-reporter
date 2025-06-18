@@ -9,8 +9,13 @@
     </div>
 </nav>
 <main class="main">
-    <div class="content">
-        @Body
+    <div class="container dashboard-container">
+        <aside class="dashboard-sidebar">
+            <DashboardSideMenu />
+        </aside>
+        <div class="content">
+            @Body
+        </div>
     </div>
 </main>
 
