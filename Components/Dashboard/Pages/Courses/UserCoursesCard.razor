@@ -3,8 +3,23 @@
 @rendermode InteractiveServer
 
 <div class="card user-courses-card">
+	<div class="user-info">
+		<div class="info-item">
+			<p>نام و نام خانوادگی:</p>
+			<b>@employee?.FirstName @employee?.LastName</b>
+		</div>
+		<div class="info-item">
+			<p>کد ملی:</p>
+			<b>@employee?.SeenCode</b>
+		</div>
+		<div class="info-item">
+			<p>نام پدر:</p>
+			<b>@employee?.FatherName</b>
+		</div>
+	</div>
+
 	<div class="card-header border-bottom">
-		<h6 class="title">شناسنامه آموزشی سال @year</h6>
+		<h6 class="title">دوره های گذرانده شده در سال @year</h6>
 		<InputSelect class="select" @bind-Value="year" @onclick="SelectYear">
 			@foreach (string year in years!)
 			{
@@ -14,25 +29,6 @@
 	</div>
 
 	<div class="card-body">
-		<div class="summary">
-			<div class="summary-item">
-				<p>کد ملی:</p>
-				<b>@employee?.SeenCode</b>
-			</div>
-			<div class="summary-item">
-				<p>نام و نام خانوادگی:</p>
-				<b>@employee?.FirstName @employee?.LastName</b>
-			</div>
-			<div class="summary-item">
-				<p>نام پدر:</p>
-				<b>@employee?.FatherName</b>
-			</div>
-			<div class="summary-item">
-				<p>تاریخ تولد:</p>
-				<b>@employee?.BirthDate</b>
-			</div>
-		</div>
-
 		<div class="courses-list">
 			@if (courses is not null)
 			{
@@ -45,7 +41,7 @@
 				</QuickGrid>
 			}
 		</div>
-		<div class="totla-hour">
+		<div class="total-hour">
 			<p>مجموع دوره ها <b>@totalHours</b> ساعت</p>
 		</div>
 	</div>

@@ -17,100 +17,102 @@
         box-shadow: var(--card-box-shadow);
     }
 
-.summary {
+.user-courses-card .user-info {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 4px 0 16px;
-    background: var(--primary-color);
-    color: var(--light-color);
+    margin: 0;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    padding: 6px 0;
+    background: var(--card-bg);
+    color: var(--black-color);
+    box-shadow: var(--card-box-shadow);
+    font-size: 14px;
 }
 
-    .summary > div {
+    .user-courses-card .user-info .info-item {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 8px 12px;
+        padding: 6px 12px;
         border-left: 1px solid lightgray;
         flex: 0 1 25%;
     }
-
-        .summary > div:last-child {
+        .user-courses-card .user-info .info-item:first-child {
+            flex: 0 1 50%;
+        }
+        .user-courses-card .user-info .info-item:last-child {
             border-left: none;
         }
+        .user-courses-card .user-info .info-item * {
+            margin: 0;
+        }
 
-.courses-list {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-}
-
-    .courses-list ::deep.courses-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
+    .user-courses-card .card-body .courses-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
     }
 
-        .courses-list ::deep.courses-table thead tr {
-            background-color: lightgray;
-        }
-        .courses-list ::deep.courses-table thead tr th {
-            padding: 12px 12px 8px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 600;
+        .user-courses-card .card-body .courses-list ::deep.courses-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
-            .courses-list ::deep.courses-table thead tr th .col-title {
-                justify-content: center;
-                font-size: 13px;
-                font-weight: 600;
+            .user-courses-card .card-body .courses-list ::deep.courses-table thead tr {
+                background-color: var(--primary-color);
+                color: var(--light-color);
             }
-
-            .courses-list ::deep.courses-table thead tr th:first-child .col-title {
-                justify-content: right;
-            }
-
-        .courses-list ::deep.courses-table tbody tr {
-            background: #ffffff;
-        }
-
-            .courses-list ::deep.courses-table tbody tr:nth-child(2n) {
-                background: var(--light-color);
-            }
-
-            .courses-list ::deep.courses-table tbody tr:hover {
-                transform: scale(1.01);
-                box-shadow: 0 0 8px 0px dimgray;
-            }
-
-            .courses-list ::deep.courses-table tbody tr td {
-                padding: 8px 12px;
-                text-align: center;
-                font-size: 13px;
-                font-weight: 400;
-            }
-
-                .courses-list ::deep.courses-table tbody tr td:first-child {
-                    font-weight: 500;
-                    text-align: right;
+                .user-courses-card .card-body .courses-list ::deep.courses-table thead tr th {
+                    padding: 12px 12px 8px;
+                    text-align: center;
+                    font-size: 13px;
+                    font-weight: 600;
                 }
 
-                .courses-list ::deep.courses-table tbody tr td .info-link {
-                    opacity: 0;
-                    display: flex;
-                    justify-content: flex-end;
-                }
+                    .user-courses-card .card-body .courses-list ::deep.courses-table thead tr th .col-title {
+                        justify-content: center;
+                        font-size: 13px;
+                        font-weight: 600;
+                    }
 
-            .courses-list ::deep.courses-table tbody tr:hover td .info-link {
-                opacity: 1;
+                    .user-courses-card .card-body .courses-list ::deep.courses-table thead tr th:first-child .col-title {
+                        justify-content: right;
+                    }
+
+            .user-courses-card .card-body .courses-list ::deep.courses-table tbody tr {
+                background: #ffffff;
             }
 
-    .courses-list .paginator {
-        margin: 8px 0 0;
-        padding-bottom: 0;
+                .user-courses-card .card-body .courses-list ::deep.courses-table tbody tr:nth-child(2n) {
+                    background: var(--light-color);
+                }
+
+                .user-courses-card .card-body .courses-list ::deep.courses-table tbody tr:hover {
+                    transform: scale(1.01);
+                    box-shadow: 0 0 8px 0px dimgray;
+                }
+
+                .user-courses-card .card-body .courses-list ::deep.courses-table tbody tr td {
+                    padding: 8px 12px;
+                    text-align: center;
+                    font-size: 13px;
+                    font-weight: 400;
+                }
+
+                    .user-courses-card .card-body .courses-list ::deep.courses-table tbody tr td:first-child {
+                        font-weight: 500;
+                        text-align: right;
+                    }
+
+    .user-courses-card .card-body .total-hour {
+        margin-top: 8px;
+        padding: 12px 8px 0;
         border-top: 1px solid lightgray;
+        text-align: center;
     }
