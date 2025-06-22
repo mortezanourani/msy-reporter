@@ -1,0 +1,89 @@
+﻿.courses-card {
+    background: none;
+    box-shadow: none;
+    overflow: visible;
+    padding: 0;
+}
+
+    .courses-card .card-header {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+
+    .courses-card .card-body {
+        padding: var(--spacing-x);
+        background: var(--card-bg);
+        box-shadow: var(--card-box-shadow);
+    }
+
+    .courses-card .card-body .courses-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+
+        .courses-card .card-body .courses-list ::deep.courses-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            .courses-card .card-body .courses-list ::deep.courses-table thead tr {
+                background-color: var(--primary-color);
+                color: var(--light-color);
+            }
+                .courses-card .card-body .courses-list ::deep.courses-table thead tr th {
+                    padding: 12px 12px 8px;
+                    text-align: center;
+                    font-size: 13px;
+                    font-weight: 600;
+                }
+
+                    .courses-card .card-body .courses-list ::deep.courses-table thead tr th .col-title {
+                        justify-content: center;
+                        font-size: 13px;
+                        font-weight: 600;
+                    }
+
+                    .courses-card .card-body .courses-list ::deep.courses-table thead tr th:first-child .col-title {
+                        justify-content: right;
+                    }
+
+            .courses-card .card-body .courses-list ::deep.courses-table tbody tr {
+                background: #ffffff;
+            }
+
+                .courses-card .card-body .courses-list ::deep.courses-table tbody tr:nth-child(2n) {
+                    background: var(--light-color);
+                }
+
+                .courses-card .card-body .courses-list ::deep.courses-table tbody tr:hover {
+                    transform: scale(1.01);
+                    box-shadow: 0 0 8px 0px dimgray;
+                }
+
+                .courses-card .card-body .courses-list ::deep.courses-table tbody tr td {
+                    padding: 8px 12px;
+                    text-align: center;
+                    font-size: 13px;
+                    font-weight: 400;
+                }
+
+                    .courses-card .card-body .courses-list ::deep.courses-table tbody tr td:first-child {
+                        font-weight: 500;
+                        text-align: right;
+                    }
+
+                    .courses-card .card-body .courses-list ::deep.courses-table tbody tr td:last-child {
+                        text-align: left;
+                    }
+
+        .courses-card .card-body .add-link {
+            margin-top: 8px;
+            padding: 12px 8px 0;
+            border-top: 1px solid lightgray;
+            text-align: center;
+            font-size: 13px;
+        }

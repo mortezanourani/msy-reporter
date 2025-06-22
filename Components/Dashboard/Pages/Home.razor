@@ -5,12 +5,14 @@
 <PageTitle>پنل کاربری</PageTitle>
 
 <div class="home">
-    @userName
+    @userName، خوش آمدید
 </div>
 
 @code {
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
+
+    private AppDbContext context = default!;
 
     private ApplicationUser? User = default!;
     private string? userName;
@@ -19,5 +21,11 @@
     {
         User = await UserAccessor.GetRequiredUserAsync(HttpContext);
         userName = await UserManager.GetUserNameAsync(User);
+
+        context = DbFactory.CreateDbContext();
+        userName = await context.Employees
+            .Where(employee => employee.AccountId == User!.Id)
+            .Select(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))
+            .FirstOrDefaultAsync();
     }
 }

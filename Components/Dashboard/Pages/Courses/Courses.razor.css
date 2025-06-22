@@ -1,0 +1,27 @@
+﻿.courses-top-menu {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    background: var(--card-bg);
+    box-shadow: var(--card-box-shadow);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .courses-top-menu .panel-title {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+    }
+
+    .courses-top-menu .panel-link {
+        margin: 0;
+        padding: 0;
+        font-size: 13px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+    }

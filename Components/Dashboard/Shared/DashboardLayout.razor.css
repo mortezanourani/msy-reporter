@@ -39,10 +39,13 @@
             position: sticky;
             top: calc(var(--navbar-height) + var(--spacing-y));
             border-radius: 4px;
-            border: 1px solid var(--primary-color);
+            border: 1px solid lightgray;
             min-width: var(--sidebar-width);
             max-width: var(--sidebar-width);
             height: calc(100vh - (var(--navbar-height) + 2 * (var(--spacing-y))));
+            background: rgba(0, 0, 0, .1);
+            /*background: var(--light-color);*/
+            box-shadow: var(--card-box-shadow);
         }
 
         .main .dashboard-container .content {

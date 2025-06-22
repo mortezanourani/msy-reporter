@@ -4,9 +4,16 @@
 
 <PageTitle>شناسنامه آموزشی</PageTitle>
 
-<AuthorizeView Roles="Administrator">
+<AuthorizeView Roles="Administrators">
     <Authorized>
-        <h5>مدیریت شناسنامه آموزشی</h5>
+        <div class="courses-top-menu">
+            <h6 class="panel-title">مدیریت شناسنامه آموزشی</h6>
+            <a class="panel-link" href="/Dashboard/Courses/Add">
+                <img src="/icons/course-add.svg" />
+                افزودن دوره
+            </a>
+        </div>
+        <CoursesCard />
     </Authorized>
     <NotAuthorized>
         <UserCoursesCard User=@User />

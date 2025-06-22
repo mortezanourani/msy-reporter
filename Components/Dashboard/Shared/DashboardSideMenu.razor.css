@@ -4,7 +4,7 @@
     justify-content: space-between;
     align-items: start;
     padding: 12px 8px;
-    gap: 6px;
+    gap: 8px;
 }
 
     ::deep.nav .nav-item .nav-link {
@@ -15,14 +15,19 @@
         justify-content: flex-start;
         align-items: center;
         font: 500 12px 'IRANSans';
-        color: var(--primary-color);
+        color: var(--dark-color);
     }
 
-        ::deep.nav .nav-item .nav-link.active:before {
-            content: "";
-            border-radius: 50%;
-            width: 5px;
-            aspect-ratio: 1;
-            background-color: var(--primary-color);
-            margin-right: -11px;
+        ::deep.nav .nav-item .nav-link.active {
+            color: var(--primary-color);
         }
+
+            ::deep.nav .nav-item .nav-link.active:before {
+                content: "";
+                border-radius: 50%;
+                width: 5px;
+                aspect-ratio: 1;
+                color: var(--primary-color);
+                background-color: var(--primary-color);
+                margin-right: -11px;
+            }

@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@rendermode InteractiveServer
+
+<div class="card courses-card">
+	<div class="card-header border-bottom">
+		<h6 class="title">دوره های برگزار در سال @year</h6>
+		<InputSelect class="select" @bind-Value="year" @onclick="SelectYear">
+			@foreach (string year in years!)
+			{
+				<option value="@year">@year</option>
+			}
+		</InputSelect>
+	</div>
+
+	<div class="card-body">
+		<div class="courses-list">
+			@if (courses is not null)
+			{
+				<QuickGrid Items="courses" Theme="" Class="courses-table">
+					<PropertyColumn Title="عنوان دوره" Property="@(course => course.Title)" />
+					<PropertyColumn Title="ساعت دوره" Property="@(course => course.CourseTime)" />
+					<PropertyColumn Title="زمان برگزاری دوره" Property="@(course => string.Format("{0:0000}/{1:00}", course.Year, course.Month))" />
+					<PropertyColumn Title="نوع دوره" Property="@(course => course.IsGeneral ? "عمومی" : "تخصصی")" />
+					<PropertyColumn Title="نوع برگزاری دوره" Property="@(course => course.IsOnline ? "مجازی" : "حضوری")" />
+					<TemplateColumn>
+						<a class="edit-link" href="/Dashboard/Courses/@context.Id">
+							<img src="/icons/course-edit.svg" />
+						</a>
+					</TemplateColumn>
+				</QuickGrid>
+			}
+		</div>
+		@*
+		<a class="add-link" href="/Dashboard/Courses/Add">
+			<img src="/icons/course-add.svg" />
+			افزودن دوره
+		</a>
+		*@
+	</div>
+</div>
+
+@code {
+	private AppDbContext context = default!;
+
+	private List<string> years = new List<string>();
+	private string? year;
+
+	private IQueryable<Course>? courses;
+
+	protected override async Task OnInitializedAsync()
+	{
+		context = DbFactory.CreateDbContext();
+
+		years = await context.Courses
+			.GroupBy(course => course.Year)
+				.OrderByDescending(group => group.Key)
+				.Select(group => group.Key)
+			.ToListAsync();
+
+		year = years.FirstOrDefault();
+
+		SelectYear();
+	}
+
+	private void SelectYear()
+	{
+		courses = context.Courses
+			.Where(course => course.Year == year)
+			.OrderByDescending(course => course.Month);
+	}
+}
