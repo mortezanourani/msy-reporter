@@ -1,0 +1,27 @@
+﻿@page "/Dashboard/Courses"
+
+@inject IdentityUserAccessor UserAccessor
+
+<PageTitle>شناسنامه آموزشی</PageTitle>
+
+<AuthorizeView Roles="Administrator">
+    <Authorized>
+        <h5>مدیریت شناسنامه آموزشی</h5>
+    </Authorized>
+    <NotAuthorized>
+        <UserCoursesCard User=@User />
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private ApplicationUser? User;
+
+    protected override async Task OnInitializedAsync()
+    {
+        User = await UserAccessor.GetRequiredUserAsync(HttpContext);
+    }
+}
+
