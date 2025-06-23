@@ -1,0 +1,123 @@
+﻿@page "/Dashboard/Courses/{Id:guid}"
+
+@inject IdentityUserAccessor UserAccessor
+
+<PageTitle>شناسنامه آموزشی</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+    <div class="courses-top-menu">
+        <h6 class="panel-title">مدیریت شناسنامه آموزشی</h6>
+        <a class="panel-link" href="/Dashboard/Courses/Add">
+            <img src="/icons/course-add.svg" />
+            افزودن دوره
+        </a>
+    </div>
+
+    @if (Course is not null)
+    {
+        <div class="row">
+            <div class="col1-1">
+                <EditForm method="post" Model="Course" OnValidSubmit="UpdateCourse" FormName="edit" Enhance>
+                    <DataAnnotationsValidator />
+                    <input type="hidden" name="Course.Id" value="@Course.Id" />
+                    <div class="form-container">
+                        <div class="wrapper">
+                            <div class="wrapper-group title">
+                                <label for="title" class="form-label">عنوان دوره:</label>
+                                <InputText id="title" @bind-Value="Course.Title" class="form-control" />
+                                @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
+                            </div>
+                            <div class="wrapper-group time">
+                                <label for="coursetime" class="form-label">ساعت دوره:</label>
+                                <InputNumber id="coursetime" @bind-Value="Course.CourseTime" class="form-control" />
+                            </div>
+                            <div class="wrapper-group type">
+                                <label for="isgeneral" class="form-label">نوع دوره:</label>
+                                <InputSelect @bind-Value="Course.IsGeneral" class="select">
+                                    <option value="True">عمومی</option>
+                                    <option value="False">تخصصی</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="wrapper-group year">
+                                <label for="year" class="form-label">سال برگزاری:</label>
+                                <InputText id="year" @bind-Value="Course.Year" class="form-control" />
+                            </div>
+                            <div class="wrapper-group month">
+                                <label for="month" class="form-label">ماه برگزاری:</label>
+                                <InputText id="month" @bind-Value="Course.Month" class="form-control" />
+                            </div>
+                            <div class="wrapper-group type">
+                                <label for="isonline" class="form-label">نوع برگزاری:</label>
+                                <InputSelect @bind-Value="Course.IsOnline" class="select">
+                                    <option value="True">مجازی</option>
+                                    <option value="False">حضوری</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="wrapper-group year"></div>
+                            <div class="wrapper-group year"></div>
+                            <div class="wrapper-group type">
+                                <button type="submit" class="btn btn-primary">تایید</button>
+                            </div>
+                        </div>
+                        <ValidationSummary role="alert" />
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Course? Course { get; set; }
+
+    private AppDbContext context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+        Course ??= await context.Courses
+            .Include(course => course.Employees)
+            .FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Course is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task UpdateCourse()
+    {
+        context = DbFactory.CreateDbContext();
+        context.Attach(Course!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            var isExist = context.Courses
+                .Any(e => e.Id == Course!.Id);
+
+            if (!isExist)
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/courses");
+    }
+}
+
