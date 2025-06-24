@@ -1,0 +1,75 @@
+﻿@page "/Dashboard/Courses/Add"
+
+@inject IdentityUserAccessor UserAccessor
+
+<PageTitle>اضافه کردن دوره</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+    <div class="courses-top-menu">
+        <h6 class="panel-title">مدیریت شناسنامه آموزشی</h6>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Course" OnValidSubmit="AddCourse" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <div class="form-group fa mb-3">
+                    <label for="title" class="form-label">
+                        <img src="/icons/title.svg" />
+                    </label>
+                    <InputText id="title" @bind-Value="Course.Title" class="form-control" placeholder="عنوان دوره" />
+                    @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
+                </div>
+                <div class="form-checkbox mb-3">
+                    <label for="isgeneral" class="form-label">
+                        <span class="checked">عمومی</span>
+                        <span class="unchecked">تخصصی</span>
+                    </label>
+                    <InputCheckbox id="isgeneral" @bind-Value="Course.IsGeneral" class="form-check-input" hidden />
+                </div>
+                <div class="form-group en mb-3">
+                    <label for="coursetime" class="form-label">
+                        <img src="/icons/duration.svg" />
+                    </label>
+                    <InputNumber id="coursetime" @bind-Value="Course.CourseTime" class="form-control" placeholder="ساعت دوره" />
+                </div>
+                <div class="form-group en mb-3">
+                    <label for="year" class="form-label">
+                        <img src="/icons/calendar.svg" />
+                    </label>
+                    <InputText id="year" @bind-Value="Course.Year" class="form-control" placeholder="سال" />
+                </div>
+                <div class="form-group en mb-3">
+                    <label for="month" class="form-label">
+                        <img src="/icons/calendar.svg" />
+                    </label>
+                    <InputText id="month" @bind-Value="Course.Month" class="form-control" placeholder="ماه" />
+                </div>
+                <div class="form-checkbox mb-3">
+                    <label for="isonline" class="form-label">
+                        <span class="unchecked">حضوری</span>
+                        <span class="checked">مجازی</span>
+                    </label>
+                    <InputCheckbox id="isonline" @bind-Value="Course.IsOnline" class="form-check-input" />
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+                <ValidationSummary class="text-danger" role="alert" />
+            </EditForm>
+        </div>
+    </div>
+</AuthorizeView>
+
+@code {
+    [SupplyParameterFromForm]
+    private Course Course { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddCourse()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Courses.Add(Course);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/courses");
+    }
+}
+
