@@ -1,12 +1,12 @@
 ﻿@page "/Dashboard/Courses/{Id:guid}"
 
-@inject IdentityUserAccessor UserAccessor
+@rendermode InteractiveServer
 
 <PageTitle>شناسنامه آموزشی</PageTitle>
 
 <AuthorizeView Roles="Administrators" Context="authContext">
     <div class="courses-top-menu">
-        <h6 class="panel-title">مدیریت شناسنامه آموزشی</h6>
+        <h6 class="panel-title">ویرایش دوره آموزشی</h6>
         <a class="panel-link" href="/Dashboard/Courses/Add">
             <img src="/icons/course-add.svg" />
             افزودن دوره
@@ -16,55 +16,78 @@
     @if (Course is not null)
     {
         <div class="row">
-            <div class="col1-1">
-                <EditForm method="post" Model="Course" OnValidSubmit="UpdateCourse" FormName="edit" Enhance>
+            <div class="col3-5">
+                <div class="instructions">
+                    <p class="mb-3">دوره ها و کلاس های آموزشی ضمن خدمت با اطلاعات ذیل در سامانه آماری اداره کل ورزش و جوانان استان گیلان ثبت می گردد.</p>
+                    <div class="instruction-item">
+                        <div class="icon-title mb-2">
+                            <img src="/icons/title-blue.svg">
+                            <h6>عنوان دوره:</h6>
+                        </div>
+                        <p>در فرم مربوطه بخش اول اطلاعات عنوان دوره آموزشی مورد نظر است.</p>
+                        <p>در این بخش عنوان دوره، نوع دوره بین عمومی یا تخصصی (شغلی) و نحوه برگزاری دوره از نظر مجازی یا حضوری قابل ویرایش می باشد.</p>
+                    </div>
+                    <div class="instruction-item">
+                        <div class="icon-title mb-2">
+                            <img src="/icons/duration-blue.svg">
+                            <h6>مدت دوره (ساعت):</h6>
+                        </div>
+                        <p>در بخش بعدی مدت دوره آموزشی را برحسب ساعت مشخص می کنید. بدیهی است که در حالت پیشفرض مقدار مدت دوره صفر در نظر گرفته شده است.</p>
+                    </div>
+                    <div class="instruction-item">
+                        <div class="icon-title mb-2">
+                            <img src="/icons/calendar-blue.svg">
+                            <h6>تاریخ برگزاری دوره:</h6>
+                        </div>
+                        <p>تاریخ برگزاری دوره در دو بخش ماه و سال در سامانه ذخیره می گردد. سال برگزاری دوره به صورت چهار رقمی و ماه برگزاری دوره به صورت دو رقمی وارد می شود.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col2-5 mb-auto">
+                <EditForm method="post" class="card p-3" Model="Course" OnValidSubmit="UpdateCourse" FormName="edit" Enhance>
                     <DataAnnotationsValidator />
                     <input type="hidden" name="Course.Id" value="@Course.Id" />
-                    <div class="form-container">
-                        <div class="wrapper">
-                            <div class="wrapper-group title">
-                                <label for="title" class="form-label">عنوان دوره:</label>
-                                <InputText id="title" @bind-Value="Course.Title" class="form-control" />
-                                @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
-                            </div>
-                            <div class="wrapper-group time">
-                                <label for="coursetime" class="form-label">ساعت دوره:</label>
-                                <InputNumber id="coursetime" @bind-Value="Course.CourseTime" class="form-control" />
-                            </div>
-                            <div class="wrapper-group type">
-                                <label for="isgeneral" class="form-label">نوع دوره:</label>
-                                <InputSelect @bind-Value="Course.IsGeneral" class="select">
-                                    <option value="True">عمومی</option>
-                                    <option value="False">تخصصی</option>
-                                </InputSelect>
-                            </div>
-                        </div>
-                        <div class="wrapper">
-                            <div class="wrapper-group year">
-                                <label for="year" class="form-label">سال برگزاری:</label>
-                                <InputText id="year" @bind-Value="Course.Year" class="form-control" />
-                            </div>
-                            <div class="wrapper-group month">
-                                <label for="month" class="form-label">ماه برگزاری:</label>
-                                <InputText id="month" @bind-Value="Course.Month" class="form-control" />
-                            </div>
-                            <div class="wrapper-group type">
-                                <label for="isonline" class="form-label">نوع برگزاری:</label>
-                                <InputSelect @bind-Value="Course.IsOnline" class="select">
-                                    <option value="True">مجازی</option>
-                                    <option value="False">حضوری</option>
-                                </InputSelect>
-                            </div>
-                        </div>
-                        <div class="wrapper">
-                            <div class="wrapper-group year"></div>
-                            <div class="wrapper-group year"></div>
-                            <div class="wrapper-group type">
-                                <button type="submit" class="btn btn-primary">تایید</button>
-                            </div>
-                        </div>
-                        <ValidationSummary role="alert" />
+                    <div class="form-group fa mb-3">
+                        <label for="title" class="form-label">
+                            <img src="/icons/title.svg" />
+                        </label>
+                        <InputText id="title" @bind-Value="Course.Title" class="form-control" />
+                        @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
                     </div>
+                    <div class="row2">
+                        <div class="form-checkbox">
+                            <label for="isgeneral" class="form-label">
+                                <span class="checked">عمومی</span>
+                                <span class="unchecked">تخصصی</span>
+                            </label>
+                            <InputCheckbox id="isgeneral" @bind-Value="Course.IsGeneral" class="form-check-input" hidden />
+                        </div>
+                        <div class="form-checkbox">
+                            <label for="isonline" class="form-label">
+                                <span class="unchecked">حضوری</span>
+                                <span class="checked">مجازی</span>
+                            </label>
+                            <InputCheckbox id="isonline" @bind-Value="Course.IsOnline" class="form-check-input" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row3">
+                        <div class="form-group en mb-3">
+                            <label for="coursetime" class="form-label">
+                                <img src="/icons/duration.svg" />
+                            </label>
+                            <InputNumber id="coursetime" @bind-Value="Course.CourseTime" class="form-control" placeholder="ساعت دوره" />
+                        </div>
+                        <div class="form-group en date mb-3">
+                            <label for="year" class="form-label">
+                                <img src="/icons/calendar.svg" />
+                            </label>
+                            <InputText id="year" @bind-Value="Course.Year" class="form-control" placeholder="سال" />
+                            <InputText id="month" @bind-Value="Course.Month" class="form-control" placeholder="ماه" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">تایید</button>
+                    <ValidationSummary role="alert" />
                 </EditForm>
             </div>
         </div>
@@ -84,7 +107,6 @@
     {
         context = DbFactory.CreateDbContext();
         Course ??= await context.Courses
-            .Include(course => course.Employees)
             .FirstOrDefaultAsync(m => m.Id == Id);
 
         if (Course is null)
@@ -117,7 +139,7 @@
             }
         }
 
-        NavigationManager.NavigateTo("/courses");
+        NavigationManager.NavigateTo("/Dashboard/Courses/");
     }
 }
 

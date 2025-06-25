@@ -12,7 +12,7 @@
 
     .courses-top-menu .panel-title {
         margin: 0;
-        padding: 0;
+        padding: 4px 0;
         font-size: 14px;
     }
 
@@ -28,60 +28,56 @@
         font-weight: 500;
     }
 
-.form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: space-between;
-    gap: 16px;
+.instructions p {
+    font-size: 15px;
+    line-height: 26px;
+    margin: 0;
 }
 
-    .form-container .wrapper {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: stretch;
-        gap: 16px;
+.instructions .instruction-item .icon-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+    .instructions .instruction-item .icon-title h6 {
+        font-size: 15px;
+        margin: 0;
     }
 
-        .form-container .wrapper .wrapper-group {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 4px;
-            padding: 0px;
-            border-radius: 6px;
-        }
-            .form-container .wrapper .wrapper-group.title {
-                flex: 0 1 50%;
-            }
-            .form-container .wrapper .wrapper-group.year,
-            .form-container .wrapper .wrapper-group.month {
-                flex: 0 1 37.5%;
-            }
-            .form-container .wrapper .wrapper-group.time,
-            .form-container .wrapper .wrapper-group.type {
-                flex: 0 1 25%;
-            }
+.instructions .instruction-item p {
+    color: #726e60;
+    margin-bottom: 6px;
+    margin-right: 32px;
+}
 
-            .form-container .wrapper .wrapper-group .form-label {
-                margin: 0;
-                padding: 0 4px;
-                font-size: 13px;
-                font-weight: 500;
-                text-wrap: nowrap;
-            }
+form .row2,
+form .row3 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+    form .row2 > *,
+    form .row3 > * {
+        flex-basis: 100%;
+    }
 
-            .form-container .wrapper .wrapper-group ::deep.select,
-            .form-container .wrapper .wrapper-group ::deep.btn-primary,
-            .form-container .wrapper .wrapper-group ::deep.form-control {
-                width: 100%;
-                margin: 0;
-                padding: 6px 12px;
-                font-size: 13px;
-                font-weight: 400;
-                border: 1px solid var(--primary-color);
-                border-radius: 6px;
-                height: 36px;
-            }
+form .date {
+    display: flex;
+    flex-direction: row-reverse;
+}
+    form .date ::deep.form-control {
+        border-radius: 6px 0 0 6px;
+        border-right: none;
+    }
+    form .date ::deep.form-control:last-child {
+        border-radius: 0 6px 6px 0;
+        border-left: none;
+        border-right: 1px solid #a7a7a7;
+        padding: 8px;
+    }
+    

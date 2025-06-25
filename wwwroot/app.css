@@ -377,7 +377,7 @@ body {
             background: var(--primary-color);
         }
 
-    .form-group + button {
+    button[type="submit"] {
         background: var(--primary-color);
         font-size: 15px;
         border: none;
