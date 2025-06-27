@@ -2,6 +2,8 @@
 
 @rendermode InteractiveServer
 
+@using Microsoft.AspNetCore.Components.QuickGrid
+
 <PageTitle>شناسنامه آموزشی</PageTitle>
 
 <AuthorizeView Roles="Administrators" Context="authContext">
@@ -16,7 +18,7 @@
     @if (Course is not null)
     {
         <div class="row">
-            <div class="col3-5">
+            <div class="col3-5 mb-0">
                 <div class="instructions">
                     <p class="mb-3">دوره ها و کلاس های آموزشی ضمن خدمت با اطلاعات ذیل در سامانه آماری اداره کل ورزش و جوانان استان گیلان ثبت می گردد.</p>
                     <div class="instruction-item">
@@ -91,6 +93,29 @@
                 </EditForm>
             </div>
         </div>
+        <hr />
+        <h6 class="mb-3">شرکت کنندگان در دوره <b class="text-primary">@Course.Title</b></h6>
+        <div class="row">
+            <div class="col1-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="title">افرادی که دوره را گذرانده اند</h6>
+                    </div>
+                    <div class="card-body">
+                        @foreach(var employee in courseEmployees!)
+                        {
+                            <button @onclick="() => RemoveEmployee(employee)">@employee.FirstName @employee.LastName</button>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col1-2">
+                @foreach (var employee in Employees!)
+                {
+                    <button @onclick="() => AddEmployee(employee)">@employee.FirstName @employee.LastName</button>
+                }
+            </div>
+        </div>
     }
 </AuthorizeView>
 
@@ -103,21 +128,26 @@
 
     private AppDbContext context = default!;
 
+    private List<Employee>? courseEmployees = new List<Employee>();
+    private List<Employee>? Employees = new List<Employee>();
+
     protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
         Course ??= await context.Courses
+            .Include(course => course.Employees)
             .FirstOrDefaultAsync(m => m.Id == Id);
 
         if (Course is null)
         {
             NavigationManager.NavigateTo("notfound");
         }
+
+        await UpdateEmployees();
     }
 
     private async Task UpdateCourse()
     {
-        context = DbFactory.CreateDbContext();
         context.Attach(Course!).State = EntityState.Modified;
 
         try
@@ -140,6 +170,43 @@
         }
 
         NavigationManager.NavigateTo("/Dashboard/Courses/");
+    }
+
+    private async Task AddEmployee(Employee employee)
+    {
+        if (employee is null)
+        {
+            return;
+        }
+
+        Course!.Employees.Add(employee);
+        await UpdateEmployees();
+    }
+
+    private async Task RemoveEmployee(Employee employee)
+    {
+        if (employee is null)
+        {
+            return;
+        }
+
+        Course!.Employees.Remove(employee);
+        await UpdateEmployees();
+    }
+
+    private async Task UpdateEmployees()
+    {
+        await context.SaveChangesAsync();
+
+        courseEmployees = await context.Employees
+          .Where(employee => employee.Courses
+              .Any(course => course.Id == Id))
+          .ToListAsync();
+
+        Employees = await context.Employees
+            .Where(employee => employee.Courses
+                .All(course => course.Id != Id))
+            .ToListAsync();
     }
 }
 
