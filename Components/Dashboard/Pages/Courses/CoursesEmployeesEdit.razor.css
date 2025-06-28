@@ -96,48 +96,203 @@
         padding: 2px;
     }
 
-::deep .course-employees-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+.instructions p {
+    font-size: 15px;
+    line-height: 26px;
+    margin: 0;
 }
 
-    ::deep .course-employees-table thead tr {
-        display: none;
+.instructions .instruction-item .icon-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+    .instructions .instruction-item .icon-title h6 {
+        font-size: 15px;
+        margin: 0;
     }
 
-    ::deep .course-employees-table tbody tr {
-        background: #ffffff;
+.instructions .instruction-item p {
+    color: #726e60;
+    margin-bottom: 6px;
+    margin-right: 32px;
+}
+
+.course-employees-card {
+    background: none;
+    box-shadow: none;
+    overflow: visible;
+    padding: 0;
+}
+
+    .course-employees-card .card-header {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
     }
 
-        ::deep .course-employees-table tbody tr:nth-child(2n) {
+    .course-employees-card .card-body {
+        padding: var(--spacing-x);
+        background: var(--card-bg);
+        box-shadow: var(--card-box-shadow);
+    }
+
+        .course-employees-card .card-body .course-employees-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+            .course-employees-card .card-body .course-employees-list ::deep.course-employees-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+                .course-employees-card .card-body .course-employees-list ::deep.course-employees-table thead tr {
+                    background-color: var(--primary-color);
+                    color: var(--light-color);
+                }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table thead tr th {
+                        padding: 12px 12px 8px;
+                        text-align: center;
+                        font-size: 13px;
+                        font-weight: 600;
+                    }
+
+                        .course-employees-card .card-body .course-employees-list ::deep.course-employees-table thead tr th .col-title {
+                            justify-content: center;
+                            font-size: 13px;
+                            font-weight: 600;
+                        }
+
+                        .course-employees-card .card-body .course-employees-list ::deep.course-employees-table thead tr th:first-child .col-title {
+                            justify-content: right;
+                        }
+
+                .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr {
+                    background: #ffffff;
+                }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr:nth-child(2n) {
+                        background: var(--light-color);
+                    }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr:hover {
+                        transform: scale(1.01);
+                        box-shadow: 0 0 8px 0px dimgray;
+                    }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr td {
+                        padding: 8px 12px;
+                        text-align: center;
+                        font-size: 13px;
+                        font-weight: 400;
+                    }
+
+                        .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr td:first-child {
+                            font-weight: 500;
+                            text-align: right;
+                        }
+
+                        .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr td:last-child {
+                            text-align: left;
+                        }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr td .btn {
+                        padding: 0;
+                    }
+
+    .course-employees-card .paginator {
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+
+        .course-employees-card .paginator nav {
+            flex-direction: row-reverse;
+        }
+
+            .course-employees-card .paginator nav * {
+                color: var(--dark-color);
+                border-color: var(--primary-color);
+            }
+
+.employees-card .card-body,
+.employees-card .card-header {
+    padding: var(--card-padding-y);
+}
+
+.employees-card .card-body {
+    padding: var(--spacing-x);
+    background: var(--card-bg);
+    box-shadow: var(--card-box-shadow);
+}
+
+    .employees-card .card-body ::deep.employees-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .employees-card .card-body ::deep.employees-table thead tr {
+            display: none;
+        }
+
+        .employees-card .card-body ::deep.employees-table tbody tr:nth-child(2n+1) {
             background: var(--light-color);
         }
 
-        ::deep .course-employees-table tbody tr:hover {
+        .employees-card .card-body ::deep.employees-table tbody tr:hover {
             transform: scale(1.01);
             box-shadow: 0 0 8px 0px dimgray;
         }
 
-        ::deep .course-employees-table tbody tr td {
-            padding: 0px 12px;
+        .employees-card .card-body ::deep.employees-table tbody tr td {
+            padding: 6px 12px 6px 8px;
             text-align: center;
-            font-size: 12px;
-            font-weight: 400;
+            text-align: right;
+            font-weight: 500;
+            font-size: 13px;
         }
 
-            ::deep .course-employees-table tbody tr td:first-child {
-                font-weight: 600;
-                text-align: right;
-            }
-
-            ::deep .course-employees-table tbody tr td:last-child {
+            .employees-card .card-body ::deep.employees-table tbody tr td:last-child {
                 text-align: left;
             }
 
-            ::deep .course-employees-table tbody tr td:last-child .btn {
-                padding: 4px 0;
+            .employees-card .card-body ::deep.employees-table tbody tr td .btn {
+                padding: 0;
             }
+
+.employees-card .paginator {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    border: none;
+}
+
+    .employees-card .paginator nav {
+        width: 100%;
+        flex-direction: row;
+    }
+
+        .employees-card .paginator nav .buttons-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .employees-card .paginator nav * {
+            color: var(--dark-color);
+            border-color: var(--primary-color);
+        }
+
 
 /*.instructions p {
     font-size: 15px;

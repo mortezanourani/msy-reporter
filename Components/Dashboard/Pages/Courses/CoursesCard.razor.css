@@ -77,7 +77,11 @@
                     }
 
                     .courses-card .card-body .courses-list ::deep.courses-table tbody tr td:last-child {
-                        text-align: left;
+                        display: flex;
+                        flex-direction:row;
+                        justify-content: flex-end;
+                        align-items: center;
+                        gap: 16px;
                     }
 
         .courses-card .card-body .add-link {
