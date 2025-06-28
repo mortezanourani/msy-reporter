@@ -16,19 +16,18 @@
                     <button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
                             class="btn"
                             aria-current="@AriaCurrentValue(pageIndex + 1)"
-                            aria-label="@(pageIndex + 1)">
+                            aria-label="@(pageIndex + 1)"
+                            disabled=@((currentPage >= lastPage) ? "disabled" : false)>
                         <span class="material-symbols-rounded">chevron_left</span>
                     </button>
                     <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-                    if (pageIndex >= 0)
-                    {
-                        <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-                                class="btn"
-                                aria-current="@AriaCurrentValue(pageIndex - 1)"
-                                aria-label="@(pageIndex - 1)">
-                            <span class="material-symbols-rounded">chevron_right</span>
-                        </button>
-                    }
+                    <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+                            class="btn"
+                            aria-current="@AriaCurrentValue(pageIndex - 1)"
+                            aria-label="@(pageIndex - 1)"
+                            disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                        <span class="material-symbols-rounded">chevron_right</span>
+                    </button>
                 }
             </nav>
         </div>

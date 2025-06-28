@@ -94,26 +94,60 @@
             </div>
         </div>
         <hr />
-        <h6 class="mb-3">شرکت کنندگان در دوره <b class="text-primary">@Course.Title</b></h6>
-        <div class="row">
-            <div class="col1-2">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="title">افرادی که دوره را گذرانده اند</h6>
-                    </div>
-                    <div class="card-body">
-                        @foreach(var employee in courseEmployees!)
+        <div class="card course-employees-card">
+            <div class="card-header border-bottom">
+                <h6 class="title">فهرست افرادی که دوره<b class="text-primary px-1">@Course.Title</b>را گذرانده اند</h6>
+                <div class="paginator">
+                    <nav role="navigation">
+                        @if (pagination.TotalItemCount.HasValue)
                         {
-                            <button @onclick="() => RemoveEmployee(employee)">@employee.FirstName @employee.LastName</button>
+                            var totalPages = pagination.TotalItemCount;
+                            var pageIndex = pagination.CurrentPageIndex;
+                            var currentPage = pageIndex + 1;
+                            var lastPage = pagination.LastPageIndex + 1;
+                            var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+                            var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+                            <button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+                            class="btn"
+                            aria-current="@AriaCurrentValue(pageIndex + 1)"
+                            aria-label="@(pageIndex + 1)"
+                            disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+                                <span class="material-symbols-rounded">chevron_left</span>
+                            </button>
+                            <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+                            <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+                                    class="btn"
+                                    aria-current="@AriaCurrentValue(pageIndex - 1)"
+                                    aria-label="@(pageIndex - 1)"
+                                    disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                                <span class="material-symbols-rounded">chevron_right</span>
+                            </button>
                         }
-                    </div>
+                    </nav>
                 </div>
             </div>
-            <div class="col1-2">
-                @foreach (var employee in Employees!)
-                {
-                    <button @onclick="() => AddEmployee(employee)">@employee.FirstName @employee.LastName</button>
-                }
+
+            <div class="card-body">
+                <div class="course-employees-list">
+                    @if (courseEmployees is not null)
+                    {
+                        <QuickGrid Items="courseEmployees" Pagination="pagination" Theme="" Class="course-employees-table">
+                            <PropertyColumn Title="نام و نام خانوداگی" Property="@(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))" />
+                            <PropertyColumn Title="کد ملی" Property="@(employee => employee.SeenCode)" />
+                            <PropertyColumn Title="نام پدر" Property="@(employee => employee.FatherName)" />
+                            <PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate)" />
+                            <TemplateColumn>
+                                <a class="edit-link" href="/Dashboard/Employee/Courses/@context.Id">
+                                    <img src="/icons/user-courses.svg" />
+                                </a>
+                            </TemplateColumn>
+                        </QuickGrid>
+                    }
+                </div>
+                <a class="update-employees-link" href="/Dashboard/Course/Employees/@Course!.Id">
+			        <img src="/icons/users-list.svg" />
+			        ویرایش شرکت کنندگان در دوره
+		        </a>
             </div>
         </div>
     }
@@ -128,8 +162,7 @@
 
     private AppDbContext context = default!;
 
-    private List<Employee>? courseEmployees = new List<Employee>();
-    private List<Employee>? Employees = new List<Employee>();
+    private IQueryable<Employee>? courseEmployees;
 
     protected override async Task OnInitializedAsync()
     {
@@ -143,7 +176,12 @@
             NavigationManager.NavigateTo("notfound");
         }
 
-        await UpdateEmployees();
+        courseEmployees = context.Employees
+            .Where(employee => employee.Courses
+                .Any(course => course.Id == Id))
+            .OrderBy(employee => employee.LastName);
+
+        pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
     }
 
     private async Task UpdateCourse()
@@ -172,41 +210,14 @@
         NavigationManager.NavigateTo("/Dashboard/Courses/");
     }
 
-    private async Task AddEmployee(Employee employee)
-    {
-        if (employee is null)
-        {
-            return;
-        }
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
 
-        Course!.Employees.Add(employee);
-        await UpdateEmployees();
+    private async Task GoToPageAsync(int pageIndex)
+    {
+        await pagination.SetCurrentPageIndexAsync(pageIndex);
     }
 
-    private async Task RemoveEmployee(Employee employee)
-    {
-        if (employee is null)
-        {
-            return;
-        }
-
-        Course!.Employees.Remove(employee);
-        await UpdateEmployees();
-    }
-
-    private async Task UpdateEmployees()
-    {
-        await context.SaveChangesAsync();
-
-        courseEmployees = await context.Employees
-          .Where(employee => employee.Courses
-              .Any(course => course.Id == Id))
-          .ToListAsync();
-
-        Employees = await context.Employees
-            .Where(employee => employee.Courses
-                .All(course => course.Id != Id))
-            .ToListAsync();
-    }
+    private string? AriaCurrentValue(int pageIndex)
+        => pagination.CurrentPageIndex == pageIndex ? "page" : null;
 }
 

@@ -1,0 +1,173 @@
+﻿@page "/Dashboard/Course/Employees/{Id:guid}"
+
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+<PageTitle>شناسنامه آموزشی</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+    <div class="courses-top-menu">
+        <h6 class="panel-title">ویرایش شرکت کنندگان دوره آموزشی</h6>
+        <a class="panel-link" href="/Dashboard/Courses/@Course?.Id">
+            <img src="/icons/course-edit.svg" />
+            ویرایش دوره
+        </a>
+    </div>
+
+    @if (Course is not null)
+    {
+        <div class="row">
+            <div class="col1-1 mb-0">
+                <div class="course-info">
+                    <div class="course-title">
+                        <h6 class="title">@Course!.Title</h6>
+                        <span class="type-badges">
+                            <p class="type-badge">@(Course!.IsGeneral ? "عمومی" : "تخصصی")</p>
+                            <p class="type-badge">@(Course!.IsOnline ? "مجازی" : "حضوری")</p>
+                        </span>
+                    </div>
+                    <div class="course-date">
+                        <p class="date">
+                            <img src="/icons/calendar-blue.svg" />
+                            @string.Format("{0}/{1}", Course!.Year, Course!.Month)
+                        </p>
+                        <p class="duration">
+                            <img src="/icons/duration-blue.svg" />
+                            @string.Format("{0} ساعت", Course!.CourseTime)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h6 class="mb-3">شرکت کنندگان در دوره <b class="text-primary">@Course.Title</b></h6>
+        <div class="row">
+            <div class="col1-2">
+                <QuickGrid Items="employees!.AsQueryable()" Theme="" Class="course-employees-table">
+                    <PropertyColumn Property="@(course => string.Format("{0} {1}", course.FirstName, course.LastName))"></PropertyColumn>
+                    <PropertyColumn Property="@(course => course.SeenCode)"></PropertyColumn>
+                    <TemplateColumn>
+                        <button class="btn" @onclick="() => AddEmployee(context)">
+                            <img src="/icons/user-add.svg" />
+                        </button>
+                    </TemplateColumn>
+                </QuickGrid>
+            </div>
+            <div class="col1-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="title">افرادی که دوره را گذرانده اند</h6>
+                    </div>
+                    <div class="card-body">
+                        <QuickGrid Items="courseEmployees!.AsQueryable()" Theme="" Class="course-employees-table">
+                            <PropertyColumn Property="@(course => string.Format("{0} {1}", course.FirstName, course.LastName))"></PropertyColumn>
+                            <PropertyColumn Property="@(course => course.SeenCode)"></PropertyColumn>
+                            <TemplateColumn>
+                                <button class="btn" @onclick="() => RemoveEmployee(context)">
+                                    <img src="/icons/user-remove.svg" />
+                                </button>
+                            </TemplateColumn>
+                        </QuickGrid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private Course? Course { get; set; }
+
+    private AppDbContext context = default!;
+
+    private List<Employee>? courseEmployees = new List<Employee>();
+    private List<Employee>? employees = new List<Employee>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+        Course ??= await context.Courses
+            .Include(course => course.Employees)
+            .FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Course is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+
+        courseEmployees = await context.Employees
+            .Where(employee => employee.Courses
+                .Any(course => course.Id == Id))
+            .ToListAsync();
+
+        await UpdateEmployees();
+    }
+
+    private async Task UpdateCourse()
+    {
+        context.Attach(Course!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            var isExist = context.Courses
+                .Any(e => e.Id == Course!.Id);
+
+            if (!isExist)
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/Dashboard/Courses/");
+    }
+
+    private async Task AddEmployee(Employee employee)
+    {
+        if (employee is null)
+        {
+            return;
+        }
+
+        courseEmployees!.Add(employee);
+        await UpdateEmployees();
+    }
+
+    private async Task RemoveEmployee(Employee employee)
+    {
+        if (employee is null)
+        {
+            return;
+        }
+
+        courseEmployees!.Remove(employee);
+        await UpdateEmployees();
+    }
+
+    private async Task UpdateEmployees()
+    {
+        Course ??= await context.Courses
+            .Include(course => course.Employees)
+            .FirstOrDefaultAsync(m => m.Id == Id);
+
+        Course!.Employees = courseEmployees!;
+        await context.SaveChangesAsync();
+
+        employees = await context.Employees
+            .Where(employee => employee.Courses
+                .All(course => course.Id != Id))
+            .ToListAsync();
+    }
+}
+

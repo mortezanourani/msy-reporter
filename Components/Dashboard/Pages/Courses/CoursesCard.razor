@@ -24,6 +24,9 @@
 					<PropertyColumn Title="نوع دوره" Property="@(course => course.IsGeneral ? "عمومی" : "تخصصی")" />
 					<PropertyColumn Title="نوع برگزاری دوره" Property="@(course => course.IsOnline ? "مجازی" : "حضوری")" />
 					<TemplateColumn>
+						<a class="edit-link" href="/Dashboard/Course/Employees/@context.Id">
+							<img src="/icons/users-list.svg" />
+						</a>
 						<a class="edit-link" href="/Dashboard/Courses/@context.Id">
 							<img src="/icons/course-edit.svg" />
 						</a>
@@ -31,12 +34,6 @@
 				</QuickGrid>
 			}
 		</div>
-		@*
-		<a class="add-link" href="/Dashboard/Courses/Add">
-			<img src="/icons/course-add.svg" />
-			افزودن دوره
-		</a>
-		*@
 	</div>
 </div>
 

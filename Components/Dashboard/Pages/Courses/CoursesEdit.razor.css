@@ -83,3 +83,111 @@ form .date {
             border-right: 1px solid #a7a7a7;
             padding: 8px;
         }
+
+.course-employees-card {
+    background: none;
+    box-shadow: none;
+    overflow: visible;
+    padding: 0;
+}
+
+    .course-employees-card .card-header {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+
+    .course-employees-card .card-body {
+        padding: var(--spacing-x);
+        background: var(--card-bg);
+        box-shadow: var(--card-box-shadow);
+    }
+
+        .course-employees-card .card-body .course-employees-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+            .course-employees-card .card-body .course-employees-list ::deep.course-employees-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+                .course-employees-card .card-body .course-employees-list ::deep.course-employees-table thead tr {
+                    background-color: var(--primary-color);
+                    color: var(--light-color);
+                }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table thead tr th {
+                        padding: 12px 12px 8px;
+                        text-align: center;
+                        font-size: 13px;
+                        font-weight: 600;
+                    }
+
+                        .course-employees-card .card-body .course-employees-list ::deep.course-employees-table thead tr th .col-title {
+                            justify-content: center;
+                            font-size: 13px;
+                            font-weight: 600;
+                        }
+
+                        .course-employees-card .card-body .course-employees-list ::deep.course-employees-table thead tr th:first-child .col-title {
+                            justify-content: right;
+                        }
+
+                .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr {
+                    background: #ffffff;
+                }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr:nth-child(2n) {
+                        background: var(--light-color);
+                    }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr:hover {
+                        transform: scale(1.01);
+                        box-shadow: 0 0 8px 0px dimgray;
+                    }
+
+                    .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr td {
+                        padding: 8px 12px;
+                        text-align: center;
+                        font-size: 13px;
+                        font-weight: 400;
+                    }
+
+                        .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr td:first-child {
+                            font-weight: 500;
+                            text-align: right;
+                        }
+
+                        .course-employees-card .card-body .course-employees-list ::deep.course-employees-table tbody tr td:last-child {
+                            text-align: left;
+                        }
+
+        .course-employees-card .card-body .update-employees-link {
+            margin-top: 8px;
+            padding: 12px 8px 0;
+            border-top: 1px solid lightgray;
+            text-align: center;
+            font-size: 13px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+    .course-employees-card .paginator {
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+
+        .course-employees-card .paginator nav {
+            flex-direction: row-reverse;
+        }
+
+            .course-employees-card .paginator nav * {
+                color: var(--dark-color);
+                border-color: var(--primary-color);
+            }

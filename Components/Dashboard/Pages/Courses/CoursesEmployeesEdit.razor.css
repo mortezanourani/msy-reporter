@@ -1,0 +1,197 @@
+﻿.courses-top-menu {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    background: var(--card-bg);
+    box-shadow: var(--card-box-shadow);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .courses-top-menu .panel-title {
+        margin: 0;
+        padding: 4px 0;
+        font-size: 14px;
+    }
+
+    .courses-top-menu .panel-link {
+        margin: 0;
+        padding: 0;
+        font-size: 13px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+
+.course-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 16px;
+}
+
+    .course-info .course-title {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+        .course-info .course-title .title {
+            font: 400 14px IRANSans;
+            padding: 0;
+            margin: 0;
+        }
+
+        .course-info .course-title .type-badges {
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .course-info .course-title .type-badges .type-badge {
+                margin: 0;
+                padding: 0px 8px;
+                font-size: 11px;
+                border-radius: 4px;
+                border: 1px solid var(--primary-color);
+                color: var(--primary-color);
+            }
+
+    .course-info .course-date {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 4px;
+    }
+
+    .course-info .course-date .date,
+    .course-info .course-date .duration {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 8px;
+        font-size: 13px;
+    }
+    .course-info .course-date .duration img {
+        padding: 2px;
+    }
+
+::deep .course-employees-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    ::deep .course-employees-table thead tr {
+        display: none;
+    }
+
+    ::deep .course-employees-table tbody tr {
+        background: #ffffff;
+    }
+
+        ::deep .course-employees-table tbody tr:nth-child(2n) {
+            background: var(--light-color);
+        }
+
+        ::deep .course-employees-table tbody tr:hover {
+            transform: scale(1.01);
+            box-shadow: 0 0 8px 0px dimgray;
+        }
+
+        ::deep .course-employees-table tbody tr td {
+            padding: 0px 12px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+            ::deep .course-employees-table tbody tr td:first-child {
+                font-weight: 600;
+                text-align: right;
+            }
+
+            ::deep .course-employees-table tbody tr td:last-child {
+                text-align: left;
+            }
+
+            ::deep .course-employees-table tbody tr td:last-child .btn {
+                padding: 4px 0;
+            }
+
+/*.instructions p {
+    font-size: 15px;
+    line-height: 26px;
+    margin: 0;
+}
+
+.instructions .instruction-item .icon-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+    .instructions .instruction-item .icon-title h6 {
+        font-size: 15px;
+        margin: 0;
+    }
+
+.instructions .instruction-item p {
+    color: #726e60;
+    margin-bottom: 6px;
+    margin-right: 32px;
+}
+
+form .row2,
+form .row3 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+    form .row2 > *,
+    form .row3 > * {
+        flex-basis: 100%;
+    }
+
+form .date {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+    form .date ::deep.form-control {
+        border-radius: 6px 0 0 6px;
+        border-right: none;
+    }
+
+        form .date ::deep.form-control:last-child {
+            border-radius: 0 6px 6px 0;
+            border-left: none;
+            border-right: 1px solid #a7a7a7;
+            padding: 8px;
+        }
+*/
