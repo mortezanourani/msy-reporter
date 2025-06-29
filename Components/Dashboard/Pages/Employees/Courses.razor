@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/Courses"
+﻿@page "/Dashboard/Employee/Courses/{Id}"
 
 @inject IdentityUserAccessor UserAccessor
 
@@ -21,24 +21,25 @@
         </div>
         <div class="row">
             <div class="col1-1">
-                <CoursesCard />
+                <Reporter.Components.Dashboard.Pages.Courses.UserCoursesCard User=@User/>
             </div>
         </div>
     </Authorized>
-    <NotAuthorized>
-        <UserCoursesCard User=@User />
-    </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    [Parameter]
+    public string? Id { get; set; }
+
+    private AppDbContext context = default!;
 
     private ApplicationUser? User;
 
     protected override async Task OnInitializedAsync()
     {
-        User = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        context = DbFactory.CreateDbContext();
+
+        User = await UserManager.FindByIdAsync(Id!);
     }
 }
 

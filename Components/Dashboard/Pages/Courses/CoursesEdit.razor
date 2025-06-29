@@ -9,10 +9,16 @@
 <AuthorizeView Roles="Administrators" Context="authContext">
     <div class="courses-top-menu">
         <h6 class="panel-title">ویرایش دوره آموزشی</h6>
-        <a class="panel-link" href="/Dashboard/Courses/Add">
-            <img src="/icons/course-add.svg" />
-            افزودن دوره
-        </a>
+        <span class="top-menu-links">
+            <a class="panel-link" href="/Dashboard/Courses/Employees">
+                <img src="/icons/course-users.svg" />
+                فهرست افراد
+            </a>
+            <a class="panel-link" href="/Dashboard/Courses/Add">
+                <img src="/icons/course-add.svg" />
+                افزودن دوره
+            </a>
+        </span>
     </div>
 
     @if (Course is not null)
@@ -137,7 +143,7 @@
                             <PropertyColumn Title="نام پدر" Property="@(employee => employee.FatherName)" />
                             <PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate)" />
                             <TemplateColumn>
-                                <a class="edit-link" href="/Dashboard/Employee/Courses/@context.Id">
+                                <a class="edit-link" href="/Dashboard/Employee/Courses/@context.AccountId">
                                     <img src="/icons/user-courses.svg" />
                                 </a>
                             </TemplateColumn>
@@ -145,7 +151,7 @@
                     }
                 </div>
                 <a class="update-employees-link" href="/Dashboard/Course/Employees/@Course!.Id">
-			        <img src="/icons/users-list.svg" />
+                    <img src="/icons/course-users.svg" />
 			        ویرایش شرکت کنندگان در دوره
 		        </a>
             </div>

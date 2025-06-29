@@ -16,17 +16,24 @@
         font-size: 14px;
     }
 
-    .courses-top-menu .panel-link {
-        margin: 0;
-        padding: 0;
-        font-size: 13px;
+    .courses-top-menu .top-menu-links {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 4px;
-        color: var(--primary-color);
-        font-weight: 500;
+        gap: 16px;
     }
+
+        .courses-top-menu .top-menu-links .panel-link {
+            margin: 0;
+            padding: 0;
+            font-size: 13px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 4px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
 
 .instructions p {
     font-size: 15px;

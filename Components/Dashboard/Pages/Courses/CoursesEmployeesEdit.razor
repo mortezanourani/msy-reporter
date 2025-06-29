@@ -9,10 +9,16 @@
 <AuthorizeView Roles="Administrators" Context="authContext">
     <div class="courses-top-menu">
         <h6 class="panel-title">ویرایش شرکت کنندگان دوره آموزشی</h6>
-        <a class="panel-link" href="/Dashboard/Courses/@Course?.Id">
-            <img src="/icons/course-edit.svg" />
-            ویرایش دوره
-        </a>
+        <span class="top-menu-links">
+            <a class="panel-link" href="/Dashboard/Courses/@Course?.Id">
+                <img src="/icons/course-edit.svg" />
+                ویرایش دوره
+            </a>
+            <a class="panel-link" href="/Dashboard/Courses/Add">
+                <img src="/icons/course-add.svg" />
+                افزودن دوره
+            </a>
+        </span>
     </div>
 
     @if (Course is not null)
