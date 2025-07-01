@@ -32,7 +32,7 @@
 									<PropertyColumn Title="نام و نام خانوادگی" Property="@(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))" />
 									<PropertyColumn Title="کد ملی" Property="@(employee => employee.SeenCode)" />
 									<PropertyColumn Title="نام پدر" Property="@(employee => employee.FatherName)" />
-									<PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate!.Replace("-", "/"))" />
+									<PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate!)" />
 									<TemplateColumn>
 										<a class="edit-link" href="/Dashboard/Employee/Courses/@context.AccountId">
 											<img src="/icons/user-courses.svg" />

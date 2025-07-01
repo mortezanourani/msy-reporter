@@ -1,0 +1,54 @@
+﻿@page "/Dashboard/Employees/CreateAccounts"
+
+<h3>CreateAccounts</h3>
+
+<AuthorizeView Roles="Administrators">
+    <Authorized>
+
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    private AppDbContext context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        var employees = await context.Employees
+            .Where(employee => employee.AccountId == null)
+            .ToListAsync();
+
+        foreach (Employee employee in employees)
+        {
+            var userAccount = await UserManager.FindByNameAsync(employee.SeenCode);
+            if (userAccount is null)
+            {
+                var user = Activator.CreateInstance<ApplicationUser>();
+                user.UserName = employee.SeenCode;
+                user.Email = string.Format("{0}@reporter.guilan.msy", employee.SeenCode);
+                user.EmailConfirmed = true;
+                try
+                {
+                    var regResult = await UserManager.CreateAsync(user, employee.SeenCode);
+
+                    if (regResult.Succeeded)
+                    {
+                        var newUser = await UserManager.FindByNameAsync(user.UserName);
+                        if (newUser is not null)
+                        {
+                            employee.AccountId = newUser.Id;
+                            context.Attach(employee);
+                            await context.SaveChangesAsync();
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+    }
+}
