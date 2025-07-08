@@ -280,6 +280,8 @@
     padding: 0;
     width: 100%;
     border: none;
+    flex-direction: column;
+    gap: 12px;
 }
 
     .employees-card .paginator nav {
@@ -299,60 +301,10 @@
             border-color: var(--primary-color);
         }
 
-
-/*.instructions p {
-    font-size: 15px;
-    line-height: 26px;
-    margin: 0;
-}
-
-.instructions .instruction-item .icon-title {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-end;
-    gap: 8px;
-}
-
-    .instructions .instruction-item .icon-title h6 {
-        font-size: 15px;
+    .employees-card .paginator .paginator-search {
         margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 36px;
+        border: none;
     }
-
-.instructions .instruction-item p {
-    color: #726e60;
-    margin-bottom: 6px;
-    margin-right: 32px;
-}
-
-form .row2,
-form .row3 {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-}
-
-    form .row2 > *,
-    form .row3 > * {
-        flex-basis: 100%;
-    }
-
-form .date {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
-    form .date ::deep.form-control {
-        border-radius: 6px 0 0 6px;
-        border-right: none;
-    }
-
-        form .date ::deep.form-control:last-child {
-            border-radius: 0 6px 6px 0;
-            border-left: none;
-            border-right: 1px solid #a7a7a7;
-            padding: 8px;
-        }
-*/

@@ -92,20 +92,26 @@
                                     <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
                                     <span class="buttons-wrapper">
                                         <button @onclick="@(() => EmployeesGoToPageAsync(pageIndex - 1))"
-                                                class="btn"
-                                                aria-label="@(pageIndex - 1)"
-                                                disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                                        class="btn"
+                                        aria-label="@(pageIndex - 1)"
+                                        disabled=@((pageIndex <= 0) ? "disabled" : false)>
                                             <span class="material-symbols-rounded">chevron_right</span>
                                         </button>
                                         <button @onclick="@(() => EmployeesGoToPageAsync(pageIndex + 1))"
-                                                class="btn"
-                                                aria-label="@(pageIndex + 1)"
-                                                disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+                                        class="btn"
+                                        aria-label="@(pageIndex + 1)"
+                                        disabled=@((currentPage >= lastPage) ? "disabled" : false)>
                                             <span class="material-symbols-rounded">chevron_left</span>
                                         </button>
                                     </span>
                                 }
                             </nav>
+                            <div class="paginator-search form-group fa">
+                                <label class="form-label" for="paginator-search-input">
+                                    <img src="/icons/search-gray.svg" />
+                                </label>
+                                <InputText class="form-control" placeholder="جستجو" id="paginator-search-input" @bind-Value="searchText" @oninput="SearchName"></InputText>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -141,16 +147,16 @@
                             var firstItemNumber = 1 + (courseEmployeesPagination.ItemsPerPage * courseEmployeesPagination.CurrentPageIndex);
                             var lastItemNumber = courseEmployeesPagination.ItemsPerPage * (courseEmployeesPagination.CurrentPageIndex + 1);
                             <button @onclick="@(() => CourseEmployeesGoToPageAsync(pageIndex + 1))"
-                                    class="btn"
-                                    aria-label="@(pageIndex + 1)"
-                                    disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+                            class="btn"
+                            aria-label="@(pageIndex + 1)"
+                            disabled=@((currentPage >= lastPage) ? "disabled" : false)>
                                 <span class="material-symbols-rounded">chevron_left</span>
                             </button>
                             <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
                             <button @onclick="@(() => CourseEmployeesGoToPageAsync(pageIndex - 1))"
-                                    class="btn"
-                                    aria-label="@(pageIndex - 1)"
-                                    disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                            class="btn"
+                            aria-label="@(pageIndex - 1)"
+                            disabled=@((pageIndex <= 0) ? "disabled" : false)>
                                 <span class="material-symbols-rounded">chevron_right</span>
                             </button>
                         }
@@ -191,6 +197,8 @@
     private List<Employee>? courseEmployees = new List<Employee>();
     private List<Employee>? employees = new List<Employee>();
 
+    private string? searchText { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
@@ -212,6 +220,21 @@
         courseEmployeesPagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
 
         await UpdateEmployees();
+    }
+
+    private async Task SearchName(ChangeEventArgs args)
+    {
+        searchText = args.Value!.ToString();
+        employees = string.IsNullOrEmpty(searchText)
+            ? await context.Employees
+                .Where(employee => employee.Courses
+                    .All(course => course.Id != Id))
+                .ToListAsync()
+            : await context.Employees
+                .Where(employee => employee.LastName.Contains(searchText))
+                .Where(employee => employee.Courses
+                    .All(course => course.Id != Id))
+                .ToListAsync();
     }
 
     private async Task UpdateCourse()
@@ -271,6 +294,7 @@
         Course!.Employees = courseEmployees!;
         await context.SaveChangesAsync();
 
+        searchText = string.Empty;
         employees = await context.Employees
             .Where(employee => employee.Courses
                 .All(course => course.Id != Id))
