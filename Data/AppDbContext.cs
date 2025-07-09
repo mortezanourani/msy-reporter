@@ -163,6 +163,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.BirthDate).HasMaxLength(10);
             entity.Property(e => e.SeenCode).HasMaxLength(10);
 
+            entity.HasOne(d => d.Gender).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.GenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
             entity.HasOne(d => d.Type).WithMany(p => p.Employees).HasForeignKey(d => d.TypeId);
 
             entity.HasMany(d => d.Courses).WithMany(p => p.Employees)

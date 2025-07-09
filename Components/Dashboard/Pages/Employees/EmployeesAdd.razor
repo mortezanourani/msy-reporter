@@ -1,0 +1,126 @@
+﻿@page "/Dashboard/Employees/Create"
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+    <div class="courses-top-menu">
+        <h6 class="panel-title">تعریف دوره آموزشی جدید</h6>
+    </div>
+
+    <div class="row">
+        <div class="col3-5">
+            <div class="instructions">
+                <p class="mb-3">دوره ها و کلاس های آموزشی ضمن خدمت با اطلاعات ذیل در سامانه آماری اداره کل ورزش و جوانان استان گیلان ثبت می گردد.</p>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/title-blue.svg">
+                        <h6>عنوان دوره:</h6>
+                    </div>
+                    <p>در فرم مربوطه بخش اول اطلاعات عنوان دوره آموزشی مورد نظر است.</p>
+                    <p>در این بخش عنوان دوره، نوع دوره بین عمومی یا تخصصی (شغلی) و نحوه برگزاری دوره از نظر مجازی یا حضوری قابل ویرایش می باشد.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/duration-blue.svg">
+                        <h6>مدت دوره (ساعت):</h6>
+                    </div>
+                    <p>در بخش بعدی مدت دوره آموزشی را برحسب ساعت مشخص می کنید. بدیهی است که در حالت پیشفرض مقدار مدت دوره صفر در نظر گرفته شده است.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/calendar-blue.svg">
+                        <h6>تاریخ برگزاری دوره:</h6>
+                    </div>
+                    <p>تاریخ برگزاری دوره در دو بخش ماه و سال در سامانه ذخیره می گردد. سال برگزاری دوره به صورت چهار رقمی و ماه برگزاری دوره به صورت دو رقمی وارد می شود.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col2-5 mb-auto">
+            <EditForm method="post" Model="Employee" OnValidSubmit="AddEmployee" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div class="form-group en mb-3">
+                    <label for="seencode" class="form-label">
+                        <img src="/icons/idcard.svg" />
+                    </label>
+                    <InputText id="seencode" @bind-Value="Employee.SeenCode" class="form-control" placeholder="کد ملی" />
+                    <ValidationMessage For="() => Employee.SeenCode" class="text-danger" />
+                </div>
+                <div class="form-group fa mb-3">
+                    <label for="firstname" class="form-label">
+                        <img src="/icons/user.svg" />
+                    </label>
+                    <InputText id="firstname" @bind-Value="Employee.FirstName" class="form-control" placeholder="نام" />
+                </div>
+                <div class="form-group fa mb-3">
+                    <label for="lastname" class="form-label">
+                        <img src="/icons/group.svg" />
+                    </label>
+                    <InputText id="lastname" @bind-Value="Employee.LastName" class="form-control" placeholder="نام خانوداگی" />
+                </div>
+                <div class="form-group fa mb-3">
+                    <label for="genderid" class="form-label">
+                        <img src="/icons/genders.svg" />
+                    </label>
+                    <InputSelect id="genderid" class="select form-control" @bind-Value="Employee.GenderId">
+                        @if(Genders is not null)
+                        {
+                            foreach (Gender gender in Genders)
+                            {
+                                <option value="@gender.Id">@gender.PersianName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group en mb-3">
+                    <label for="personnelid" class="form-label">
+                        <img src="/icons/badge.svg" />
+                    </label>
+                    <InputText id="personnelid" @bind-Value="Employee.PersonnelId" class="form-control" placeholder="کد پرسنلی" />
+                </div>
+                <div class="form-group fa mb-3">
+                    <label for="fathername" class="form-label">
+                        <img src="/icons/father.svg" />
+                    </label>
+                    <InputText id="fathername" @bind-Value="Employee.FatherName" class="form-control" placeholder="نام پدر" />
+                </div>
+                <div class="form-group en mb-3">
+                    <label for="birthdate" class="form-label">
+                        <img src="/icons/calendar.svg" />
+                    </label>
+                    <InputText id="birthdate" @bind-Value="Employee.BirthDate" class="form-control" placeholder="تاریخ تولد" />
+                </div>
+                <div class="form-group fa mb-3">
+                    <label for="typeid" class="form-label">
+                        <img src="/icons/title.svg" />
+                    </label>
+                    <InputNumber id="typeid" @bind-Value="Employee.TypeId" class="form-control" placeholder="نوع استخدام" />
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </EditForm>
+        </div>
+    </div>
+</AuthorizeView>
+
+@code {
+    [SupplyParameterFromForm]
+    private Employee Employee { get; set; } = new();
+
+    private AppDbContext context = default!;
+
+    private List<Gender> Genders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        Genders = await context.Genders.ToListAsync();
+    }
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddEmployee()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Employees.Add(Employee);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/employees");
+    }
+}

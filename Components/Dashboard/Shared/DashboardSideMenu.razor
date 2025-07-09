@@ -5,4 +5,9 @@
     <li class="nav-item">
         <NavLink class="nav-link" href="/Dashboard/Courses">شناسنامه آموزشی</NavLink>
     </li>
+    <AuthorizeView Roles="Administrators">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="/Dashboard/Employees/Create">افزودن پرسنل</NavLink>
+        </li>
+    </AuthorizeView>
 </ul>
