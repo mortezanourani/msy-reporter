@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/Employees/Create"
+﻿@page "/Dashboard/Employees/Add"
 
 <AuthorizeView Roles="Administrators" Context="authContext">
     <div class="courses-top-menu">
@@ -71,7 +71,6 @@
                         <img src="/icons/idcard.svg" />
                     </label>
                     <InputText id="seencode" @bind-Value="Employee.SeenCode" class="form-control" placeholder="کد ملی" />
-                    <ValidationMessage For="() => Employee.SeenCode" class="text-danger" />
                 </div>
                 <div class="form-group fa mb-3">
                     <label for="firstname" class="form-label">
@@ -158,12 +157,62 @@
         Employments = await context.EmploymentTypes.ToListAsync();
     }
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddEmployee()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Employees.Add(Employee);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/employees");
+        // context = DbFactory.CreateDbContext();
+        // context.Employees.Add(Employee);
+        // await context.SaveChangesAsync();
+        // NavigationManager.NavigateTo("/employees");
+
+        var employee = await context.Employees
+            .FirstOrDefaultAsync(employee => employee.SeenCode == Employee.SeenCode);
+        if (employee is not null)
+        {
+            // Employee exists
+            NavigationManager.NavigateTo("/employeeexists");
+            return;
+        }
+
+
+        var userAccount = await UserManager.FindByNameAsync(Employee.SeenCode);
+        if (userAccount is not null)
+        {
+            try
+            {
+                NavigationManager.NavigateTo("/deleteaccount");
+                // await UserManager.DeleteAsync(userAccount);
+            }
+            catch (Exception exception)
+            {
+                NavigationManager.NavigateTo("/exception");
+                // throw exception;
+            }
+        }
+
+        NavigationManager.NavigateTo("/accountcreated");
+
+        // var user = Activator.CreateInstance<ApplicationUser>();
+        // user.UserName = Employee.SeenCode;
+        // user.Email = string.Format("{0}@reporter.guilan.msy", Employee.SeenCode);
+        // user.EmailConfirmed = true;
+        // try
+        // {
+        //     var regResult = await UserManager.CreateAsync(user, Employee.SeenCode);
+        //     if (regResult.Succeeded)
+        //     {
+        //         var newUser = await UserManager.FindByNameAsync(user.UserName);
+        //         if (newUser is not null)
+        //         {
+        //             Employee.AccountId = newUser.Id;
+        //             context.Employees.Add(Employee);
+        //             await context.SaveChangesAsync();
+        //             NavigationManager.NavigateTo("/Dashboard/Employees");
+        //         }
+        //     }
+        // }
+        // catch (Exception ex)
+        // {
+        //     throw ex;
+        // }
     }
 }
