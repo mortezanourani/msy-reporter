@@ -34,46 +34,6 @@
             color: var(--primary-color);
             font-weight: 500;
         }
-
-.instructions p {
-    font-size: 15px;
-    line-height: 26px;
-    margin: 0;
-}
-
-.instructions .instruction-item .icon-title {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-end;
-    gap: 8px;
-}
-
-    .instructions .instruction-item .icon-title h6 {
-        font-size: 15px;
-        margin: 0;
-    }
-
-.instructions .instruction-item p {
-    color: #726e60;
-    margin-bottom: 6px;
-    margin-right: 32px;
-}
-
-form .row2,
-form .row3 {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-}
-
-    form .row2 > *,
-    form .row3 > * {
-        flex-basis: 100%;
-    }
-
 form .date {
     display: flex;
     flex-direction: row-reverse;

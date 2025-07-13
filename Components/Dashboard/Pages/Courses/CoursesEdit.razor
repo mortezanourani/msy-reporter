@@ -23,7 +23,7 @@
 
     @if (Course is not null)
     {
-        <div class="row">
+        <div class="row form-wrapper">
             <div class="col3-5 mb-0">
                 <div class="instructions">
                     <p class="mb-3">دوره ها و کلاس های آموزشی ضمن خدمت با اطلاعات ذیل در سامانه آماری اداره کل ورزش و جوانان استان گیلان ثبت می گردد.</p>
@@ -62,7 +62,7 @@
                         <InputText id="title" @bind-Value="Course.Title" class="form-control" />
                         @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
                     </div>
-                    <div class="row2">
+                    <div class="form-row">
                         <div class="form-checkbox">
                             <label for="isgeneral" class="form-label">
                                 <span class="checked">عمومی</span>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                     <hr />
-                    <div class="row3">
+                    <div class="form-row">
                         <div class="form-group en mb-3">
                             <label for="coursetime" class="form-label">
                                 <img src="/icons/duration.svg" />

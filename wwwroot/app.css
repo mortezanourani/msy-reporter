@@ -253,6 +253,43 @@ body {
                 color: var(--light-color);
             }
 
+.form-wrapper .instructions p {
+    font-size: 15px;
+    line-height: 26px;
+    margin: 0;
+}
+
+.form-wrapper .instructions .instruction-item .icon-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+    .form-wrapper .instructions .instruction-item .icon-title h6 {
+        font-size: 15px;
+        margin: 0;
+    }
+
+.form-wrapper .instructions .instruction-item p {
+    color: #726e60;
+    margin-bottom: 6px;
+    margin-right: 32px;
+}
+
+form .form-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+    form .form-row * {
+        flex-basis: 100%;
+    }
+
 .form-group,
 .form-checkbox {
     position: relative;
