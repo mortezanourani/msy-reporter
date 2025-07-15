@@ -4,9 +4,22 @@
 <ul class="nav">
     <li class="nav-item">
         <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+            <img src="/icons/monitoring.svg" />
+        </NavLink>
+    </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="/Dashboard" Match="NavLinkMatch.All">
             <img src="/icons/dashboard.svg" />
         </NavLink>
     </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="/Dashboard/Courses">شناسنامه آموزشی</NavLink>
+    </li>
+    <AuthorizeView Roles="Administrators">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="/Dashboard/Employees/Add">افزودن پرسنل</NavLink>
+        </li>
+    </AuthorizeView>
     <li class="nav-item">
         <NavLink class="nav-link" href="/Dashboard/ChangePassword">
             <img src="/icons/password.svg" />
@@ -16,7 +29,7 @@
         <form method="post" action="/Account/Logout">
             <input name="returnUrl" value="" hidden />
             <button type="submit" class="nav-link">
-                <img src="/icons/poweroff.svg" />
+                <img src="/icons/signout.svg" />
             </button>
         </form>
     </li>

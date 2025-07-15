@@ -25,7 +25,7 @@
         context = DbFactory.CreateDbContext();
         userName = await context.Employees
             .Where(employee => employee.AccountId == User!.Id)
-            .Select(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))
+            .Select(employee => $"{employee.FirstName} {employee.LastName}")
             .FirstOrDefaultAsync();
     }
 }

@@ -4,7 +4,7 @@
     padding: 0 12px;
     max-width: 100%;
     position: sticky;
-    background: var(--primary-color);
+    background: #00498d;
     overflow-x: clip;
     z-index: 999;
 }
@@ -12,7 +12,7 @@
     .dashboard-navbar .container {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: stretch;
         align-items: center;
     }
 
