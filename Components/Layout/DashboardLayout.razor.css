@@ -16,11 +16,6 @@
         align-items: center;
     }
 
-        .dashboard-navbar .container .nav-user-name {
-            color: var(--light-color);
-            margin: 0;
-        }
-
 .main {
     position: relative;
     padding-top: var(--spacing-y);

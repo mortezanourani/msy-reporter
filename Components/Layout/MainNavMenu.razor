@@ -29,7 +29,14 @@
     </li>
     <li class="nav-item">
         <NavLink href="/Dashboard">
-            <img src="/icons/account.svg" />
+            <AuthorizeView>
+                <Authorized>
+                    <img src="/icons/dashboard.svg" />
+                </Authorized>
+                <NotAuthorized>
+                    <img src="/icons/account.svg" />
+                </NotAuthorized>
+            </AuthorizeView>
         </NavLink>
     </li>
 </ul>

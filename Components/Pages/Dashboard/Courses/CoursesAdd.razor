@@ -38,50 +38,52 @@
             </div>
         </div>
         <div class="col2-5 mb-auto">
-            <EditForm method="post" class="card p-3" Model="Course" OnValidSubmit="AddCourse" FormName="create" Enhance>
-                <DataAnnotationsValidator />
-                <div class="form-group fa mb-3">
-                    <label for="title" class="form-label">
-                        <img src="/icons/title.svg" />
-                    </label>
-                    <InputText id="title" @bind-Value="Course.Title" class="form-control" placeholder="عنوان دوره" />
-                    @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
-                </div>
-                <div class="form-row">
-                    <div class="form-checkbox">
-                        <label for="isgeneral" class="form-label">
-                            <span class="checked">عمومی</span>
-                            <span class="unchecked">تخصصی</span>
+            <div class="card p-3">
+                <EditForm method="post" Model="Course" OnValidSubmit="AddCourse" FormName="create" Enhance>
+                    <DataAnnotationsValidator />
+                    <div class="form-group fa mb-3">
+                        <label for="title" class="form-label">
+                            <img src="/icons/title.svg" />
                         </label>
-                        <InputCheckbox id="isgeneral" @bind-Value="Course.IsGeneral" class="form-check-input" hidden />
+                        <InputText id="title" @bind-Value="Course.Title" class="form-control" placeholder="عنوان دوره" />
+                        @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
                     </div>
-                    <div class="form-checkbox">
-                        <label for="isonline" class="form-label">
-                            <span class="unchecked">حضوری</span>
-                            <span class="checked">مجازی</span>
-                        </label>
-                        <InputCheckbox id="isonline" @bind-Value="Course.IsOnline" class="form-check-input" />
+                    <div class="form-row">
+                        <div class="form-checkbox">
+                            <label for="isgeneral" class="form-label">
+                                <span class="checked">عمومی</span>
+                                <span class="unchecked">تخصصی</span>
+                            </label>
+                            <InputCheckbox id="isgeneral" @bind-Value="Course.IsGeneral" class="form-check-input" hidden />
+                        </div>
+                        <div class="form-checkbox">
+                            <label for="isonline" class="form-label">
+                                <span class="unchecked">حضوری</span>
+                                <span class="checked">مجازی</span>
+                            </label>
+                            <InputCheckbox id="isonline" @bind-Value="Course.IsOnline" class="form-check-input" />
+                        </div>
                     </div>
-                </div>
-                <hr />
-                <div class="form-row">
-                    <div class="form-group en mb-3">
-                        <label for="coursetime" class="form-label">
-                            <img src="/icons/duration.svg" />
-                        </label>
-                        <InputNumber id="coursetime" @bind-Value="Course.CourseTime" class="form-control" placeholder="ساعت دوره" />
+                    <hr />
+                    <div class="form-row">
+                        <div class="form-group en mb-3">
+                            <label for="coursetime" class="form-label">
+                                <img src="/icons/duration.svg" />
+                            </label>
+                            <InputNumber id="coursetime" @bind-Value="Course.CourseTime" class="form-control" placeholder="ساعت دوره" />
+                        </div>
+                        <div class="form-group en date mb-3">
+                            <label for="year" class="form-label">
+                                <img src="/icons/calendar.svg" />
+                            </label>
+                            <InputText id="year" maxlength="4" @bind-Value="Course.Year" class="form-control" placeholder="سال" />
+                            <InputText id="month" maxlength="2" @bind-Value="Course.Month" class="form-control" placeholder="ماه" />
+                        </div>
                     </div>
-                    <div class="form-group en date mb-3">
-                        <label for="year" class="form-label">
-                            <img src="/icons/calendar.svg" />
-                        </label>
-                        <InputText id="year" maxlength="4" @bind-Value="Course.Year" class="form-control" placeholder="سال" />
-                        <InputText id="month" maxlength="2" @bind-Value="Course.Month" class="form-control" placeholder="ماه" />
-                    </div>
-                </div>
-                <button type="submit" class="w-100 btn btn-primary">تایید</button>
-                <ValidationSummary class="text-danger" role="alert" />
-            </EditForm>
+                    <button type="submit" class="w-100 btn btn-primary">تایید</button>
+                    <ValidationSummary class="text-danger" role="alert" />
+                </EditForm>
+            </div>
         </div>
     </div>
 </AuthorizeView>

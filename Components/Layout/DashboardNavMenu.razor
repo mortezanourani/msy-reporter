@@ -12,24 +12,27 @@
             <img src="/icons/dashboard.svg" />
         </NavLink>
     </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="/Dashboard/Courses">شناسنامه آموزشی</NavLink>
-    </li>
     <AuthorizeView Roles="Administrators">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="/Dashboard/HumanResource">امور اداری</NavLink>
+        </li>
         <li class="nav-item">
             <NavLink class="nav-link" href="/Dashboard/Employees/Add">افزودن پرسنل</NavLink>
         </li>
     </AuthorizeView>
     <li class="nav-item">
+        <NavLink class="nav-link" href="/Dashboard/Courses">شناسنامه آموزشی</NavLink>
+    </li>
+    <li class="nav-item">
         <NavLink class="nav-link" href="/Dashboard/ChangePassword">
-            <img src="/icons/password.svg" />
+            <img src="/icons/account-settings.svg" />
         </NavLink>
     </li>
     <li class="nav-item">
         <form method="post" action="/Account/Logout">
             <input name="returnUrl" value="" hidden />
             <button type="submit" class="nav-link">
-                <img src="/icons/signout.svg" />
+                <img src="/icons/poweroff.svg" />
             </button>
         </form>
     </li>
