@@ -68,58 +68,59 @@
             cursor: default;
         }
 
+::deep .secondary-navbar {
+    top: 42px;
+    padding: 0 12px;
+    position: sticky;
+    background: #deebf8e0;
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid var(--primary-color);
+    overflow-x: clip;
+    z-index: 999;
+}
+
+    ::deep .secondary-navbar .container {
+        height: 55px;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+
+        ::deep .secondary-navbar .container .sub-title {
+            color: var(--primary-color);
+            font-weight: 300;
+        }
+
+        ::deep .secondary-navbar .container .nav {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0;
+            gap: 16px;
+        }
+
+::deep .secondary-navbar .container .nav .nav-item a {
+    padding: 8px 4px;
+    border-radius: 12px;
+    display: flex;
+    gap: 8px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+    font: 500 12px 'IRANSans';
+    color: var(--black-color);
+}
+
+    ::deep .secondary-navbar .container .nav .nav-item a.active {
+        color: var(--primary-color);
+        cursor: default;
+    }
+
 .content {
     position: relative;
 }
-
-    .content .top-navbar {
-        position: sticky;
-        top: 0px;
-        background: var(--light-color);
-        margin: 0 calc(var(--spacing-x) * -1);
-        z-index: 999;
-        overflow-x: clip;
-    }
-
-        .content .top-navbar .wrapper {
-            height: 64px;
-            padding: 8px var(--spacing-x) 12px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            gap: var(--spacing-x);
-            transition: all linear 100ms;
-        }
-
-        .content .top-navbar.scrolled .wrapper {
-            box-shadow: 0 0.5rem 0.5rem -0.35rem rgba(0, 0, 0, 0.2) !important;
-        }
-
-        .content .top-navbar .wrapper .nav {
-            gap: 8px;
-            padding: 0;
-            margin-right: auto;
-        }
-
-            .content .top-navbar .wrapper .nav .btn-signout,
-            .content .top-navbar .wrapper .nav .btn-settings {
-                padding: 4px;
-                width: 36px;
-                height: 36px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .content .top-navbar .wrapper .nav .btn-signout {
-                color: #ff4040;
-            }
-
-                .content .top-navbar .wrapper .nav .btn-signout span,
-                .content .top-navbar .wrapper .nav .btn-settings span {
-                    font-size: 30px;
-                }
 
 #error-ui {
     background: lightyellow;
