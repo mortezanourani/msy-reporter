@@ -11,59 +11,66 @@
 		</InputSelect>
 	</div>
 	<div class="card-body">
-		<div class="summary">
-			<div class="summary-item">
-				<p>تعداد مدال آوران:</p>
-				<b>@championsCount</b>
+		@if (federation is null || Year is null)
+		{
+			<Loading />
+		}
+		else
+		{
+			<div class="summary">
+				<div class="summary-item">
+					<p>تعداد مدال آوران:</p>
+					<b>@championsCount</b>
+				</div>
+				<div class="summary-item">
+					<p>تعداد مدال آوران آقا:</p>
+					<b>@menChampionsCount</b>
+				</div>
+				<div class="summary-item">
+					<p>تعداد مدال آوران خانم:</p>
+					<b>@womenChampionsCount</b>
+				</div>
 			</div>
-			<div class="summary-item">
-				<p>تعداد مدال آوران آقا:</p>
-				<b>@menChampionsCount</b>
+			<div class="summary mt-0">
+				<div class="summary-item">
+					<p>تعداد مدال ها:</p>
+					<b>@medalsCount</b>
+				</div>
+				<div class="summary-item">
+					<p>تعداد مدال های طلا:</p>
+					<b>@goldMedalsCount</b>
+				</div>
+				<div class="summary-item">
+					<p>تعداد مدال های نقره:</p>
+					<b>@silverMedalsCount</b>
+				</div>
+				<div class="summary-item">
+					<p>تعداد مدال های برنز:</p>
+					<b>@bronzeMedalsCount</b>
+				</div>
 			</div>
-			<div class="summary-item">
-				<p>تعداد مدال آوران خانم:</p>
-				<b>@womenChampionsCount</b>
+			<div class="medals-list">
+				@if (ageGroupChampions is not null)
+				{
+					<QuickGrid Items="ageGroupChampions.AsQueryable()" Theme="" Class="champions-table">
+						<PropertyColumn Title="رده سنی" Property="@(ageGroupChampion => ageGroupChampion.ageGroup.PersianName)" />
+						<PropertyColumn Title="مدال آوران" Property="@(ageGroupChampion => ageGroupChampion.championsCount)" />
+						<PropertyColumn Title="مدال آوران آقایان" Property="@(ageGroupChampion => ageGroupChampion.menChampionsCount)" />
+						<PropertyColumn Title="مدال آوران بانوان" Property="@(ageGroupChampion => ageGroupChampion.womenChampionsCount)" />
+						<PropertyColumn Title="مدال طلا" Property="@(ageGroupChampion => ageGroupChampion.goldMedalsCount)" />
+						<PropertyColumn Title="مدال نقره" Property="@(ageGroupChampion => ageGroupChampion.silverMedalsCount)" />
+						<PropertyColumn Title="مدال برنز" Property="@(ageGroupChampion => ageGroupChampion.bronzeMedalsCount)" />
+						<PropertyColumn Title="مجموع مدال ها" Property="@(ageGroupChampion => ageGroupChampion.medalsCount)" />
+					</QuickGrid>
+				}
 			</div>
-		</div>
-		<div class="summary mt-0">
-			<div class="summary-item">
-				<p>تعداد مدال ها:</p>
-				<b>@medalsCount</b>
-			</div>
-			<div class="summary-item">
-				<p>تعداد مدال های طلا:</p>
-				<b>@goldMedalsCount</b>
-			</div>
-			<div class="summary-item">
-				<p>تعداد مدال های نقره:</p>
-				<b>@silverMedalsCount</b>
-			</div>
-			<div class="summary-item">
-				<p>تعداد مدال های برنز:</p>
-				<b>@bronzeMedalsCount</b>
-			</div>
-		</div>
-		<div class="medals-list">
-			@if (ageGroupChampions is not null)
-			{
-				<QuickGrid Items="ageGroupChampions.AsQueryable()" Theme="" Class="champions-table">
-					<PropertyColumn Title="رده سنی" Property="@(ageGroupChampion => ageGroupChampion.ageGroup.PersianName)" />
-					<PropertyColumn Title="مدال آوران" Property="@(ageGroupChampion => ageGroupChampion.championsCount)" />
-					<PropertyColumn Title="مدال آوران آقایان" Property="@(ageGroupChampion => ageGroupChampion.menChampionsCount)" />
-					<PropertyColumn Title="مدال آوران بانوان" Property="@(ageGroupChampion => ageGroupChampion.womenChampionsCount)" />
-					<PropertyColumn Title="مدال طلا" Property="@(ageGroupChampion => ageGroupChampion.goldMedalsCount)" />
-					<PropertyColumn Title="مدال نقره" Property="@(ageGroupChampion => ageGroupChampion.silverMedalsCount)" />
-					<PropertyColumn Title="مدال برنز" Property="@(ageGroupChampion => ageGroupChampion.bronzeMedalsCount)" />
-					<PropertyColumn Title="مجموع مدال ها" Property="@(ageGroupChampion => ageGroupChampion.medalsCount)" />
-				</QuickGrid>
-			}
-		</div>
+		}
 	</div>
 </div>
 
 @code {
 	[Parameter]
-	public int Year { get; set; }
+	public int? Year { get; set; }
 
 	[Parameter]
 	public List<Federation>? Federations { get; set; }

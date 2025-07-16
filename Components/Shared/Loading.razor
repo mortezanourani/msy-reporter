@@ -1,0 +1,22 @@
+﻿
+<div class="@cssClass">
+    <div class="loading-curtain">
+        <img src="/icons/loading.svg" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool CardMode { get; set; }
+
+    private string? cssClass = "loading";
+
+    protected override void OnParametersSet()
+    {
+        if (CardMode)
+        {
+            cssClass += " card";
+        }
+    }
+}
+

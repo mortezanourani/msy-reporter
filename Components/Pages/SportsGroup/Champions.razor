@@ -20,11 +20,11 @@
     </div>
 </div>
 
-<YearChampionsSummaryCard Year="@year" />
+<ChampionsYearStatusCard Year="@year" />
 
 <div class="row">
     <div class="col1-1">
-        <YearFederationsChampionsCard Year="@year" Federations="@federations" />
+        <ChampionsYearFederationsStatusCard Year="@year" Federations="@federations" />
     </div>
 </div>
 
@@ -32,6 +32,7 @@
     private AppDbContext context = default!;
 
     private int year;
+
     [CascadingParameter]
     private List<int> years
     {

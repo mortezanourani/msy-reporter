@@ -1,75 +1,91 @@
 ﻿
 <div class="row">
 	<div class="col1-3">
-		<div class="card cornered1">
-			<div class="card-header">
-				<h6 class="title">مدال آوران استان</h6>
-			</div>
-			<div class="card-body medals-card">
-				<div>
-					<h1 class="total">@championsCount</h1>
+		@if (champions is null)
+		{
+			<Loading CardMode=true />
+		}
+		else
+		{
+			<div class="card cornered1">
+				<div class="card-header">
+					<h6 class="title">مدال آوران استان</h6>
 				</div>
-				<div class="medal-items">
-					<div class="medal-item">
-						<span class="material-symbols-rounded">man</span>
-						<p>@menChampionsCount</p>
+				<div class="card-body medals-card">
+					<div>
+						<h1 class="total">@championsCount</h1>
 					</div>
-					<div class="medal-item">
-						<span class="material-symbols-rounded">woman</span>
-						<p>@womenChampionsCount</p>
+					<div class="medal-items">
+						<div class="medal-item">
+							<span class="material-symbols-rounded">man</span>
+							<p>@menChampionsCount</p>
+						</div>
+						<div class="medal-item">
+							<span class="material-symbols-rounded">woman</span>
+							<p>@womenChampionsCount</p>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		}
 	</div>
 	<div class="col2-3">
-		<div class="card cornered2">
-			<div class="card-header">
-				<h6 class="title">مدال های استان</h6>
-			</div>
-			<div class="row">
-				<div class="col1-2 mb-0">
-					<div class="card-body medals-card">
-						<div>
-							<h1 class="total">@medalsCount</h1>
-						</div>
-						<div class="medal-items">
-							<div class="medal-item">
-								<span class="material-symbols-rounded">man</span>
-								<p>@menMedalsCount</p>
+		@if (champions is null)
+		{
+			<Loading CardMode=true />
+		}
+		else
+		{
+			<div class="card cornered2">
+				<div class="card-header">
+					<h6 class="title">مدال های استان</h6>
+				</div>
+				<div class="row">
+					<div class="col1-2 mb-0">
+						<div class="card-body medals-card">
+							<div>
+								<h1 class="total">@medalsCount</h1>
 							</div>
-							<div class="medal-item">
-								<span class="material-symbols-rounded">woman</span>
-								<p>@womenMedalsCount</p>
+							<div class="medal-items">
+								<div class="medal-item">
+									<span class="material-symbols-rounded">man</span>
+									<p>@menMedalsCount</p>
+								</div>
+								<div class="medal-item">
+									<span class="material-symbols-rounded">woman</span>
+									<p>@womenMedalsCount</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col1-2 mb-0 d-flex">
+						<div class="card-body medals-card">
+							<div class="medal-items">
+								<div class="medal-item">
+									<span class="material-symbols-rounded medal-silver">trophy</span>
+									<p>@silverMedalsCount</p>
+								</div>
+								<div class="medal-item">
+									<span class="material-symbols-rounded medal-gold">trophy</span>
+									<p>@goldMedalsCount</p>
+								</div>
+								<div class="medal-item">
+									<span class="material-symbols-rounded medal-bronze">trophy</span>
+									<p>@bronzeMedalsCount</p>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col1-2 mb-0 d-flex">
-					<div class="card-body medals-card">
-						<div class="medal-items">
-							<div class="medal-item">
-								<span class="material-symbols-rounded medal-silver">trophy</span>
-								<p>@silverMedalsCount</p>
-							</div>
-							<div class="medal-item">
-								<span class="material-symbols-rounded medal-gold">trophy</span>
-								<p>@goldMedalsCount</p>
-							</div>
-							<div class="medal-item">
-								<span class="material-symbols-rounded medal-bronze">trophy</span>
-								<p>@bronzeMedalsCount</p>
-							</div>
-						</div>
-					</div>
-				</div>
 			</div>
-		</div>
+		}
 	</div>
 </div>
 
 @code {
 	private AppDbContext context = default!;
+
+	private IQueryable<Athlete>? champions;
 
 	private int championsCount;
 	private int menChampionsCount;
@@ -86,7 +102,7 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		var champions = context.Athletes
+		champions = context.Athletes
 			.Include(athlete => athlete.Gender)
 			.Include(athlete => athlete.Champions)
 			.Where(athlete => athlete.Champions

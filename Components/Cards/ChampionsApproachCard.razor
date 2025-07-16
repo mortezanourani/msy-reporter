@@ -5,7 +5,14 @@
         <h6 class="title">روند مقایسه ای مدال آوران استان گیلان</h6>
     </div>
     <div class="card-body">
-        <canvas id="championsApproachChart"></canvas>
+        @if (champions is null)
+        {
+            <Loading />
+        }
+        else
+        {
+            <canvas id="championsApproachChart"></canvas>
+        }
     </div>
     <div class="card-footer legend">
         <div class="legend-row total">
@@ -107,10 +114,10 @@
 
     private int year;
 
-    private IQueryable<Champion> champions;
-    private List<int> years;
-    private List<int> menChampionsCount;
-    private List<int> womenChampionsCount;
+    private IQueryable<Champion>? champions;
+    private List<int>? years;
+    private List<int>? menChampionsCount;
+    private List<int>? womenChampionsCount;
 
     protected override void OnInitialized()
     {

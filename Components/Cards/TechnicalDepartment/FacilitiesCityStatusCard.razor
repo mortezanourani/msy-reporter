@@ -6,30 +6,37 @@
             <div class="card-header border-bottom">
                 <h6>خلاصه وضعیت اماکن ورزشی شهرستان</h6>
             </div>
-            <div class="card-body">
-                <div class="city-facilities-bar">
-                    <div class="facilities-counts">
-                        <div class="msy-facilities">
-                            <h6>اماکن ورزشی وزارت ورزش و جوانان</h6>
-                            <p>@msyFacilities</p>
-                            <p>%@msyFacilitiesPercent</p>
+            @if (City is null)
+            {
+                <Loading />
+            }
+            else
+            {
+                <div class="card-body">
+                    <div class="city-facilities-bar">
+                        <div class="facilities-counts">
+                            <div class="msy-facilities">
+                                <h6>اماکن ورزشی وزارت ورزش و جوانان</h6>
+                                <p>@msyFacilities</p>
+                                <p>%@msyFacilitiesPercent</p>
+                            </div>
+                            <div class="gov-facilities">
+                                <h6>اماکن ورزشی سایر ارگان ها</h6>
+                                <p>@govFacilities</p>
+                                <p>%@govFacilitiesPercent</p>
+                            </div>
+                            <div class="private-facilities">
+                                <h6>باشگاه های خصوصی</h6>
+                                <p>@privateFacilities</p>
+                                <p>%@privateFacilitiesPercent</p>
+                            </div>
                         </div>
-                        <div class="gov-facilities">
-                            <h6>اماکن ورزشی سایر ارگان ها</h6>
-                            <p>@govFacilities</p>
-                            <p>%@govFacilitiesPercent</p>
+                        <div class="percent-bar-wrapper">
+                            <canvas id="cityFacilitiesChart"></canvas>
                         </div>
-                        <div class="private-facilities">
-                            <h6>باشگاه های خصوصی</h6>
-                            <p>@privateFacilities</p>
-                            <p>%@privateFacilitiesPercent</p>
-                        </div>
-                    </div>
-                    <div class="percent-bar-wrapper">
-                        <canvas id="cityFacilitiesChart"></canvas>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>
@@ -88,7 +95,7 @@
 @code {
     [Parameter]
     public City? City { get; set; }
-
+    
     private AppDbContext context = default!;
 
     private int msyFacilities { get; set; } = 0;
@@ -109,13 +116,13 @@
         OnParametersSet();
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        var city = context.Cities
+        var city = await context.Cities
             .Include(c => c.Facilities)
             .Include(c => c.GovernmentFacilities)
             .Include(c => c.PrivateFacilities)
-            .FirstOrDefault(c => c.Id == City!.Id);
+            .FirstOrDefaultAsync(c => c.Id == City!.Id);
 
         msyFacilities = city!.Facilities.Count();
 

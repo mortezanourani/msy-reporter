@@ -1,4 +1,6 @@
-@import 'fontiran.css';
+@import '/css/bootstrap.min.css';
+@import '/css/fontiran.css';
+
 :root {
     --primary-color: #2e77ae;
     --secondary-color: #ff8e2b;

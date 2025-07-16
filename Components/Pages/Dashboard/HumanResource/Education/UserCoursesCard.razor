@@ -2,50 +2,57 @@
 
 @rendermode InteractiveServer
 
-<div class="card user-courses-card">
-	<div class="user-info">
-		<div class="info-item">
-			<p>نام و نام خانوادگی:</p>
-			<b>@employee?.FirstName @employee?.LastName</b>
+@if(User is null)
+{
+	<Loading />
+}
+else
+{
+	<div class="card user-courses-card">
+		<div class="user-info">
+			<div class="info-item">
+				<p>نام و نام خانوادگی:</p>
+				<b>@employee?.FirstName @employee?.LastName</b>
+			</div>
+			<div class="info-item">
+				<p>کد ملی:</p>
+				<b>@employee?.SeenCode</b>
+			</div>
+			<div class="info-item">
+				<p>نام پدر:</p>
+				<b>@employee?.FatherName</b>
+			</div>
 		</div>
-		<div class="info-item">
-			<p>کد ملی:</p>
-			<b>@employee?.SeenCode</b>
-		</div>
-		<div class="info-item">
-			<p>نام پدر:</p>
-			<b>@employee?.FatherName</b>
-		</div>
-	</div>
 
-	<div class="card-header border-bottom">
-		<h6 class="title">دوره های گذرانده شده در سال @year</h6>
-		<InputSelect class="select" @bind-Value="year" @onclick="SelectYear">
-			@foreach (string year in years!)
-			{
-				<option value="@year">@year</option>
-			}
-		</InputSelect>
-	</div>
+		<div class="card-header border-bottom">
+			<h6 class="title">دوره های گذرانده شده در سال @year</h6>
+			<InputSelect class="select" @bind-Value="year" @onclick="SelectYear">
+				@foreach (string year in years!)
+				{
+					<option value="@year">@year</option>
+				}
+			</InputSelect>
+		</div>
 
-	<div class="card-body">
-		<div class="courses-list">
-			@if (courses is not null)
-			{
-				<QuickGrid Items="courses" Theme="" Class="courses-table">
-					<PropertyColumn Title="عنوان دوره" Property="@(course => course.Title)" />
-					<PropertyColumn Title="ساعت دوره" Property="@(course => course.CourseTime)" />
-					<PropertyColumn Title="زمان برگزاری دوره" Property="@(course => string.Format("{0:0000}/{1:00}", course.Year, course.Month))" />
-					<PropertyColumn Title="نوع دوره" Property="@(course => course.IsGeneral ? "عمومی" : "تخصصی")" />
-					<PropertyColumn Title="نوع برگزاری دوره" Property="@(course => course.IsOnline ? "مجازی" : "حضوری")" />
-				</QuickGrid>
-			}
-		</div>
-		<div class="total-hour">
-			<p>مجموع دوره ها <b>@totalHours</b> ساعت</p>
+		<div class="card-body">
+			<div class="courses-list">
+				@if (courses is not null)
+				{
+					<QuickGrid Items="courses" Theme="" Class="courses-table">
+						<PropertyColumn Title="عنوان دوره" Property="@(course => course.Title)" />
+						<PropertyColumn Title="ساعت دوره" Property="@(course => course.CourseTime)" />
+						<PropertyColumn Title="زمان برگزاری دوره" Property="@(course => string.Format("{0:0000}/{1:00}", course.Year, course.Month))" />
+						<PropertyColumn Title="نوع دوره" Property="@(course => course.IsGeneral ? "عمومی" : "تخصصی")" />
+						<PropertyColumn Title="نوع برگزاری دوره" Property="@(course => course.IsOnline ? "مجازی" : "حضوری")" />
+					</QuickGrid>
+				}
+			</div>
+			<div class="total-hour">
+				<p>مجموع دوره ها <b>@totalHours</b> ساعت</p>
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 @code {
 	[Parameter]
@@ -65,25 +72,28 @@
 
 	protected override async Task OnParametersSetAsync()
 	{
-		context = DbFactory.CreateDbContext();
-		if (User != null)
+		if(User is null)
 		{
-			employee = await context.Employees.
-				FirstOrDefaultAsync(employee => employee.AccountId == User!.Id);
-
-			years = context.Courses
-				.Include(course => course.Employees)
-				.Where(course => course.Employees
-					.Any(employee => employee.AccountId == User!.Id))
-				.GroupBy(course => course.Year)
-					.OrderByDescending(group => group.Key)
-					.Select(group => group.Key)
-				.ToList();
-
-			year = years.FirstOrDefault();
-
-			SelectYear();
+			return;
 		}
+
+		context = DbFactory.CreateDbContext();
+
+		employee = await context.Employees.
+			FirstOrDefaultAsync(employee => employee.AccountId == User!.Id);
+
+		years = context.Courses
+			.Include(course => course.Employees)
+			.Where(course => course.Employees
+				.Any(employee => employee.AccountId == User!.Id))
+			.GroupBy(course => course.Year)
+				.OrderByDescending(group => group.Key)
+				.Select(group => group.Key)
+			.ToList();
+
+		year = years.FirstOrDefault();
+
+		SelectYear();
 	}
 
 	private void SelectYear()

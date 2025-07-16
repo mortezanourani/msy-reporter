@@ -1,25 +1,32 @@
 ﻿@inject IJSRuntime JSRuntime
 
-<div class="card card2 cornered1">
-	<div class="card-body">
-		<div>
-			<h6 class="title">تعداد هیات های فعال استانی</h6>
+<div class="card card2 color-card">
+	<div class="card-header pb-0 mb-2">
+		<h6 class="title">تعداد هیات های فعال</h6>
+	</div>
+	<div class="card-body pt-0">
+		@if (federations is null)
+		{
+			<Loading />
+		}
+		else
+		{
 			<h2>@activeFederationsCount</h2>
-		</div>
-		<div>
-            <div class="d-flex justify-content-between">
-                <p>تعداد هیات های دارای شناسه:</p>
-                <b>@identifiedFederationsCount</b>
-            </div>
-            <div class="d-flex justify-content-between">
-				<p>تعداد احکام ریاست:</p>
-				<b>@federationPresidentsCount</b>
+			<div>
+				<div class="d-flex justify-content-between">
+					<p>تعداد هیات های دارای شناسه:</p>
+					<b>@identifiedFederationsCount</b>
+				</div>
+				<div class="d-flex justify-content-between">
+					<p>تعداد احکام ریاست:</p>
+					<b>@federationPresidentsCount</b>
+				</div>
+				<div class="d-flex justify-content-between">
+					<p>تعداد احکام سرپرستی:</p>
+					<b>@federationInterimPresidentsCount</b>
+				</div>
 			</div>
-			<div class="d-flex justify-content-between">
-				<p>تعداد احکام سرپرستی:</p>
-				<b>@federationInterimPresidentsCount</b>
-			</div>
-		</div>
+		}
 	</div>
 </div>
 
@@ -38,8 +45,7 @@
 		context = DbFactory.CreateDbContext();
 
 		federations = context.LocalFederations
-			.Include(federation => federation.LocalFederationPresidents)
-			.Where(federation => federation.CityId == 0);
+			.Include(federation => federation.LocalFederationPresidents);
 
 		activeFederationsCount = federations!
 			.Count(federation => federation.LocalFederationPresidents.Any());

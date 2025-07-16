@@ -6,23 +6,30 @@
 				<a href="/TechnicalDepartment/Facilities">جزئیات بیشتر</a>
 			</div>
 			<div class="card-body">
-				<div>
-					<h1>@msyFacilitiesCount</h1>
-				</div>
-				<div>
-					<div class="d-flex justify-content-between">
-						<p>دارای سند:</p>
-						<b>@documentedMsyFacilitiesCount</b>
+				@if(msyFacilities is null)
+				{
+					<Loading />
+				}
+				else
+				{
+					<div>
+						<h1>@msyFacilitiesCount</h1>
 					</div>
-					<div class="d-flex justify-content-between">
-						<p>فاقد سند:</p>
-						<b>@undocumentedMsyFacilitiesCount</b>
+					<div>
+						<div class="d-flex justify-content-between">
+							<p>دارای سند:</p>
+							<b>@documentedMsyFacilitiesCount</b>
+						</div>
+						<div class="d-flex justify-content-between">
+							<p>فاقد سند:</p>
+							<b>@undocumentedMsyFacilitiesCount</b>
+						</div>
+						<div class="d-flex justify-content-between">
+							<p>واگذار شده در ماده 88:</p>
+							<b>@contractedMsyFacilitiesCount</b>
+						</div>
 					</div>
-					<div class="d-flex justify-content-between">
-						<p>واگذار شده در ماده 88:</p>
-						<b>@contractedMsyFacilitiesCount</b>
-					</div>
-				</div>
+				}
 			</div>
 		</div>
 	</div>
@@ -33,15 +40,22 @@
 				<a href="/TechnicalDepartment/Facilities">جزئیات بیشتر</a>
 			</div>
 			<div class="card-body">
-				<div>
-					<h1>@govFacilitiesCount</h1>
-				</div>
-				<div>
-					<div class="d-flex justify-content-between">
-						<p>دارای مجوز ماده 5:</p>
-						<b>@licensedGovFacilitiesCount</b>
+				@if(govFacilities is null)
+				{
+					<Loading />
+				}
+				else
+				{
+					<div>
+						<h1>@govFacilitiesCount</h1>
 					</div>
-				</div>
+					<div>
+						<div class="d-flex justify-content-between">
+							<p>دارای مجوز ماده 5:</p>
+							<b>@licensedGovFacilitiesCount</b>
+						</div>
+					</div>
+				}
 			</div>
 		</div>
 	</div>
@@ -52,19 +66,26 @@
 				<a href="/TechnicalDepartment/Facilities">جزئیات بیشتر</a>
 			</div>
 			<div class="card-body">
-				<div>
-					<h1>@privateFacilitiesCount</h1>
-				</div>
-				<div>
-					<div class="d-flex justify-content-between">
-						<p>حقیقی:</p>
-						<b>@beneficalPrivateFacilitiesCount</b>
+				@if(privateFacilities is null)
+				{
+					<Loading />
+				}
+				else
+				{
+					<div>
+						<h1>@privateFacilitiesCount</h1>
 					</div>
-					<div class="d-flex justify-content-between">
-						<p>تملیکی:</p>
-						<b>@ownedPrivateFacilitiesCount</b>
+					<div>
+						<div class="d-flex justify-content-between">
+							<p>حقیقی:</p>
+							<b>@beneficalPrivateFacilitiesCount</b>
+						</div>
+						<div class="d-flex justify-content-between">
+							<p>تملیکی:</p>
+							<b>@ownedPrivateFacilitiesCount</b>
+						</div>
 					</div>
-				</div>
+				}
 			</div>
 		</div>
 	</div>
@@ -73,14 +94,17 @@
 @code {
 	private AppDbContext context = default!;
 
+	private DbSet<Facility>? msyFacilities;
 	private int msyFacilitiesCount { get; set; } = 0;
 	private int documentedMsyFacilitiesCount { get; set; } = 0;
 	private int undocumentedMsyFacilitiesCount { get; set; } = 0;
 	private int contractedMsyFacilitiesCount { get; set; } = 0;
 
+	private DbSet<GovernmentFacility>? govFacilities;
 	private int govFacilitiesCount { get; set; } = 0;
 	private int licensedGovFacilitiesCount { get; set; } = 0;
 
+	private DbSet<PrivateFacility>? privateFacilities;
 	private int privateFacilitiesCount { get; set; } = 0;
 	private int beneficalPrivateFacilitiesCount { get; set; } = 0;
 	private int ownedPrivateFacilitiesCount { get; set; } = 0;
@@ -90,37 +114,25 @@
 	{
 		context = DbFactory.CreateDbContext();
 
-		var msyFacilities = context.Facilities;
+		msyFacilities = context.Facilities;
 		msyFacilitiesCount = msyFacilities
 			.Where(facility => facility.IsSubFacility == false)
 			.Count();
 
 		documentedMsyFacilitiesCount = context.FacilityDocuments
 			.Count();
-
 		undocumentedMsyFacilitiesCount = msyFacilitiesCount - documentedMsyFacilitiesCount;
-		// documentedMsyFacilitiesCount = msyFacilities
-		// 	.Where(m => m.HasDocuments)
-		// 	.Count();
 		contractedMsyFacilitiesCount = msyFacilities
 			.Where(m => m.FacilityContracts.Count() > 0)
 			.Count();
-		// contractedMsyFacilitiesCount = msyFacilities
-		// 	.Where(m => m.FacilityContracts
-		// 		.Where(m => DateOnly.Parse(m.ExpireDate) >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
-		// 	.Count();
 
-		var govFacilities = context.GovernmentFacilities;
+		govFacilities = context.GovernmentFacilities;
 		govFacilitiesCount = govFacilities.Count();
 		licensedGovFacilitiesCount = govFacilities
 			.Where(m => m.GovernmentFacilityLicenses.Count() > 0)
 			.Count();
-		// licensedGovFacilitiesCount = govFacilities
-		// 	.Where(m => m.GovernmentFacilityLicenses
-		// 		.Where(m => DateOnly.Parse(m.ExpireDate) >= DateOnly.FromDateTime(DateTime.Now)).Count() > 0)
-		// 	.Count();
 
-		var privateFacilities = context.PrivateFacilities;
+		privateFacilities = context.PrivateFacilities;
 		privateFacilitiesCount = privateFacilities.Count();
 		beneficalPrivateFacilitiesCount = privateFacilities
 			.Where(m => m.PrivateFacilityLicenses
