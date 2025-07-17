@@ -6,7 +6,7 @@
             <div class="card-header border-bottom">
                 <h6>خلاصه وضعیت اماکن ورزشی شهرستان</h6>
             </div>
-            @if (City is null)
+            @if (msyFacilities < 0)
             {
                 <Loading />
             }
@@ -109,15 +109,10 @@
 
     private List<decimal> chartCounts = new List<decimal>();
 
-    protected override void OnInitialized()
+    protected override async Task OnParametersSetAsync()
     {
         context = DbFactory.CreateDbContext();
 
-        OnParametersSet();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
         var city = await context.Cities
             .Include(c => c.Facilities)
             .Include(c => c.GovernmentFacilities)

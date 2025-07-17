@@ -4,14 +4,7 @@
 
 @layout _Layout
 
-<PageTitle>Sport Facilities</PageTitle>
-
-<div class="d-flex align-items-baseline">
-    <a class="ms-3" href="/">
-        <img src="/icons/back.svg" />
-    </a>
-    <h2 class="page-title mb-3">اماکن ورزشی</h2>
-</div>
+<PageTitle>دفتر فنی</PageTitle>
 
 <FacilitiesStatusCard />
 
@@ -35,16 +28,16 @@
 
 <div class="row">
     <div class="col1-2">
-        <CityMsyFacilitiesCard City="@city" />
+        <FacilitiesMsyCityCard City="@city" />
     </div>
     <div class="col1-2">
-        <CityGovFacilitiesCard City="@city" />
+        <FacilitiesGovCityCard City="@city" />
     </div>
 </div>
 
 <div class="row">
     <div class="col1-1">
-        <CityPrivateFacilitiesCard City="@city" />
+        <FacilitiesPrivateCityCard City="@city" />
     </div>
 </div>
 

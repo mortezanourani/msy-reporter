@@ -96,13 +96,10 @@
     private int maintenanceProjectsCount;
     private decimal maintenanceProjectsPercentage;
 
-    protected override void OnInitialized()
-    {
-        context = DbFactory.CreateDbContext();
-    }
-
     protected override void OnParametersSet()
     {
+        context = DbFactory.CreateDbContext();
+     
         projects = context.ConstructionProjects
             .Include(project => project.ProjectProgresses)
             .Where(project => project.ProjectProgresses

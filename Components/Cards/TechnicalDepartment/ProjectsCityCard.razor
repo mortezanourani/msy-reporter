@@ -14,7 +14,7 @@
                     <PropertyColumn Sortable="true" Title="سال آغاز" Property="@(project => project.Year)" />
                     <PropertyColumn Title="پیشرفت فیزیکی" Property="@(project => string.Format("%{0}", project.ProjectProgresses!.Max(progress => progress.Percentage)))" />
                     <TemplateColumn>
-                        <a class="info-link" href="/Projects/@context.Id">
+                        <a class="info-link" href="/TechnicalDepartment/Projects/@context.Id">
                             <span class="material-symbols-rounded">info</span>
                         </a>
                     </TemplateColumn>
@@ -52,13 +52,10 @@
     private AppDbContext context = default!;
     private IQueryable<ConstructionProject>? projects;
 
-    protected override void OnInitialized()
-    {
-        context = DbFactory.CreateDbContext();
-    }
-
     protected override void OnParametersSet()
     {
+        context = DbFactory.CreateDbContext();
+     
         projects = context.ConstructionProjects
             .Include(project => project.City)
             .Include(project => project.Type)
