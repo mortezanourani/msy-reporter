@@ -2,7 +2,7 @@
 
 <div class="card msy-facilities-card">
     <div class="card-header">
-        <h6 class="title">اماکن دولتی ورزش و جوانان @City!.PersianName</h6>
+        <h6 class="title">اماکن دولتی ورزش و جوانان @City?.PersianName</h6>
     </div>
     @if (msyFacilities is null)
     {
@@ -12,19 +12,16 @@
     {
         <div class="card-body pt-0">
             <div class="facilities-list">
-                @if (msyFacilities is not null)
-                {
-                    <QuickGrid Items="msyFacilities!.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
-                        <PropertyColumn Title="عنوان باشگاه" Property="@(facility => facility.Name)" />
-                        <PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : "نامشخص")" />
-                        <PropertyColumn Title="موقیعت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
-                        <TemplateColumn>
-                            <a class="info-link" href="/Facilities/@context.Id">
-                                <span class="material-symbols-rounded">info</span>
-                            </a>
-                        </TemplateColumn>
-                    </QuickGrid>
-                }
+                <QuickGrid Items="msyFacilities!.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
+                    <PropertyColumn Title="عنوان باشگاه" Property="@(facility => facility.Name)" />
+                    <PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : "نامشخص")" />
+                    <PropertyColumn Title="موقیعت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
+                    <TemplateColumn>
+                        <a class="info-link" href="/Facilities/@context.Id">
+                            <span class="material-symbols-rounded">info</span>
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
             </div>
         </div>
         <div class="card-footer pt-0">
@@ -36,9 +33,9 @@
                         {
                             var capturedIndex = pageIndex;
                             <button @onclick="@(() => GoToPageAsync(capturedIndex))"
-                            class="btn @PageButtonClass(capturedIndex)"
-                            aria-current="@AriaCurrentValue(capturedIndex)"
-                            aria-label="@(pageIndex + 1)">
+                                    class="btn @PageButtonClass(capturedIndex)"
+                                    aria-current="@AriaCurrentValue(capturedIndex)"
+                                    aria-label="@(pageIndex + 1)">
                                 @(pageIndex + 1)
                             </button>
                         }
@@ -53,7 +50,7 @@
 </div>
 
 @code {
-    [Parameter]
+    [CascadingParameter]
     public City? City { get; set; }
 
     private AppDbContext context = default!;
@@ -62,17 +59,20 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        context = DbFactory.CreateDbContext();
-
         msyFacilities = null;
 
-        msyFacilities = await context.Facilities
-            .Include(facility => facility.City)
-            .Include(facility => facility.FacilityDocuments)
-            .Include(facility => facility.FacilityContracts)
-            .Include(facility => facility.Type)
-            .Where(facility => facility.City.Id == City.Id)
-            .ToListAsync();
+        context = DbFactory.CreateDbContext();
+
+        if (City is not null)
+        {
+            msyFacilities = await context.Facilities
+                .Include(facility => facility.City)
+                    .Include(facility => facility.FacilityDocuments)
+                    .Include(facility => facility.FacilityContracts)
+                    .Include(facility => facility.Type)
+                    .Where(facility => facility.City.Id == City.Id)
+                    .ToListAsync();
+        }
 
         pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
     }

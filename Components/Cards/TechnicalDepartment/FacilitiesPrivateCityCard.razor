@@ -62,7 +62,7 @@
 </div>
 
 @code {
-    [Parameter]
+    [CascadingParameter]
     public City? City { get; set; }
 
     private AppDbContext context = default!;
@@ -71,16 +71,19 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        context = DbFactory.CreateDbContext();
-
         privateFacilities = null;
 
-        privateFacilities = await context.PrivateFacilities
-            .Include(facility => facility.City)
-            .Include(facility => facility.Type)
-            .Include(facility => facility.PrivateFacilityLicenses)
-            .Where(facility => facility.City.Id == City.Id)
-            .ToListAsync();
+        context = DbFactory.CreateDbContext();
+
+        if (City is not null)
+        {
+            privateFacilities = await context.PrivateFacilities
+                .Include(facility => facility.City)
+                .Include(facility => facility.Type)
+                .Include(facility => facility.PrivateFacilityLicenses)
+                .Where(facility => facility.City.Id == City.Id)
+                .ToListAsync();
+        }
 
         pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
     }

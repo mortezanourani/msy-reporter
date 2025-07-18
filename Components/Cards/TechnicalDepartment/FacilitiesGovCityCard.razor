@@ -4,7 +4,7 @@
     <div class="card-header">
         <h6 class="title">اماکن دولتی سایر ارگان های @City!.PersianName</h6>
     </div>
-    @if(govFacilities is null)
+    @if (govFacilities is null)
     {
         <Loading />
     }
@@ -53,7 +53,7 @@
 </div>
 
 @code {
-    [Parameter]
+    [CascadingParameter]
     public City? City { get; set; }
 
     private AppDbContext context = default!;
@@ -62,15 +62,19 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        context = DbFactory.CreateDbContext();
-
         govFacilities = null;
 
-        govFacilities = await context.GovernmentFacilities
-            .Include(faciliyt => faciliyt.City)
-            .Include(facility => facility.Type)
-            .Include(facility => facility.GovernmentFacilityLicenses)
-            .ToListAsync();
+        context = DbFactory.CreateDbContext();
+
+        if (City is not null)
+        {
+            govFacilities = await context.GovernmentFacilities
+                .Include(faciliyt => faciliyt.City)
+                .Include(facility => facility.Type)
+                .Include(facility => facility.GovernmentFacilityLicenses)
+                .Where(facility => facility.City.Id == City!.Id)
+                .ToListAsync();
+        }
 
         pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
     }

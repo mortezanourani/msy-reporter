@@ -4,9 +4,9 @@
     <div class="col1-1">
         <div class="card city-facilities-card">
             <div class="card-header border-bottom">
-                <h6>خلاصه وضعیت اماکن ورزشی شهرستان</h6>
+                <h6>خلاصه وضعیت اماکن ورزشی شهرستان @City!.PersianName</h6>
             </div>
-            @if (msyFacilities < 0)
+            @if (SelectedCity is null)
             {
                 <Loading />
             }
@@ -93,10 +93,12 @@
 </script>
 
 @code {
-    [Parameter]
+    [CascadingParameter]
     public City? City { get; set; }
-    
+
     private AppDbContext context = default!;
+
+    private City? SelectedCity { get; set; }
 
     private int msyFacilities { get; set; } = 0;
     private decimal msyFacilitiesPercent { get; set; } = 0;
@@ -111,30 +113,35 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        SelectedCity = null;
+
         context = DbFactory.CreateDbContext();
 
-        var city = await context.Cities
-            .Include(c => c.Facilities)
-            .Include(c => c.GovernmentFacilities)
-            .Include(c => c.PrivateFacilities)
-            .FirstOrDefaultAsync(c => c.Id == City!.Id);
-
-        msyFacilities = city!.Facilities.Count();
-
-        govFacilities = city!.GovernmentFacilities.Count();
-
-        privateFacilities = city!.PrivateFacilities.Count();
-
-        var totalFacilities = msyFacilities + govFacilities + privateFacilities;
-
-        msyFacilitiesPercent = 0;
-        govFacilitiesPercent = 0;
-        privateFacilitiesPercent = 0;
-        if (totalFacilities > 0)
+        if (City is not null)
         {
-            msyFacilitiesPercent = Math.Round(decimal.Divide(msyFacilities * 100, totalFacilities));
-            govFacilitiesPercent = Math.Round(decimal.Divide(govFacilities * 100, totalFacilities));
-            privateFacilitiesPercent = Math.Round(decimal.Divide(privateFacilities * 100, totalFacilities));
+            SelectedCity = await context.Cities
+                .Include(c => c.Facilities)
+                .Include(c => c.PrivateFacilities)
+                .Include(c => c.GovernmentFacilities)
+                .FirstOrDefaultAsync(c => c.Id == City!.Id);
+
+            msyFacilities = SelectedCity!.Facilities.Count();
+
+            govFacilities = SelectedCity!.GovernmentFacilities.Count();
+
+            privateFacilities = SelectedCity!.PrivateFacilities.Count();
+
+            var totalFacilities = msyFacilities + govFacilities + privateFacilities;
+
+            msyFacilitiesPercent = 0;
+            govFacilitiesPercent = 0;
+            privateFacilitiesPercent = 0;
+            if (totalFacilities > 0)
+            {
+                msyFacilitiesPercent = Math.Round(decimal.Divide(msyFacilities * 100, totalFacilities));
+                govFacilitiesPercent = Math.Round(decimal.Divide(govFacilities * 100, totalFacilities));
+                privateFacilitiesPercent = Math.Round(decimal.Divide(privateFacilities * 100, totalFacilities));
+            }
         }
 
         chartCounts.Clear();
@@ -145,11 +152,13 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        try
         {
             await JSRuntime.InvokeVoidAsync("renderCityFacilitiesChart", chartCounts);
         }
+        catch (Exception excep)
+        {
 
-        await JSRuntime.InvokeVoidAsync("renderCityFacilitiesChart", chartCounts);
+        }
     }
 }

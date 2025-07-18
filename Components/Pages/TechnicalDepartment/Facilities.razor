@@ -12,9 +12,9 @@
     <div class="col1-1">
         <div class="card">
             <div class="card-header">
-                <h6 class="title">اماکن ورزشی شهرستان @city!.PersianName</h6>
-                <InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
-                    @foreach (City city in cities!)
+                <h6 class="title">اماکن ورزشی شهرستان @City!.PersianName</h6>
+                <InputSelect class="select" @bind-Value="CityId" @bind-Value:after="SelectCity">
+                    @foreach (City city in Cities!)
                     {
                         <option value="@city.Id">@city.PersianName</option>
                     }
@@ -24,36 +24,40 @@
     </div>
 </div>
 
-<FacilitiesCityStatusCard City="@city" />
 
-<div class="row">
-    <div class="col1-2">
-        <FacilitiesMsyCityCard City="@city" />
-    </div>
-    <div class="col1-2">
-        <FacilitiesGovCityCard City="@city" />
-    </div>
-</div>
+<CascadingValue Value="City">
+    <FacilitiesCityStatusCard />
 
-<div class="row">
-    <div class="col1-1">
-        <FacilitiesPrivateCityCard City="@city" />
+    <div class="row">
+        <div class="col1-2">
+            <FacilitiesMsyCityCard />
+        </div>
+        <div class="col1-2">
+            <FacilitiesGovCityCard />
+        </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col1-1">
+            <FacilitiesPrivateCityCard />
+        </div>
+    </div>
+</CascadingValue>
 
 @code {
     private AppDbContext context = default!;
 
-    private int cityId = 1;
+    private int CityId = 1;
 
-    private City? city;
-    private IQueryable<City>? cities;
+    private City? City;
+
+    private IQueryable<City>? Cities;
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
 
-        cities = context.Cities
+        Cities = context.Cities
             .Where(city => city.Id != 0);
 
         SelectCity();
@@ -61,7 +65,7 @@
 
     private void SelectCity()
     {
-        city = context.Cities
-            .FirstOrDefault(c => c.Id == cityId);
+        City = context.Cities
+            .FirstOrDefault(c => c.Id == CityId);
     }
 }
