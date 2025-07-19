@@ -1,0 +1,16 @@
+﻿::deep select {
+    border: 0;
+    height: 100%;
+}
+
+form .form-row > *:first-child {
+    flex-basis: 33.33333%;
+}
+
+form .form-row > *:last-child {
+    flex-basis: 66.66666%;
+}
+
+::deep #genderid {
+    min-width: auto;
+}

@@ -5,7 +5,9 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IEmailSender<ApplicationUser> EmailSender
 
-@layout Layout.DashboardLayout
+@using Reporter.Components.Layout
+
+@layout DashboardLayout
 
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
