@@ -1,0 +1,141 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@page "/Dashboard/Facilities/Privates"
+
+@rendermode InteractiveServer
+
+<PageTitle>اماکن ورزشی وزارت ورزش و جوانان</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+	<Authorized>
+		<div class="row">
+			<div class="col1-1">
+				<div class="card facilities-list-card">
+					<div class="card-header border-bottom">
+						<h6 class="title">فهرست اماکن ورزشی وزارت ورزش و جوانان شهرستان @City?.PersianName</h6>
+						<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
+							@foreach (City city in Cities!)
+							{
+								<option value="@city.Id">@city.PersianName</option>
+							}
+						</InputSelect>
+					</div>
+					@if (Facilities is null)
+					{
+						<Loading CardMode=true />
+					}
+					else
+					{
+						<div class="card-body">
+							<div class="facilities-list">
+								@if (Facilities is not null)
+								{
+									<QuickGrid Items="Facilities.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
+										<PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
+										<PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : string.Empty)" />
+										<PropertyColumn Title="موقعیت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
+										<PropertyColumn Title="مساحت" Property="@(facility => facility.Area)" />
+										<PropertyColumn Title="مساحت روباز" Property="@(facility => facility.SportLandArea)" />
+										<PropertyColumn Title="مساحت سرپوشیده" Property="@(facility => facility.SportHallArea)" />
+										<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />
+										<TemplateColumn>
+											<a class="edit-link" href="/Dashboard/Facilities/Edit/@context.Id">
+												<img src="/icons/square-edit.svg" />
+											</a>
+										</TemplateColumn>
+									</QuickGrid>
+								}
+							</div>
+						</div>
+						<div class="card-footer pt-0">
+							<div class="paginator border-top pt-3">
+								<nav role="navigation">
+									@if (pagination.TotalItemCount.HasValue)
+									{
+										var totalPages = pagination.TotalItemCount;
+										var pageIndex = pagination.CurrentPageIndex;
+										var currentPage = pageIndex + 1;
+										var lastPage = pagination.LastPageIndex + 1;
+										var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+										var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+										<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+												class="btn"
+												aria-current="@AriaCurrentValue(pageIndex - 1)"
+												aria-label="@(pageIndex - 1)"
+												disabled=@((pageIndex <= 0) ? "disabled" : false)>
+											<span class="material-symbols-rounded">chevron_right</span>
+										</button>
+										<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+										<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+												class="btn"
+												aria-current="@AriaCurrentValue(pageIndex + 1)"
+												aria-label="@(pageIndex + 1)"
+												disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+											<span class="material-symbols-rounded">chevron_left</span>
+										</button>
+									}
+								</nav>
+								<div class="total">
+									@string.Format("{0} مکان", pagination.TotalItemCount)
+								</div>
+							</div>
+						</div>
+
+					}
+				</div>
+			</div>
+		</div>
+	</Authorized>
+</AuthorizeView>
+
+@code {
+	private AppDbContext context = default!;
+
+	private int CityId = 1;
+
+	private City? City;
+
+	private IQueryable<City>? Cities;
+
+	private List<PrivateFacility>? Facilities { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		context = DbFactory.CreateDbContext();
+
+		Cities = context.Cities
+			.Where(city => city.Id != 0);
+
+		await UpdateList();
+	}
+
+	private async Task UpdateList()
+	{
+		Facilities = null;
+
+		context = DbFactory.CreateDbContext();
+
+		City = Cities!.FirstOrDefault(c => c.Id == CityId);
+
+		Facilities = await context.PrivateFacilities
+			.Include(facility => facility.Type)
+			.Include(facility => facility.PrivateFacilityLicenses)
+			.Where(facility => facility.City!.Id == CityId)
+			.ToListAsync();
+
+		await pagination.SetCurrentPageIndexAsync(0);
+		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+
+		StateHasChanged();
+	}
+
+	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+	private async Task GoToPageAsync(int pageIndex)
+	{
+		await pagination.SetCurrentPageIndexAsync(pageIndex);
+	}
+
+	private string? AriaCurrentValue(int pageIndex)
+		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;
+}

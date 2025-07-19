@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+@layout Layout.DashboardLayout
+
+<nav class="secondary-navbar">
+    <div class="container">
+        <h5 class="sub-title">اماکن ورزشی</h5>
+        <ul class="nav">
+            <li class="nav-item">
+                <NavLink href="/Dashboard/Facilities" Match="NavLinkMatch.All">وزارت ورزش و جوانان</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Dashboard/Facilities/Privates">ماده 5</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/Dashboard/Facilities/Govermentals">سایر ارگان های دولتی</NavLink>
+            </li>
+        </ul>
+    </div>
+</nav>
+<article class="content py-3">
+    <div class="container">
+        @Body
+    </div>
+</article>
+
+@code {
+
+}
