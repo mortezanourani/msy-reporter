@@ -12,7 +12,7 @@
 			<div class="col1-1">
 				<div class="card facilities-list-card">
 					<div class="card-header border-bottom">
-						<h6 class="title">فهرست اماکن ورزشی وزارت ورزش و جوانان شهرستان @City?.PersianName</h6>
+						<h6 class="title">فهرست اماکن ورزشی سایر ارگان های دولتی شهرستان @City?.PersianName</h6>
 						<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
 							@foreach (City city in Cities!)
 							{
@@ -32,6 +32,7 @@
 								{
 									<QuickGrid Items="Facilities.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
 										<PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
+										<PropertyColumn Title="مالک دولتی" Property="@(facility => facility.Owner)" />
 										<PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : string.Empty)" />
 										<PropertyColumn Title="موقعیت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
 										<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />

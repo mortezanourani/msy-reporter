@@ -97,6 +97,8 @@
             }
 
                 ::deep .secondary-navbar .container .nav .nav-item a.active {
+                    border-bottom: 1px solid var(--dashboard-primary-color);
                     color: var(--dashboard-primary-color);
+                    border-radius: 0;
                     cursor: default;
                 }
