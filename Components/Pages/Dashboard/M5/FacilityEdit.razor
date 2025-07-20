@@ -38,30 +38,25 @@
                             <DataAnnotationsValidator />
                             <ValidationSummary role="alert" />
                             <input type="hidden" name="Facility.Id" value="@Facility.Id" />
-                            <div class="form-group fa mb-3">
-                                <label for="title" class="form-label">
-                                    <img src="/icons/title.svg" />
-                                </label>
-                                <InputText id="title" @bind-Value="Facility.Name" class="form-control" placeholder="عنوان باشگاه" />
-                            </div>
-                            <div class="form-group fa mb-3">
-                                <label for="typeid" class="form-label">
-                                    <img src="/icons/genders.svg" />
-                                </label>
-                                <InputSelect id="typeid" class="select form-control" @bind-Value="Facility.TypeId">
-                                    @if (Types is not null)
-                                    {
-                                        foreach (FacilityType type in Types)
-                                        {
-                                            <option value="@type.Id">@type.PersianTitle</option>
-                                        }
-                                    }
-                                </InputSelect>
+                            <div class="form-row">
+                                <div class="form-group fa mb-3">
+                                    <label for="title" class="form-label">
+                                        <img src="/icons/title.svg" />
+                                    </label>
+                                    <InputText id="title" @bind-Value="Facility.Name" class="form-control" placeholder="عنوان باشگاه" />
+                                </div>
+                                <div class="form-group active-sign mb-3">
+                                    <label for="isactive" class="form-label">
+                                        <img class="active" src="/icons/verified.svg" />
+                                        <img class="deactive" src="/icons/verified-off.svg" />
+                                    </label>
+                                    <InputCheckbox id="isactive" @bind-Value="Facility.IsActive" class="form-check-input" />
+                                </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group fa mb-3">
                                     <label for="cityid" class="form-label">
-                                        <img src="/icons/genders.svg" />
+                                        <img src="/icons/dropdown.svg" />
                                     </label>
                                     <InputSelect id="cityid" class="select form-control" @bind-Value="Facility.CityId">
                                         @if (Cities is not null)
@@ -75,52 +70,77 @@
                                 </div>
                                 <div class="form-group fa mb-3">
                                     <label for="district" class="form-label">
-                                        <img src="/icons/title.svg" />
+                                        <img src="/icons/location-map.svg" />
                                     </label>
-                                    <InputText id="district" @bind-Value="Facility.District" class="form-control" placeholder="بخش" />
+                                    <InputText id="district" @bind-Value="Facility.District" class="form-control" placeholder="بخش / روستا" />
                                 </div>
                             </div>
-                            @*                 <div class="mb-3">
-                                <label for="isrural" class="form-label">IsRural:</label>
-                                <InputCheckbox id="isrural" @bind-Value="Facility.IsRural" class="form-check-input" />
-                                <ValidationMessage For="() => Facility.IsRural" class="text-danger" />
-                            </div> *@
-                            <div class="mb-3">
-                                <label for="area" class="form-label">Area:</label>
-                                <InputNumber id="area" @bind-Value="Facility.Area" class="form-control" />
-                                <ValidationMessage For="() => Facility.Area" class="text-danger" />
+                            <div class="form-group fa mb-3">
+                                <label for="address" class="form-label">
+                                    <img src="/icons/location.svg" />
+                                </label>
+                                <InputText id="address" @bind-Value="Facility.Address" class="form-control" placeholder="آدرس پستی" />
                             </div>
-                            <div class="mb-3">
-                                <label for="sporthallarea" class="form-label">SportHallArea:</label>
-                                <InputNumber id="sporthallarea" @bind-Value="Facility.SportHallArea" class="form-control" />
-                                <ValidationMessage For="() => Facility.SportHallArea" class="text-danger" />
+                            <div class="form-row">
+                                <div class="form-group en mb-3">
+                                    <label for="zipcode" class="form-label">
+                                        <img src="/icons/zipcode.svg" />
+                                    </label>
+                                    <InputText id="zipcode" @bind-Value="Facility.ZipCode" class="form-control" placeholder="کد پستی" />
+                                </div>
+                                <div class="form-group fa mb-3">
+                                    <label for="isrural" class="form-label">
+                                        <img src="/icons/dropdown.svg" />
+                                    </label>
+                                    <InputSelect id="isrural" class="form-control select" @bind-Value="Facility.IsRural">
+                                        <option value="false">شهری</option>
+                                        <option value="true">روستایی</option>
+                                    </InputSelect>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="sportlandarea" class="form-label">SportLandArea:</label>
-                                <InputNumber id="sportlandarea" @bind-Value="Facility.SportLandArea" class="form-control" />
-                                <ValidationMessage For="() => Facility.SportLandArea" class="text-danger" />
+                            <div class="form-group en mb-3">
+                                <label for="phone" class="form-label">
+                                    <img src="/icons/phone.svg" />
+                                </label>
+                                <InputText id="phone" @bind-Value="Facility.Phone" class="form-control" placeholder="شماره تلفن باشگاه" />
                             </div>
-                            <div class="mb-3">
-                                <label for="isactive" class="form-label">IsActive:</label>
-                                <InputCheckbox id="isactive" @bind-Value="Facility.IsActive" class="form-check-input" />
-                                <ValidationMessage For="() => Facility.IsActive" class="text-danger" />
+                            <div class="form-row">
+                                <div class="form-group fa mb-3">
+                                    <label for="typeid" class="form-label">
+                                        <img src="/icons/dropdown.svg" />
+                                    </label>
+                                    <InputSelect id="typeid" class="select form-control" @bind-Value="Facility.TypeId">
+                                        @if (Types is not null)
+                                        {
+                                            foreach (FacilityType type in Types)
+                                            {
+                                                <option value="@type.Id">@type.PersianTitle</option>
+                                            }
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <div class="form-group en mb-3">
+                                    <label for="area" class="form-label">
+                                        <img src="/icons/area.svg" />
+                                    </label>
+                                    <InputNumber id="area" @bind-Value="Facility.Area" class="form-control" placeholder="مساحت کل" />
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="zipcode" class="form-label">ZipCode:</label>
-                                <InputText id="zipcode" @bind-Value="Facility.ZipCode" class="form-control" />
-                                <ValidationMessage For="() => Facility.ZipCode" class="text-danger" />
+                            <div class="form-row">
+                                <div class="form-group en mb-3">
+                                    <label for="sporthallarea" class="form-label">
+                                        <img src="/icons/area.svg" />
+                                    </label>
+                                    <InputNumber id="sporthallarea" @bind-Value="Facility.SportHallArea" class="form-control" placeholder="مساحت سرپوشیده" />
+                                </div>
+                                <div class="form-group en mb-3">
+                                    <label for="sportlandarea" class="form-label">
+                                        <img src="/icons/area.svg" />
+                                    </label>
+                                    <InputNumber id="sportlandarea" @bind-Value="Facility.SportLandArea" class="form-control" placeholder="مساحت روباز" />
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Address:</label>
-                                <InputText id="address" @bind-Value="Facility.Address" class="form-control" />
-                                <ValidationMessage For="() => Facility.Address" class="text-danger" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Phone:</label>
-                                <InputText id="phone" @bind-Value="Facility.Phone" class="form-control" />
-                                <ValidationMessage For="() => Facility.Phone" class="text-danger" />
-                            </div>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary w-100">تایید</button>
                         </EditForm>
                     </div>
                 }
