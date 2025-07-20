@@ -6,7 +6,7 @@
 
 @layout _Layout
 
-<PageTitle>اماکن ورزشی وزارت ورزش و جوانان</PageTitle>
+<PageTitle>ماده 5</PageTitle>
 
 <AuthorizeView Roles="Administrators" Context="authContext">
 	<Authorized>
@@ -41,7 +41,7 @@
 										<PropertyColumn Title="مساحت سرپوشیده" Property="@(facility => facility.SportHallArea)" />
 										<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />
 										<TemplateColumn>
-											<a class="edit-link" href="/Dashboard/Facilities/Edit/@context.Id">
+											<a class="edit-link" href="/Dashboard/M5/Edit/@context.Id">
 												<img src="/icons/square-edit.svg" />
 											</a>
 										</TemplateColumn>
