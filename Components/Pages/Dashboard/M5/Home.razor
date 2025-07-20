@@ -1,8 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.QuickGrid
 
-@page "/Dashboard/Facilities/Govermentals"
+@page "/Dashboard/M5"
 
 @rendermode InteractiveServer
+
+@layout _Layout
 
 <PageTitle>اماکن ورزشی وزارت ورزش و جوانان</PageTitle>
 
@@ -12,7 +14,7 @@
 			<div class="col1-1">
 				<div class="card facilities-list-card">
 					<div class="card-header border-bottom">
-						<h6 class="title">فهرست اماکن ورزشی سایر ارگان های دولتی شهرستان @City?.PersianName</h6>
+						<h6 class="title">فهرست باشگاه های خصوصی شهرستان @City?.PersianName</h6>
 						<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
 							@foreach (City city in Cities!)
 							{
@@ -32,9 +34,11 @@
 								{
 									<QuickGrid Items="Facilities.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
 										<PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
-										<PropertyColumn Title="مالک دولتی" Property="@(facility => facility.Owner)" />
 										<PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : string.Empty)" />
 										<PropertyColumn Title="موقعیت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
+										<PropertyColumn Title="مساحت" Property="@(facility => facility.Area)" />
+										<PropertyColumn Title="مساحت روباز" Property="@(facility => facility.SportLandArea)" />
+										<PropertyColumn Title="مساحت سرپوشیده" Property="@(facility => facility.SportHallArea)" />
 										<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />
 										<TemplateColumn>
 											<a class="edit-link" href="/Dashboard/Facilities/Edit/@context.Id">
@@ -50,16 +54,27 @@
 								<nav role="navigation">
 									@if (pagination.TotalItemCount.HasValue)
 									{
-										for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
-										{
-											var capturedIndex = pageIndex;
-											<button @onclick="@(() => GoToPageAsync(capturedIndex))"
-													class="btn @PageButtonClass(capturedIndex)"
-													aria-current="@AriaCurrentValue(capturedIndex)"
-													aria-label="@(pageIndex + 1)">
-												@(pageIndex + 1)
-											</button>
-										}
+										var totalPages = pagination.TotalItemCount;
+										var pageIndex = pagination.CurrentPageIndex;
+										var currentPage = pageIndex + 1;
+										var lastPage = pagination.LastPageIndex + 1;
+										var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+										var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+										<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+												class="btn"
+												aria-current="@AriaCurrentValue(pageIndex - 1)"
+												aria-label="@(pageIndex - 1)"
+												disabled=@((pageIndex <= 0) ? "disabled" : false)>
+											<span class="material-symbols-rounded">chevron_right</span>
+										</button>
+										<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+										<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+												class="btn"
+												aria-current="@AriaCurrentValue(pageIndex + 1)"
+												aria-label="@(pageIndex + 1)"
+												disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+											<span class="material-symbols-rounded">chevron_left</span>
+										</button>
 									}
 								</nav>
 								<div class="total">
@@ -84,7 +99,7 @@
 
 	private IQueryable<City>? Cities;
 
-	private List<GovernmentFacility>? Facilities { get; set; }
+	private List<PrivateFacility>? Facilities { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -104,9 +119,9 @@
 
 		City = Cities!.FirstOrDefault(c => c.Id == CityId);
 
-		Facilities = await context.GovernmentFacilities
+		Facilities = await context.PrivateFacilities
 			.Include(facility => facility.Type)
-			.Include(facility => facility.GovernmentFacilityLicenses)
+			.Include(facility => facility.PrivateFacilityLicenses)
 			.Where(facility => facility.City!.Id == CityId)
 			.ToListAsync();
 
@@ -122,9 +137,6 @@
 	{
 		await pagination.SetCurrentPageIndexAsync(pageIndex);
 	}
-
-	private string? PageButtonClass(int pageIndex)
-		=> pagination.CurrentPageIndex == pageIndex ? "current" : null;
 
 	private string? AriaCurrentValue(int pageIndex)
 		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;

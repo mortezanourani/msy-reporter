@@ -1,10 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Components.QuickGrid
 
-@page "/Dashboard/Facilities"
+@page "/Dashboard/Govermentals"
 
 @rendermode InteractiveServer
 
-<PageTitle>اماکن ورزشی وزارت ورزش و جوانان</PageTitle>
+@layout _Layout
+
+<PageTitle>اماکن ورزشی سایر ارگان ها</PageTitle>
 
 <AuthorizeView Roles="Administrators" Context="authContext">
 	<Authorized>
@@ -12,7 +14,7 @@
 			<div class="col1-1">
 				<div class="card facilities-list-card">
 					<div class="card-header border-bottom">
-						<h6 class="title">فهرست اماکن ورزشی وزارت ورزش و جوانان شهرستان @City?.PersianName</h6>
+						<h6 class="title">فهرست اماکن ورزشی سایر ارگان های دولتی شهرستان @City?.PersianName</h6>
 						<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
 							@foreach (City city in Cities!)
 							{
@@ -32,9 +34,9 @@
 								{
 									<QuickGrid Items="Facilities.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
 										<PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
+										<PropertyColumn Title="مالک دولتی" Property="@(facility => facility.Owner)" />
 										<PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : string.Empty)" />
 										<PropertyColumn Title="موقعیت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
-										<PropertyColumn Title="جنسیت کاربران" Property="@(facility => facility.UsersGender!.PersianName)" />
 										<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />
 										<TemplateColumn>
 											<a class="edit-link" href="/Dashboard/Facilities/Edit/@context.Id">
@@ -84,7 +86,7 @@
 
 	private IQueryable<City>? Cities;
 
-	private List<Facility>? Facilities { get; set; }
+	private List<GovernmentFacility>? Facilities { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -104,9 +106,9 @@
 
 		City = Cities!.FirstOrDefault(c => c.Id == CityId);
 
-		Facilities = await context.Facilities
+		Facilities = await context.GovernmentFacilities
 			.Include(facility => facility.Type)
-			.Include(facility => facility.UsersGender)
+			.Include(facility => facility.GovernmentFacilityLicenses)
 			.Where(facility => facility.City!.Id == CityId)
 			.ToListAsync();
 
