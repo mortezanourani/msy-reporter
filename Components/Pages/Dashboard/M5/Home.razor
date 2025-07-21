@@ -123,6 +123,7 @@
 			.Include(facility => facility.Type)
 			.Include(facility => facility.PrivateFacilityLicenses)
 			.Where(facility => facility.City!.Id == CityId)
+			.OrderBy(facility => facility.Name)
 			.ToListAsync();
 
 		await pagination.SetCurrentPageIndexAsync(0);

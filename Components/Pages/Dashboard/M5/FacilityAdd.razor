@@ -58,7 +58,7 @@
                                         <img src="/icons/dropdown.svg" />
                                     </label>
                                     <InputSelect id="cityid" class="select form-control" @bind-Value="CityId">
-                                        @foreach (City city in Cities)
+                                        @foreach (City city in Cities!)
                                         {
                                             <option value="@city.Id">@city.PersianName</option>
                                         }
@@ -105,7 +105,7 @@
                                     <label for="typeid" class="form-label">
                                         <img src="/icons/dropdown.svg" />
                                     </label>
-                                    <InputSelect id="typeid" class="select form-control" @bind-Value="Facility.TypeId">
+                                    <InputSelect id="typeid" class="select form-control" @bind-Value="TypeId">
                                         @foreach (FacilityType type in Types!)
                                         {
                                             <option value="@type.Id">@type.PersianTitle</option>
@@ -161,6 +161,7 @@
     private List<FacilityType>? Types;
 
     private int CityId = 1;
+    private int TypeId = 1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -179,10 +180,36 @@
         context = DbFactory.CreateDbContext();
 
         Facility.CityId = CityId;
-        Facility.City = Cities!.FirstOrDefault(city => city.Id == CityId)!;
+        Facility.TypeId = TypeId;
 
-        context.PrivateFacilities.Add(Facility);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/privatefacilities");
+        try
+        {
+            var isExist = context.PrivateFacilities
+                .Any(facility =>
+                    facility.Name == Facility.Name
+                    &&
+                    facility.CityId == Facility.CityId
+                );
+
+            if (isExist)
+            {
+                statusMessageClass = "danger";
+                statusMessage = $"باشگاهی با عنوان {Facility.Name} در شهرستان {Cities!.FirstOrDefault(c => c.Id == CityId)!.PersianName} قبلا ثبت شده است.";
+                return;
+            }
+
+            context.PrivateFacilities.Add(Facility);
+            await context.SaveChangesAsync();
+
+            statusMessageClass = "success";
+            statusMessage = $"باشگاه {Facility.Name} با موفقیت ثبت شد.";
+        }
+        catch (Exception ex)
+        {
+            statusMessageClass = "danger";
+            statusMessage = ex.InnerException.Message;
+        }
+
+        return;
     }
 }
