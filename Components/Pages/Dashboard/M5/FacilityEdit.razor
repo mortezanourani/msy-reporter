@@ -110,12 +110,9 @@
                                         <img src="/icons/dropdown.svg" />
                                     </label>
                                     <InputSelect id="typeid" class="select form-control" @bind-Value="Facility.TypeId">
-                                        @if (Types is not null)
+                                        @foreach (FacilityType type in Types!)
                                         {
-                                            foreach (FacilityType type in Types)
-                                            {
-                                                <option value="@type.Id">@type.PersianTitle</option>
-                                            }
+                                            <option value="@type.Id">@type.PersianTitle</option>
                                         }
                                     </InputSelect>
                                 </div>
@@ -140,6 +137,12 @@
                                     <InputNumber id="sportlandarea" @bind-Value="Facility.SportLandArea" class="form-control" placeholder="مساحت روباز" />
                                 </div>
                             </div>
+                            @if (!string.IsNullOrEmpty(statusMessage))
+                            {
+                                <div class="alert alert-@statusMessageClass" role="alert">
+                                    @statusMessage
+                                </div>
+                            }
                             <button type="submit" class="btn btn-primary w-100">تایید</button>
                         </EditForm>
                     </div>
@@ -153,53 +156,61 @@
     [Parameter]
     public Guid Id { get; set; }
 
+    private string? statusMessage;
+    private string? statusMessageClass;
+
     [SupplyParameterFromForm]
     private PrivateFacility? Facility { get; set; }
 
     private AppDbContext? context { get; set; } = null!;
 
-    private List<FacilityType>? Types;
     private List<City>? Cities;
+    private List<FacilityType>? Types;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         Facility = null;
 
         context = DbFactory.CreateDbContext();
 
         Types = await context.FacilityTypes.ToListAsync();
-        
+
         Cities = await context.Cities
             .Where(city => city.Id != 0)
             .ToListAsync();
 
-        Facility = await context.PrivateFacilities
-            .Include(facility => facility.City)
+        Facility ??= await context.PrivateFacilities
             .FirstOrDefaultAsync(facility => facility.Id == Id);
+
+        if (Facility is null)
+        {
+            NavigationManager.NavigateTo("/Dashboard/M5");
+        }
     }
 
     private async Task UpdateFacility()
     {
-        using var context = DbFactory.CreateDbContext();
+        context = DbFactory.CreateDbContext();
+
+        Facility.City = Cities!.FirstOrDefault(city => city.Id == Facility!.CityId)!;
+        Facility.Type = Types!.FirstOrDefault(city => city.Id == Facility!.TypeId);
+
         context.Attach(Facility!).State = EntityState.Modified;
 
         try
         {
             await context.SaveChangesAsync();
+            statusMessageClass = "success";
+            statusMessage = "تغییرات با موفقیت ثبت شد.";
         }
-        catch (DbUpdateConcurrencyException)
+        catch (DbUpdateConcurrencyException exception)
         {
-            if (!FacilityExists(Facility!.Id))
-            {
-                NavigationManager.NavigateTo("notfound");
-            }
-            else
-            {
-                throw;
-            }
+            statusMessageClass = "danger";
+            statusMessage = $"Error: {exception}";
+            return;
         }
 
-        NavigationManager.NavigateTo("/privatefacilities");
+        NavigationManager.NavigateTo($"/Dashboard/M5/Edit/{Facility!.Id}");
     }
 
     private bool FacilityExists(Guid id)
