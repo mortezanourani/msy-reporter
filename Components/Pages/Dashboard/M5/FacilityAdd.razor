@@ -1,0 +1,188 @@
+﻿@page "/Dashboard/M5/Add"
+
+@rendermode InteractiveServer
+
+@layout _Layout
+
+<PageTitle>ثبت باشگاه خصوصی جدید</PageTitle>
+
+<div class="page-top-menu">
+    <h6 class="panel-title">ثبت باشگاه خصوصی جدید</h6>
+</div>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+    <Authorized>
+        <div class="row form-wrapper">
+            <div class="col3-5 mb-0">
+                <div class="instructions">
+                    <p class="mb-3">دوره ها و کلاس های آموزشی ضمن خدمت با اطلاعات ذیل در سامانه آماری اداره کل ورزش و جوانان استان گیلان ثبت می گردد.</p>
+                    <div class="instruction-item">
+                        <div class="icon-title mb-2">
+                            <img src="/icons/title-blue.svg">
+                            <h6>عنوان دوره:</h6>
+                        </div>
+                        <p>در فرم مربوطه بخش اول اطلاعات عنوان دوره آموزشی مورد نظر است.</p>
+                        <p>در این بخش عنوان دوره، نوع دوره بین عمومی یا تخصصی (شغلی) و نحوه برگزاری دوره از نظر مجازی یا حضوری قابل ویرایش می باشد.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col2-5 mb-auto">
+                @if(Cities is null || Types is null)
+                {
+                    <Loading CardMode=true />
+                }
+                else
+                {
+                    <div class="card p-3">
+                        <EditForm method="post" Model="Facility" OnValidSubmit="AddFacility" FormName="create" Enhance>
+                            <DataAnnotationsValidator />
+                            <ValidationSummary role="alert" />
+                            <div class="form-row">
+                                <div class="form-group fa mb-3">
+                                    <label for="title" class="form-label">
+                                        <img src="/icons/title.svg" />
+                                    </label>
+                                    <InputText id="title" @bind-Value="Facility.Name" class="form-control" placeholder="عنوان باشگاه" />
+                                </div>
+                                <div class="form-group active-sign mb-3">
+                                    <label for="isactive" class="form-label">
+                                        <img class="active" src="/icons/verified.svg" />
+                                        <img class="deactive" src="/icons/verified-off.svg" />
+                                    </label>
+                                    <InputCheckbox id="isactive" @bind-Value="Facility.IsActive" class="form-check-input" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group fa mb-3">
+                                    <label for="cityid" class="form-label">
+                                        <img src="/icons/dropdown.svg" />
+                                    </label>
+                                    <InputSelect id="cityid" class="select form-control" @bind-Value="CityId">
+                                        @foreach (City city in Cities)
+                                        {
+                                            <option value="@city.Id">@city.PersianName</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <div class="form-group fa mb-3">
+                                    <label for="district" class="form-label">
+                                        <img src="/icons/location-map.svg" />
+                                    </label>
+                                    <InputText id="district" @bind-Value="Facility.District" class="form-control" placeholder="بخش / روستا" />
+                                </div>
+                            </div>
+                            <div class="form-group fa mb-3">
+                                <label for="address" class="form-label">
+                                    <img src="/icons/location.svg" />
+                                </label>
+                                <InputText id="address" @bind-Value="Facility.Address" class="form-control" placeholder="آدرس پستی" />
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group en mb-3">
+                                    <label for="zipcode" class="form-label">
+                                        <img src="/icons/zipcode.svg" />
+                                    </label>
+                                    <InputText id="zipcode" @bind-Value="Facility.ZipCode" class="form-control" placeholder="کد پستی" />
+                                </div>
+                                <div class="form-group fa mb-3">
+                                    <label for="isrural" class="form-label">
+                                        <img src="/icons/dropdown.svg" />
+                                    </label>
+                                    <InputSelect id="isrural" class="form-control select" @bind-Value="Facility.IsRural">
+                                        <option value="false">شهری</option>
+                                        <option value="true">روستایی</option>
+                                    </InputSelect>
+                                </div>
+                            </div>
+                            <div class="form-group en mb-3">
+                                <label for="phone" class="form-label">
+                                    <img src="/icons/phone.svg" />
+                                </label>
+                                <InputText id="phone" @bind-Value="Facility.Phone" class="form-control" placeholder="شماره تلفن باشگاه" />
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group fa mb-3">
+                                    <label for="typeid" class="form-label">
+                                        <img src="/icons/dropdown.svg" />
+                                    </label>
+                                    <InputSelect id="typeid" class="select form-control" @bind-Value="Facility.TypeId">
+                                        @foreach (FacilityType type in Types!)
+                                        {
+                                            <option value="@type.Id">@type.PersianTitle</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <div class="form-group en mb-3">
+                                    <label for="area" class="form-label">
+                                        <img src="/icons/area.svg" />
+                                    </label>
+                                    <InputNumber id="area" @bind-Value="Facility.Area" class="form-control" placeholder="مساحت کل" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group en mb-3">
+                                    <label for="sporthallarea" class="form-label">
+                                        <img src="/icons/area.svg" />
+                                    </label>
+                                    <InputNumber id="sporthallarea" @bind-Value="Facility.SportHallArea" class="form-control" placeholder="مساحت سرپوشیده" />
+                                </div>
+                                <div class="form-group en mb-3">
+                                    <label for="sportlandarea" class="form-label">
+                                        <img src="/icons/area.svg" />
+                                    </label>
+                                    <InputNumber id="sportlandarea" @bind-Value="Facility.SportLandArea" class="form-control" placeholder="مساحت روباز" />
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(statusMessage))
+                            {
+                                <div class="alert alert-@statusMessageClass" role="alert">
+                                    @statusMessage
+                                </div>
+                            }
+                            <button type="submit" class="btn btn-primary w-100">تایید</button>
+                        </EditForm>
+                    </div>
+                }
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [SupplyParameterFromForm]
+    private PrivateFacility Facility { get; set; } = new();
+
+    private string? statusMessage;
+    private string? statusMessageClass;
+
+    private AppDbContext? context { get; set; } = null!;
+
+    private List<City>? Cities;
+    private List<FacilityType>? Types;
+
+    private int CityId = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        Cities = await context.Cities
+            .Where(city => city.Id != 0)
+            .ToListAsync();
+
+        Types = await context.FacilityTypes
+            .ToListAsync();
+    }
+
+    private async Task AddFacility()
+    {
+        context = DbFactory.CreateDbContext();
+
+        Facility.CityId = CityId;
+        Facility.City = Cities!.FirstOrDefault(city => city.Id == CityId)!;
+
+        context.PrivateFacilities.Add(Facility);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/privatefacilities");
+    }
+}
