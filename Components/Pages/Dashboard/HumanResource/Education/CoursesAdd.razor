@@ -46,7 +46,6 @@
                             <img src="/icons/title.svg" />
                         </label>
                         <InputText id="title" @bind-Value="Course.Title" class="form-control" placeholder="عنوان دوره" />
-                        @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
                     </div>
                     <div class="form-row">
                         <div class="form-checkbox">
@@ -80,8 +79,8 @@
                             <InputText id="month" maxlength="2" @bind-Value="Course.Month" class="form-control" placeholder="ماه" />
                         </div>
                     </div>
-                    <button type="submit" class="w-100 btn btn-primary">تایید</button>
                     <ValidationSummary class="text-danger" role="alert" />
+                    <button type="submit" class="w-100 btn btn-primary">تایید</button>
                 </EditForm>
             </div>
         </div>
@@ -92,13 +91,23 @@
     [SupplyParameterFromForm]
     private Course Course { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private AppDbContext? context;
+
     private async Task AddCourse()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Courses.Add(Course);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/Dashboard/Courses");
+        Course.Employees = null!;
+
+        try
+        {
+            context = DbFactory.CreateDbContext();
+            context.Courses.Add(Course);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo("/Dashboard/HumanResource/Education/Courses");
+        }
+        catch(Exception ex)
+        {
+            throw;
+        }
     }
 }
 

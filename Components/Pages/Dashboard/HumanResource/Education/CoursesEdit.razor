@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/HumanResource/Education/Courses/{Id:guid}"
+﻿@page "/Dashboard/HumanResource/Education/Courses/Edit/{Id:guid}"
 
 @rendermode InteractiveServer
 
@@ -7,21 +7,11 @@
 <PageTitle>شناسنامه آموزشی</PageTitle>
 
 <AuthorizeView Roles="Administrators" Context="authContext">
-    <div class="courses-top-menu">
-        <h6 class="panel-title">ویرایش دوره آموزشی</h6>
-        <span class="top-menu-links">
-            <a class="panel-link" href="/Dashboard/Courses/Employees">
-                <img src="/icons/course-users.svg" />
-                فهرست افراد
-            </a>
-            <a class="panel-link" href="/Dashboard/Courses/Add">
-                <img src="/icons/course-add.svg" />
-                افزودن دوره
-            </a>
-        </span>
-    </div>
-
-    @if (Course is not null)
+    @if (Course is null)
+    {
+        <Loading />
+    }
+    else
     {
         <div class="row form-wrapper">
             <div class="col3-5 mb-0">
@@ -61,7 +51,6 @@
                                 <img src="/icons/title.svg" />
                             </label>
                             <InputText id="title" @bind-Value="Course.Title" class="form-control" />
-                            @* <ValidationMessage For="() => Course.Title" class="text-danger" /> *@
                         </div>
                         <div class="form-row">
                             <div class="form-checkbox">
@@ -95,7 +84,7 @@
                                 <InputText id="month" @bind-Value="Course.Month" class="form-control" placeholder="ماه" />
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">تایید</button>
+                        <button type="submit" class="btn btn-primary w-100">تایید</button>
                         <ValidationSummary role="alert" />
                     </EditForm>
                 </div>
@@ -124,10 +113,10 @@
                             </button>
                             <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
                             <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-                                    class="btn"
-                                    aria-current="@AriaCurrentValue(pageIndex - 1)"
-                                    aria-label="@(pageIndex - 1)"
-                                    disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                            class="btn"
+                            aria-current="@AriaCurrentValue(pageIndex - 1)"
+                            aria-label="@(pageIndex - 1)"
+                            disabled=@((pageIndex <= 0) ? "disabled" : false)>
                                 <span class="material-symbols-rounded">chevron_right</span>
                             </button>
                         }
@@ -152,10 +141,10 @@
                         </QuickGrid>
                     }
                 </div>
-                <a class="update-employees-link" href="/Dashboard/Course/Employees/@Course!.Id">
+                <a class="update-employees-link" href="/Dashboard/HumanResource/Education/Courses/Employees/Edit/@Course!.Id">
                     <img src="/icons/course-users.svg" />
-			        ویرایش شرکت کنندگان در دوره
-		        </a>
+                    ویرایش شرکت کنندگان در دوره
+                </a>
             </div>
         </div>
     }
@@ -194,10 +183,11 @@
 
     private async Task UpdateCourse()
     {
-        context.Attach(Course!).State = EntityState.Modified;
+        Course!.Employees = courseEmployees!.ToArray();
 
         try
         {
+            context.Attach(Course!).State = EntityState.Modified;
             await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -215,7 +205,7 @@
             }
         }
 
-        NavigationManager.NavigateTo("/Dashboard/Courses/");
+        NavigationManager.NavigateTo("/Dashboard/HumanResource/Education/Courses");
     }
 
     private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };

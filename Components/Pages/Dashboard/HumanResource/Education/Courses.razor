@@ -1,33 +1,15 @@
-﻿@page "/Dashboard/HumanResource/Education"
+﻿@page "/Dashboard/HumanResource/Education/Courses2"
 
 @inject IdentityUserAccessor UserAccessor
 
-<PageTitle>شناسنامه آموزشی</PageTitle>
+<PageTitle>برنامه ریزی آموزش کارکنان</PageTitle>
 
 <AuthorizeView Roles="Administrators">
-    <Authorized>
-        <div class="courses-top-menu">
-            <h6 class="panel-title">مدیریت شناسنامه آموزشی</h6>
-            <span class="top-menu-links">
-                <a class="panel-link" href="/Dashboard/Courses/Employees">
-                    <img src="/icons/course-users.svg" />
-                    فهرست افراد
-                </a>
-                <a class="panel-link" href="/Dashboard/Courses/Add">
-                    <img src="/icons/course-add.svg" />
-                    افزودن دوره
-                </a>
-            </span>
+    <div class="row">
+        <div class="col1-1">
+            <CoursesCard />
         </div>
-        <div class="row">
-            <div class="col1-1">
-                <CoursesCard />
-            </div>
-        </div>
-    </Authorized>
-    <NotAuthorized>
-        <UserCoursesCard User=@User />
-    </NotAuthorized>
+    </div>
 </AuthorizeView>
 
 @code {

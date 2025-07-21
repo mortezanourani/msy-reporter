@@ -82,7 +82,7 @@
                             flex-direction: row;
                             justify-content: flex-end;
                             align-items: center;
-                            gap: 16px;
+                            gap: 4px;
                         }
                             .employees-list-card .card-body .employees-list ::deep.employees-table tbody tr td:last-child .edit-link {
                                 opacity: 0;

@@ -1,74 +1,84 @@
-﻿@using Microsoft.AspNetCore.Components.QuickGrid
+﻿@page "/Dashboard/HumanResource/Education/Courses"
+
+@using Microsoft.AspNetCore.Components.QuickGrid
 
 @rendermode InteractiveServer
 
-<div class="card courses-card">
-	<div class="card-header border-bottom">
-		<h6 class="title">دوره های برگزار شده در سال @year</h6>
-		<InputSelect class="select" @bind-Value="year" @onclick="SelectYear">
-			@foreach (string year in years!)
-			{
-				<option value="@year">@year</option>
-			}
-		</InputSelect>
-	</div>
+<PageTitle>برنامه ریزی آموزش کارکنان</PageTitle>
 
-	<div class="card-body">
-		<div class="courses-list">
-			@if (courses is not null)
-			{
-				<QuickGrid Items="courses" Pagination="pagination" Theme="" Class="courses-table">
-					<PropertyColumn Title="عنوان دوره" Property="@(course => course.Title)" />
-					<PropertyColumn Title="ساعت دوره" Property="@(course => course.CourseTime)" />
-					<PropertyColumn Title="زمان برگزاری دوره" Property="@(course => string.Format("{0:0000}/{1:00}", course.Year, course.Month))" />
-					<PropertyColumn Title="نوع دوره" Property="@(course => course.IsGeneral ? "عمومی" : "تخصصی")" />
-					<PropertyColumn Title="نوع برگزاری دوره" Property="@(course => course.IsOnline ? "مجازی" : "حضوری")" />
-					<TemplateColumn>
-						<a class="edit-link" href="/Dashboard/Course/Employees/@context.Id">
-							<img src="/icons/course-users.svg" />
-						</a>
-						<a class="edit-link" href="/Dashboard/Courses/@context.Id">
-							<img src="/icons/course-edit.svg" />
-						</a>
-					</TemplateColumn>
-				</QuickGrid>
-			}
+<AuthorizeView Roles="Administrators" Context="authContext">
+	<div class="row">
+		<div class="col1-1">
+			<div class="card courses-card">
+				<div class="card-header border-bottom">
+					<h6 class="title">دوره های برگزار شده در سال @year</h6>
+					<InputSelect class="select" @bind-Value="year" @bind-Value:after="SelectYear">
+						@foreach (string year in years!)
+						{
+							<option value="@year">@year</option>
+						}
+					</InputSelect>
+				</div>
+
+				<div class="card-body">
+					<div class="courses-list">
+						@if (courses is not null)
+						{
+							<QuickGrid Items="courses" Pagination="pagination" Theme="" Class="courses-table">
+								<PropertyColumn Title="عنوان دوره" Property="@(course => course.Title)" />
+								<PropertyColumn Title="ساعت دوره" Property="@(course => course.CourseTime)" />
+								<PropertyColumn Title="زمان برگزاری دوره" Property="@(course => string.Format("{0:0000}/{1:00}", course.Year, course.Month))" />
+								<PropertyColumn Title="نوع دوره" Property="@(course => course.IsGeneral ? "عمومی" : "تخصصی")" />
+								<PropertyColumn Title="نوع برگزاری دوره" Property="@(course => course.IsOnline ? "مجازی" : "حضوری")" />
+								<TemplateColumn>
+									<a class="edit-link" href="/Dashboard/HumanResource/Education/Courses/Employees/Edit/@context.Id">
+										<img src="/icons/course-users.svg" />
+									</a>
+									<a class="edit-link" href="/Dashboard/HumanResource/Education/Courses/Edit/@context.Id">
+										<img src="/icons/course-edit.svg" />
+									</a>
+								</TemplateColumn>
+							</QuickGrid>
+						}
+					</div>
+				</div>
+
+				<div class="card-footer px-0">
+					<div class="paginator">
+						<nav role="navigation">
+							@if (pagination.TotalItemCount.HasValue)
+							{
+								var totalPages = pagination.TotalItemCount;
+								var pageIndex = pagination.CurrentPageIndex;
+								var currentPage = pageIndex + 1;
+								var lastPage = pagination.LastPageIndex + 1;
+								var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+								var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+								<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+								<span class="buttons-wrapper">
+									<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+											class="btn"
+											aria-current="@AriaCurrentValue(pageIndex - 1)"
+											aria-label="@(pageIndex - 1)"
+											disabled=@((pageIndex <= 0) ? "disabled" : false)>
+										<span class="material-symbols-rounded">chevron_right</span>
+									</button>
+									<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+											class="btn"
+											aria-current="@AriaCurrentValue(pageIndex + 1)"
+											aria-label="@(pageIndex + 1)"
+											disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+										<span class="material-symbols-rounded">chevron_left</span>
+									</button>
+								</span>
+							}
+						</nav>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-
-	<div class="card-footer px-0">
-		<div class="paginator">
-			<nav role="navigation">
-				@if (pagination.TotalItemCount.HasValue)
-				{
-					var totalPages = pagination.TotalItemCount;
-					var pageIndex = pagination.CurrentPageIndex;
-					var currentPage = pageIndex + 1;
-					var lastPage = pagination.LastPageIndex + 1;
-					var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
-					var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
-					<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-					<span class="buttons-wrapper">
-						<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-								class="btn"
-								aria-current="@AriaCurrentValue(pageIndex - 1)"
-								aria-label="@(pageIndex - 1)"
-								disabled=@((pageIndex <= 0) ? "disabled" : false)>
-							<span class="material-symbols-rounded">chevron_right</span>
-						</button>
-						<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
-								class="btn"
-								aria-current="@AriaCurrentValue(pageIndex + 1)"
-								aria-label="@(pageIndex + 1)"
-								disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-							<span class="material-symbols-rounded">chevron_left</span>
-						</button>
-					</span>
-				}
-			</nav>
-		</div>
-	</div>
-</div>
+</AuthorizeView>
 
 @code {
 	private AppDbContext context = default!;
@@ -91,15 +101,15 @@
 		year = years.FirstOrDefault();
 
 		SelectYear();
-
-		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
 	}
 
 	private void SelectYear()
 	{
 		courses = context.Courses
 			.Where(course => course.Year == year)
-			.OrderByDescending(course => course.Month);
+			.OrderBy(course => course.Title);
+
+		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
 	}
 
 	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };

@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/HumanResource/Education/Course/Employees/{Id:guid}"
+﻿@page "/Dashboard/HumanResource/Education/Courses/Employees/Edit/{Id:guid}"
 
 @rendermode InteractiveServer
 
@@ -10,13 +10,9 @@
     <div class="courses-top-menu">
         <h6 class="panel-title">ویرایش شرکت کنندگان دوره آموزشی</h6>
         <span class="top-menu-links">
-            <a class="panel-link" href="/Dashboard/Courses/@Course?.Id">
+            <a class="panel-link" href="/Dashboard/HumanResource/Education/Courses/Edit/@Course?.Id">
                 <img src="/icons/course-edit.svg" />
                 ویرایش دوره
-            </a>
-            <a class="panel-link" href="/Dashboard/Courses/Add">
-                <img src="/icons/course-add.svg" />
-                افزودن دوره
             </a>
         </span>
     </div>
@@ -212,12 +208,11 @@
         }
 
         courseEmployees = await context.Employees
-            .Where(employee => employee.Courses
-                .Any(course => course.Id == Id))
-            .ToListAsync();
-
-        employeesPagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
-        courseEmployeesPagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+           .Where(employee => employee.Courses
+               .Any(course => course.Id == Id))
+           .OrderBy(employee => employee.FirstName)
+           .OrderBy(employee => employee.LastName)
+           .ToListAsync();
 
         await UpdateEmployees();
     }
@@ -229,6 +224,8 @@
             ? await context.Employees
                 .Where(employee => employee.Courses
                     .All(course => course.Id != Id))
+                .OrderBy(employee => employee.LastName)
+                .OrderBy(employee => employee.FirstName)
                 .ToListAsync()
             : await context.Employees
                 .Where(employee => employee.LastName.Contains(searchText))
@@ -260,7 +257,7 @@
             }
         }
 
-        NavigationManager.NavigateTo("/Dashboard/Courses/");
+        NavigationManager.NavigateTo("/Dashboard/HumanResource/Education/");
     }
 
     private async Task AddEmployee(Employee employee)
@@ -298,7 +295,19 @@
         employees = await context.Employees
             .Where(employee => employee.Courses
                 .All(course => course.Id != Id))
+            .OrderBy(employee => employee.FirstName)
+            .OrderBy(employee => employee.LastName)
             .ToListAsync();
+
+        courseEmployees = await context.Employees
+            .Where(employee => employee.Courses
+                .Any(course => course.Id == Id))
+            .OrderBy(employee => employee.FirstName)
+            .OrderBy(employee => employee.LastName)
+            .ToListAsync();
+
+        employeesPagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+        courseEmployeesPagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
     }
 
     private PaginationState courseEmployeesPagination = new PaginationState { ItemsPerPage = 10 };
