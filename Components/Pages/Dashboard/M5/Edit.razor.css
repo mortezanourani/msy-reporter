@@ -1,0 +1,142 @@
+﻿.page-top-menu {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    background: var(--card-bg);
+    box-shadow: var(--card-box-shadow);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .page-top-menu .panel-title {
+        margin: 0;
+        padding: 4px 0;
+        font-size: 14px;
+    }
+
+.form-group.active-sign {
+    flex-basis: auto;
+    height: 42px;
+    border: 1px solid #a9a9a9;
+    border-radius: 6px;
+    aspect-ratio: 1;
+}
+
+    .form-group.active-sign ::deep.form-check-input {
+        display: none;
+    }
+
+    .form-group.active-sign:has(.form-check-input) {
+        border-color: #ff4040;
+    }
+    .form-group.active-sign:has(.form-check-input) img.active {
+        display: none;
+    }
+
+    .form-group.active-sign:has(.form-check-input:checked) {
+        border-color: #40aa40;
+    }
+    .form-group.active-sign:has(.form-check-input:checked) img.deactive {
+        display: none;
+    }
+    .form-group.active-sign:has(.form-check-input:checked) img.active {
+        display: block;
+    }
+
+.licenses-list-card {
+    background: none;
+    box-shadow: none;
+    overflow: visible;
+    padding: 0;
+}
+
+    .licenses-list-card .card-header {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+
+    .licenses-list-card .card-body {
+        padding: var(--spacing-x);
+        background: var(--card-bg);
+        box-shadow: var(--card-box-shadow);
+    }
+
+        .licenses-list-card .card-body .licenses-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+            .licenses-list-card .card-body .licenses-list ::deep.licenses-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+                .licenses-list-card .card-body .licenses-list ::deep.licenses-table thead tr {
+                    background-color: var(--primary-color);
+                    color: var(--light-color);
+                }
+
+                    .licenses-list-card .card-body .licenses-list ::deep.licenses-table thead tr th {
+                        padding: 12px 12px 8px;
+                        text-align: center;
+                        font-size: 13px;
+                        font-weight: 600;
+                    }
+
+                        .licenses-list-card .card-body .licenses-list ::deep.licenses-table thead tr th .col-title {
+                            justify-content: center;
+                            font-size: 13px;
+                            font-weight: 600;
+                        }
+
+                        .licenses-list-card .card-body .licenses-list ::deep.licenses-table thead tr th:first-child .col-title {
+                            justify-content: right;
+                        }
+
+                .licenses-list-card .card-body .licenses-list ::deep.licenses-table tbody tr {
+                    background: #ffffff;
+                }
+
+                    .licenses-list-card .card-body .licenses-list ::deep.licenses-table tbody tr:nth-child(2n) {
+                        background: var(--light-color);
+                    }
+
+                    .licenses-list-card .card-body .licenses-list ::deep.licenses-table tbody tr:hover {
+                        transform: scale(1.01);
+                        box-shadow: 0 0 8px 0px dimgray;
+                    }
+
+                    .licenses-list-card .card-body .licenses-list ::deep.licenses-table tbody tr td {
+                        padding: 8px 12px;
+                        text-align: center;
+                        font-size: 13px;
+                        font-weight: 400;
+                    }
+
+                        .licenses-list-card .card-body .licenses-list ::deep.licenses-table tbody tr td:first-child {
+                            font-weight: 500;
+                            text-align: right;
+                        }
+
+                        .licenses-list-card .card-body .licenses-list ::deep.licenses-table tbody tr td:last-child {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: flex-end;
+                            align-items: center;
+                            gap: 16px;
+                        }
+
+                            .licenses-list-card .card-body .licenses-list ::deep.licenses-table tbody tr td:last-child .edit-link {
+                                opacity: 0;
+                            }
+
+                    .licenses-list-card .card-body .licenses-list ::deep.licenses-table tbody tr:hover td:last-child .edit-link {
+                        opacity: 1;
+                    }
+

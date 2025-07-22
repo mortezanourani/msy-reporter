@@ -1,13 +1,15 @@
-﻿@page "/Dashboard/M5/Add"
+﻿@page "/Dashboard/M5/Edit/{Id:guid}"
+
+@using Microsoft.AspNetCore.Components.QuickGrid;
 
 @rendermode InteractiveServer
 
 @layout _Layout
 
-<PageTitle>ثبت باشگاه خصوصی جدید</PageTitle>
+<PageTitle>ویرایش باشگاه @Facility?.Name @Facility?.City!.PersianName</PageTitle>
 
 <div class="page-top-menu">
-    <h6 class="panel-title">ثبت باشگاه خصوصی جدید</h6>
+    <h6 class="panel-title">باشگاه @Facility?.Name @Facility?.City!.PersianName</h6>
 </div>
 
 <AuthorizeView Roles="Administrators" Context="authContext">
@@ -27,16 +29,17 @@
                 </div>
             </div>
             <div class="col2-5 mb-auto">
-                @if(Cities is null || Types is null)
+                @if (Facility is null)
                 {
                     <Loading CardMode=true />
                 }
                 else
                 {
                     <div class="card p-3">
-                        <EditForm method="post" Model="Facility" OnValidSubmit="AddFacility" FormName="create" Enhance>
+                        <EditForm method="post" Model="Facility" OnValidSubmit="UpdateFacility" FormName="edit" Enhance>
                             <DataAnnotationsValidator />
                             <ValidationSummary role="alert" />
+                            <input type="hidden" name="Facility.Id" value="@Facility.Id" />
                             <div class="form-row">
                                 <div class="form-group fa mb-3">
                                     <label for="title" class="form-label">
@@ -57,10 +60,13 @@
                                     <label for="cityid" class="form-label">
                                         <img src="/icons/dropdown.svg" />
                                     </label>
-                                    <InputSelect id="cityid" class="select form-control" @bind-Value="CityId">
-                                        @foreach (City city in Cities!)
+                                    <InputSelect id="cityid" class="select form-control" @bind-Value="Facility.CityId">
+                                        @if (Cities is not null)
                                         {
-                                            <option value="@city.Id">@city.PersianName</option>
+                                            foreach (City city in Cities)
+                                            {
+                                                <option value="@city.Id">@city.PersianName</option>
+                                            }
                                         }
                                     </InputSelect>
                                 </div>
@@ -105,7 +111,7 @@
                                     <label for="typeid" class="form-label">
                                         <img src="/icons/dropdown.svg" />
                                     </label>
-                                    <InputSelect id="typeid" class="select form-control" @bind-Value="TypeId">
+                                    <InputSelect id="typeid" class="select form-control" @bind-Value="Facility.TypeId">
                                         @foreach (FacilityType type in Types!)
                                         {
                                             <option value="@type.Id">@type.PersianTitle</option>
@@ -145,71 +151,128 @@
                 }
             </div>
         </div>
+        <hr />
+        <div class="row">
+            <div class="col1-1">
+                @if(Licenses is null)
+                {
+                    <Loading CardMode=true />
+                }
+                else
+                {
+                    <div class="card licenses-list-card">
+                        <div class="card-header">
+                            <h6 class="title">@($"فهرست مجوزهای باشگاه {Facility!.Name}")</h6>
+                            <div class="header-link">
+                                <a class="header-link" href="/Dashboard/M5/Licenses/Add/@Facility.Id">
+                                    <img src="/icons/note-add.svg" />
+                                    ثبت مجوز جدید
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="licenses-list">
+                                <QuickGrid Items="Licenses.AsQueryable()" Theme="" Class="licenses-table">
+                                    <PropertyColumn Title="سریال مجوز" Property="@(license => license.Serial!)" />
+                                    <PropertyColumn Title="نوع مجوز" Property="@(license => license.IsBeneficial == null ? "نامشخص" : (license.IsBeneficial == true ? "حقیقی" : "حقوقی"))" />
+                                    <PropertyColumn Title="نوع مالکیت" Property="@(license => license.IsOwner == null ? "نامشخص" : (license.IsOwner == true ? "تملیکی" : "استیجاری"))" />
+                                    <PropertyColumn Title="نوع مالکیت ملک" Property="@(license => license.IsRenewal == null ? "نامشخص" : (license.IsOwner == true ? "تمدید" : "تاسیس"))" />
+                                    <PropertyColumn Title="ارگان / شرکت" Property="@(license => license.Company!)" />
+                                    <PropertyColumn Title="تاریخ تاسیس" Property="@(license => license.StartDate!)" />
+                                    <PropertyColumn Title="تاریخ انقضا" Property="@(license => license.ExpireDate!)" />
+                                    <PropertyColumn Title="نام موسس" Property="@(license => license.Name!)" />
+                                    <PropertyColumn Title="کد ملی موسس" Property="@(license => license.SeenCode!)" />
+                                    <PropertyColumn Title="شماره همراه موسس" Property="@(license => license.Phone!)" />
+                                    <PropertyColumn Title="مساحت سرپوشیده" Property="@(license => license.UsersGender!.PersianName)" />
+                                    <TemplateColumn>
+                                        <a class="edit-link" href="/Dashboard/M5/Edit/@context.Id">
+                                            <img src="/icons/note-edit.svg" />
+                                        </a>
+                                    </TemplateColumn>
+                                </QuickGrid>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </Authorized>
 </AuthorizeView>
 
 @code {
-    [SupplyParameterFromForm]
-    private PrivateFacility Facility { get; set; } = new();
+    [Parameter]
+    public Guid Id { get; set; }
 
     private string? statusMessage;
     private string? statusMessageClass;
+
+    [SupplyParameterFromForm]
+    private PrivateFacility? Facility { get; set; }
 
     private AppDbContext? context { get; set; } = null!;
 
     private List<City>? Cities;
     private List<FacilityType>? Types;
 
-    private int CityId = 1;
-    private int TypeId = 1;
+    private List<PrivateFacilityLicense>? Licenses;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
+        Facility = null;
+
         context = DbFactory.CreateDbContext();
+
+        Types = await context.FacilityTypes.ToListAsync();
 
         Cities = await context.Cities
             .Where(city => city.Id != 0)
             .ToListAsync();
 
-        Types = await context.FacilityTypes
-            .ToListAsync();
+        Facility ??= await context.PrivateFacilities
+            .FirstOrDefaultAsync(facility => facility.Id == Id);
+
+        if (Facility is null)
+        {
+            NavigationManager.NavigateTo("/Dashboard/M5");
+        }
+        else
+        {
+            Licenses = await context.PrivateFacilityLicenses
+                .Include(license => license.UsersGender)
+                .Where(license => license.FacilityId == Facility!.Id)
+                .OrderByDescending(license => license.ExpireDate)
+                .ToListAsync();
+        }
     }
 
-    private async Task AddFacility()
+    private async Task UpdateFacility()
     {
         context = DbFactory.CreateDbContext();
 
-        Facility.CityId = CityId;
-        Facility.TypeId = TypeId;
+        Facility.City = Cities!.FirstOrDefault(city => city.Id == Facility!.CityId)!;
+        Facility.Type = Types!.FirstOrDefault(city => city.Id == Facility!.TypeId);
+
+        context.Attach(Facility!).State = EntityState.Modified;
 
         try
         {
-            var isExist = context.PrivateFacilities
-                .Any(facility =>
-                    facility.Name == Facility.Name
-                    &&
-                    facility.CityId == Facility.CityId
-                );
-
-            if (isExist)
-            {
-                statusMessageClass = "danger";
-                statusMessage = $"باشگاهی با عنوان {Facility.Name} در شهرستان {Cities!.FirstOrDefault(c => c.Id == CityId)!.PersianName} قبلا ثبت شده است.";
-                return;
-            }
-
-            context.PrivateFacilities.Add(Facility);
             await context.SaveChangesAsync();
-
             statusMessageClass = "success";
-            statusMessage = $"باشگاه {Facility.Name} با موفقیت ثبت شد.";
+            statusMessage = "تغییرات با موفقیت ثبت شد.";
         }
-        catch (Exception ex)
+        catch (DbUpdateConcurrencyException exception)
         {
             statusMessageClass = "danger";
-            statusMessage = ex.InnerException.Message;
+            statusMessage = $"Error: {exception}";
+            return;
         }
 
-        return;
+        NavigationManager.NavigateTo($"/Dashboard/M5/Edit/{Facility!.Id}");
+    }
+
+    private bool FacilityExists(Guid id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.PrivateFacilities.Any(e => e.Id == id);
     }
 }

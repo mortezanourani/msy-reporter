@@ -1,0 +1,102 @@
+﻿@page "/Dashboard/M5/Licenses/Add/{FacilityId:guid}"
+
+@rendermode InteractiveServer
+
+@layout _Layout
+
+<PageTitle>مجوز باشگاه ماده 5</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="License" OnValidSubmit="AddLicense" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+                <input type="hidden" name="License.FacilityId" value="@FacilityId" />
+                <div class="form-checkbox mb-3">
+                    <label for="isbeneficial" class="form-label">
+                        <span class="checked">حقیقی</span>
+                        <span class="unchecked">حقوقی</span>
+                    </label>
+                    <InputCheckbox id="isbeneficial" @bind-Value="IsBeneficial" class="form-check-input" hidden />
+                </div>
+                <div class="form-checkbox mb-3">
+                    <label for="isowner" class="form-label">
+                        <span class="checked">تملیکی</span>
+                        <span class="unchecked">استیجاری</span>
+                    </label>
+                    <InputCheckbox id="isowner" @bind-Value="IsOwner" class="form-check-input" hidden />
+                </div>
+                <div class="form-checkbox mb-3">
+                    <label for="isrenewal" class="form-label">
+                        <span class="checked">تمدید</span>
+                        <span class="unchecked">تاسیس</span>
+                    </label>
+                    <InputCheckbox id="isrenewal" @bind-Value="IsRenewal" class="form-check-input" hidden />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="serial" class="form-label">Serial:</label> 
+                    <InputText id="serial" @bind-Value="License.Serial" class="form-control" />
+                </div>        
+                <div class="form-group mb-3">
+                    <label for="startdate" class="form-label">StartDate:</label>
+                    <InputText id="startdate" @bind-Value="License.StartDate" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="expiredate" class="form-label">ExpireDate:</label>
+                    <InputText id="expiredate" @bind-Value="License.ExpireDate" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="usersgenderid" class="form-label">UsersGenderId:</label>
+                    <InputNumber id="usersgenderid" @bind-Value="License.UsersGenderId" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="mensports" class="form-label">MenSports:</label>
+                    <InputText id="mensports" @bind-Value="License.MenSports" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="womensports" class="form-label">WomenSports:</label>
+                    <InputText id="womensports" @bind-Value="License.WomenSports" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="company" class="form-label">Company:</label>
+                    <InputText id="company" @bind-Value="License.Company" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="License.Name" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="seencode" class="form-label">SeenCode:</label>
+                    <InputText id="seencode" @bind-Value="License.SeenCode" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="phone" class="form-label">Phone:</label>
+                    <InputText id="phone" @bind-Value="License.Phone" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Create</button>
+            </EditForm>
+        </div>
+    </div>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public Guid FacilityId { get; set; }
+
+    private bool IsBeneficial;
+    private bool IsOwner;
+    private bool IsRenewal;
+
+    [SupplyParameterFromForm]
+    private PrivateFacilityLicense License { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddLicense()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.PrivateFacilityLicenses.Add(License);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo($"/Dashboard/M5/Edit/{FacilityId}");
+    }
+}
