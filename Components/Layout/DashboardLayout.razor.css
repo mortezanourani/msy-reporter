@@ -102,3 +102,40 @@
                     border-radius: 0;
                     cursor: default;
                 }
+
+::deep .page-top-menu {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    background: var(--card-bg);
+    box-shadow: var(--card-box-shadow);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    ::deep .page-top-menu .panel-title {
+        margin: 0;
+        padding: 4px 0;
+        font-size: 14px;
+    }
+
+    ::deep .page-top-menu .top-menu-links {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+    }
+
+        ::deep .page-top-menu .top-menu-links .panel-link {
+            margin: 0;
+            padding: 0;
+            font-size: 13px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }

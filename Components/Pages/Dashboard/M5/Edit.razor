@@ -9,7 +9,7 @@
 <PageTitle>ویرایش باشگاه @Facility?.Name @Facility?.City!.PersianName</PageTitle>
 
 <div class="page-top-menu">
-    <h6 class="panel-title">باشگاه @Facility?.Name @Facility?.City!.PersianName</h6>
+    <h6 class="panel-title">باشگاه @Facility?.Name شهرستان @Facility?.City!.PersianName</h6>
 </div>
 
 <AuthorizeView Roles="Administrators" Context="authContext">
@@ -174,18 +174,18 @@
                             <div class="licenses-list">
                                 <QuickGrid Items="Licenses.AsQueryable()" Theme="" Class="licenses-table">
                                     <PropertyColumn Title="سریال مجوز" Property="@(license => license.Serial!)" />
-                                    <PropertyColumn Title="نوع مجوز" Property="@(license => license.IsBeneficial == null ? "نامشخص" : (license.IsBeneficial == true ? "حقیقی" : "حقوقی"))" />
-                                    <PropertyColumn Title="نوع مالکیت" Property="@(license => license.IsOwner == null ? "نامشخص" : (license.IsOwner == true ? "تملیکی" : "استیجاری"))" />
-                                    <PropertyColumn Title="نوع مالکیت ملک" Property="@(license => license.IsRenewal == null ? "نامشخص" : (license.IsOwner == true ? "تمدید" : "تاسیس"))" />
+                                    <PropertyColumn Title="نوع مالکیت مجوز" Property="@(license => license.IsBeneficial == null ? "نامشخص" : (license.IsBeneficial == true ? "حقیقی" : "حقوقی"))" />
+                                    <PropertyColumn Title="نوع مالکیت ملک" Property="@(license => license.IsOwner == null ? "نامشخص" : (license.IsOwner == true ? "تملیکی" : "استیجاری"))" />
+                                    <PropertyColumn Title="نوع مجوز" Property="@(license => license.IsRenewal == null ? "نامشخص" : (license.IsRenewal == true ? "تمدید" : "تاسیس"))" />
                                     <PropertyColumn Title="ارگان / شرکت" Property="@(license => license.Company!)" />
                                     <PropertyColumn Title="تاریخ تاسیس" Property="@(license => license.StartDate!)" />
                                     <PropertyColumn Title="تاریخ انقضا" Property="@(license => license.ExpireDate!)" />
                                     <PropertyColumn Title="نام موسس" Property="@(license => license.Name!)" />
                                     <PropertyColumn Title="کد ملی موسس" Property="@(license => license.SeenCode!)" />
                                     <PropertyColumn Title="شماره همراه موسس" Property="@(license => license.Phone!)" />
-                                    <PropertyColumn Title="مساحت سرپوشیده" Property="@(license => license.UsersGender!.PersianName)" />
+                                    <PropertyColumn Title="جنسیت باشگاه" Property="@(license => license.UsersGender!.PersianName)" />
                                     <TemplateColumn>
-                                        <a class="edit-link" href="/Dashboard/M5/License/Edit/@context.Id">
+                                        <a class="edit-link" href="/Dashboard/M5/Licenses/Edit/@context.Id">
                                             <img src="/icons/note-edit.svg" />
                                         </a>
                                     </TemplateColumn>
@@ -249,8 +249,11 @@
     {
         context = DbFactory.CreateDbContext();
 
-        Facility.City = Cities!.FirstOrDefault(city => city.Id == Facility!.CityId)!;
-        Facility.Type = Types!.FirstOrDefault(city => city.Id == Facility!.TypeId);
+        Facility.City = context.Cities.FirstOrDefault(city => city.Id == Facility!.CityId)!;
+        Facility.Type = context.FacilityTypes.FirstOrDefault(type => type.Id == Facility!.TypeId);
+        Facility.PrivateFacilityLicenses = await context.PrivateFacilityLicenses
+            .Where(license => license.FacilityId == Facility.Id)
+            .ToListAsync();
 
         context.Attach(Facility!).State = EntityState.Modified;
 

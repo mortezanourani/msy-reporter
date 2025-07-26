@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/M5/Licenses/Add/{FacilityId:guid}"
+﻿@page "/Dashboard/M5/Licenses/Edit/{Id:guid}"
 
 @rendermode InteractiveServer
 
@@ -7,9 +7,9 @@
 <PageTitle>مجوز باشگاه ماده 5</PageTitle>
 
 <div class="page-top-menu">
-    <h6 class="panel-title">افزودن پروانه فعالیت جدید @Facility?.Name شهرستان @Facility?.City.PersianName </h6>
+    <h6 class="panel-title">ویرایش پروانه فعالیت باشگاه @License?.Facility.Name شهرستان @License?.Facility.City.PersianName</h6>
     <span class="top-menu-links">
-        <a class="panel-link" href="/Dashboard/M5/Edit/@FacilityId">
+        <a class="panel-link" href="/Dashboard/M5/Edit/@License?.FacilityId">
             بازگشت به صفحه ویرایش باشگاه
         </a>
     </span>
@@ -45,17 +45,17 @@
             </div>
         </div>
         <div class="col2-5 mb-auto">
-            @if (UsersGenders is null)
+            @if (UsersGenders is null || License is null)
             {
                 <Loading CardMode=true />
             }
             else
             {
                 <div class="card p-3">
-                    <EditForm method="post" Model="License" OnValidSubmit="AddLicense" FormName="create" Enhance>
+                    <EditForm method="post" Model="License" OnValidSubmit="UpdateLicense" FormName="edit" Enhance>
                         <DataAnnotationsValidator />
-                        <ValidationSummary class="text-danger" role="alert" />
-                        <input type="hidden" name="License.FacilityId" value="@FacilityId" />
+                        <input type="hidden" name="License.Id" value="@Id" />
+                        <input type="hidden" name="License.FacilityId" value="@License.FacilityId" />
                         <div class="form-row">
                             <div class="form-checkbox mb-3">
                                 <label for="isbeneficial" class="form-label">
@@ -156,6 +156,7 @@
                                 @statusMessage
                             </div>
                         }
+                        <ValidationSummary class="text-danger" role="alert" />
                         <button type="submit" class="btn btn-primary w-100">ثبت</button>
                     </EditForm>
                 </div>
@@ -166,7 +167,7 @@
 
 @code {
     [Parameter]
-    public Guid FacilityId { get; set; }
+    public Guid Id { get; set; }
 
     private bool IsBeneficial;
     private bool IsOwner;
@@ -175,12 +176,11 @@
     private AppDbContext? context { get; set; } = default!;
 
     private List<UsersGender>? UsersGenders;
-    private PrivateFacility? Facility;
 
     private string? statusMessage;
 
     [SupplyParameterFromForm]
-    private PrivateFacilityLicense License { get; set; } = new();
+    private PrivateFacilityLicense? License { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -189,24 +189,41 @@
             .OrderBy(gender => gender.Id)
             .ToListAsync();
 
-        Facility = await context.PrivateFacilities
-            .Include(facility => facility.City)
-            .FirstOrDefaultAsync(facility => facility.Id == FacilityId);
+        License = await context.PrivateFacilityLicenses
+            .Include(license => license.Facility)
+                .ThenInclude(facility => facility.City)
+            .FirstOrDefaultAsync(license => license.Id == Id);
+
+        if (License is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+
+        IsBeneficial = License!.IsBeneficial.GetValueOrDefault();
+        IsOwner = License!.IsOwner.GetValueOrDefault();
+        IsRenewal = License!.IsRenewal.GetValueOrDefault();
     }
 
-    private async Task AddLicense()
+    private async Task UpdateLicense()
     {
-        License.FacilityId = FacilityId;
+        if (License is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+
+        context = DbFactory.CreateDbContext();
+
         License.IsBeneficial = IsBeneficial;
         License.IsOwner = IsOwner;
         License.IsRenewal = IsRenewal;
+        License.UsersGender = context.UsersGenders.FirstOrDefault(gender => gender.Id == License!.UsersGenderId)!;
 
-        context = DbFactory.CreateDbContext();
+        context.Attach(License!).State = EntityState.Modified;
+        
         try
         {
-            context.PrivateFacilityLicenses.Add(License);
             await context.SaveChangesAsync();
-            NavigationManager.NavigateTo($"/Dashboard/M5/Edit/{FacilityId}");
+            NavigationManager.NavigateTo($"/Dashboard/M5/Edit/{License.FacilityId}");
         }
         catch (Exception exception)
         {
