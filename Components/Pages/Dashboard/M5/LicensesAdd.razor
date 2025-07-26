@@ -141,6 +141,12 @@
                                 <InputText id="phone" @bind-Value="License.Phone" class="form-control" placeholder="شماره تماس موسس" />
                             </div>
                         </div>
+                        @if (!string.IsNullOrEmpty(statusMessage))
+                        {
+                            <div class="alert alert-@statusMessageClass" role="alert">
+                                @statusMessage
+                            </div>
+                        }
                         <button type="submit" class="btn btn-primary w-100">ثبت</button>
                     </EditForm>
                 </div>
@@ -161,6 +167,9 @@
 
     private List<UsersGender>? UsersGenders;
 
+    private string? statusMessage;
+    private string? statusMessageClass;
+
     [SupplyParameterFromForm]
     private PrivateFacilityLicense License { get; set; } = new();
 
@@ -172,12 +181,25 @@
             .ToListAsync();
     }
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddLicense()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.PrivateFacilityLicenses.Add(License);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo($"/Dashboard/M5/Edit/{FacilityId}");
+        statusMessage = $"Start...";
+        License.FacilityId = FacilityId;
+        License.IsBeneficial = IsBeneficial;
+        License.IsOwner = IsOwner;
+        License.IsRenewal = IsRenewal;
+
+        context = DbFactory.CreateDbContext();
+        try
+        {
+            context.PrivateFacilityLicenses.Add(License);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo($"/Dashboard/M5/Edit/{FacilityId}");
+        }
+        catch (Exception exception)
+        {
+            statusMessage = exception.InnerException!.Message;
+            return;
+        }
     }
 }
