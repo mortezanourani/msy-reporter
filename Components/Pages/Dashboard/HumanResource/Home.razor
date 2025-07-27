@@ -8,6 +8,14 @@
 
 <AuthorizeView Roles="Administrators" Context="authContext">
 	<Authorized>
+		<div class="page-top-menu">
+			<div class="paginator-search form-group fa">
+				<label class="form-label" for="paginator-search-input">
+					<img src="/icons/search-gray.svg" />
+				</label>
+				<InputText class="form-control" placeholder="جستجوی پرسنل بر اساس نام یا کد ملی" @bind-Value="searchText" @oninput="Search"></InputText>
+			</div>
+		</div>
 		<div class="row">
 			<div class="col1-1">
 				<div class="card employees-list-card">
@@ -30,18 +38,18 @@
 										var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
 										var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
 										<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-												class="btn"
-												aria-current="@AriaCurrentValue(pageIndex - 1)"
-												aria-label="@(pageIndex - 1)"
-												disabled=@((pageIndex <= 0) ? "disabled" : false)>
+										class="btn"
+										aria-current="@AriaCurrentValue(pageIndex - 1)"
+										aria-label="@(pageIndex - 1)"
+										disabled=@((pageIndex <= 0) ? "disabled" : false)>
 											<span class="material-symbols-rounded">chevron_right</span>
 										</button>
 										<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
 										<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
-												class="btn"
-												aria-current="@AriaCurrentValue(pageIndex + 1)"
-												aria-label="@(pageIndex + 1)"
-												disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+										class="btn"
+										aria-current="@AriaCurrentValue(pageIndex + 1)"
+										aria-label="@(pageIndex + 1)"
+										disabled=@((currentPage >= lastPage) ? "disabled" : false)>
 											<span class="material-symbols-rounded">chevron_left</span>
 										</button>
 									}
@@ -83,6 +91,8 @@
 
 	private List<Employee>? Employees;
 
+	private string? searchText;
+
 	protected override async Task OnInitializedAsync()
 	{
 		Employees = null;
@@ -98,6 +108,28 @@
 		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
 	}
 
+	private async Task Search(ChangeEventArgs args)
+	{
+		searchText = args.Value!.ToString();
+		Employees = string.IsNullOrEmpty(searchText)
+			? await context.Employees
+				.Include(employee => employee.Type)
+				.OrderBy(employee => employee.FirstName)
+				.OrderBy(employee => employee.LastName)
+				.ToListAsync()
+			: await context.Employees
+				.Include(employee => employee.Type)
+				.Where(employee => 
+					employee.LastName.Contains(searchText)
+					||
+					employee.FirstName.Contains(searchText)
+					||
+					employee.SeenCode.Contains(searchText))
+				.OrderBy(employee => employee.FirstName)
+				.OrderBy(employee => employee.LastName)
+				.ToListAsync();
+	}
+	
 	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
 
 	private async Task GoToPageAsync(int pageIndex)

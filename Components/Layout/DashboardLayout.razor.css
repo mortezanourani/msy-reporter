@@ -41,7 +41,7 @@
     }
 
         ::deep.dashboard-navbar .nav .nav-item .nav-link.active {
-            border-bottom: 0px solid var(--light-color);
+            border-bottom: 3px solid var(--light-color);
             color: var(--light-color);
             cursor: default;
         }
