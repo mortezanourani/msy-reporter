@@ -106,7 +106,7 @@
                                 <label class="form-label" for="paginator-search-input">
                                     <img src="/icons/search-gray.svg" />
                                 </label>
-                                <InputText class="form-control" placeholder="جستجو" id="paginator-search-input" @bind-Value="searchText" @oninput="SearchName"></InputText>
+                                <InputText class="form-control" placeholder="جستجو بر اساس نام یا نام خانوادگی" id="paginator-search-input" @bind-Value="searchText" @oninput="SearchName"></InputText>
                             </div>
                         </div>
                     </div>
@@ -228,7 +228,11 @@
                 .OrderBy(employee => employee.FirstName)
                 .ToListAsync()
             : await context.Employees
-                .Where(employee => employee.LastName.Contains(searchText))
+                .Where(employee => 
+                    employee.LastName.Contains(searchText)
+                    ||
+                    employee.FirstName.Contains(searchText)
+                )
                 .Where(employee => employee.Courses
                     .All(course => course.Id != Id))
                 .ToListAsync();
