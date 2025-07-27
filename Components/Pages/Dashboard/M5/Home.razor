@@ -10,6 +10,14 @@
 
 <AuthorizeView Roles="Administrators" Context="authContext">
 	<Authorized>
+		<div class="page-top-menu">
+			<div class="paginator-search form-group fa">
+				<label class="form-label" for="paginator-search-input">
+					<img src="/icons/search-gray.svg" />
+				</label>
+				<InputText class="form-control" placeholder=@($"جستجو در باشگاه های ماده 5 شهرستان {City?.PersianName}") id="paginator-search-input" @bind-Value="searchText" @oninput="SearchName"></InputText>
+			</div>
+		</div>
 		<div class="row">
 			<div class="col1-1">
 				<div class="card facilities-list-card">
@@ -61,18 +69,18 @@
 										var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
 										var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
 										<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-												class="btn"
-												aria-current="@AriaCurrentValue(pageIndex - 1)"
-												aria-label="@(pageIndex - 1)"
-												disabled=@((pageIndex <= 0) ? "disabled" : false)>
+										class="btn"
+										aria-current="@AriaCurrentValue(pageIndex - 1)"
+										aria-label="@(pageIndex - 1)"
+										disabled=@((pageIndex <= 0) ? "disabled" : false)>
 											<span class="material-symbols-rounded">chevron_right</span>
 										</button>
 										<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
 										<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
-												class="btn"
-												aria-current="@AriaCurrentValue(pageIndex + 1)"
-												aria-label="@(pageIndex + 1)"
-												disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+										class="btn"
+										aria-current="@AriaCurrentValue(pageIndex + 1)"
+										aria-label="@(pageIndex + 1)"
+										disabled=@((currentPage >= lastPage) ? "disabled" : false)>
 											<span class="material-symbols-rounded">chevron_left</span>
 										</button>
 									}
@@ -101,6 +109,8 @@
 
 	private List<PrivateFacility>? Facilities { get; set; }
 
+	private string? searchText;
+
 	protected override async Task OnInitializedAsync()
 	{
 		context = DbFactory.CreateDbContext();
@@ -111,9 +121,34 @@
 		await UpdateList();
 	}
 
+	private async Task SearchName(ChangeEventArgs args)
+	{
+		searchText = args.Value!.ToString();
+		Facilities = string.IsNullOrEmpty(searchText)
+			? await context.PrivateFacilities
+				.Include(facility => facility.Type)
+				.Include(facility => facility.PrivateFacilityLicenses)
+				.Where(facility => facility.City!.Id == CityId)
+				.OrderBy(facility => facility.Name)
+				.ToListAsync()
+			: await context.PrivateFacilities
+				.Include(facility => facility.Type)
+				.Include(facility => facility.PrivateFacilityLicenses)
+				.Where(facility => facility.City!.Id == CityId)
+				.Where(facility => 
+					facility.Name.Contains(searchText)
+					||
+					facility.PrivateFacilityLicenses
+						.Any(license => license.Name.Contains(searchText))
+				)
+				.OrderBy(facility => facility.Name)
+				.ToListAsync();
+	}
+
 	private async Task UpdateList()
 	{
 		Facilities = null;
+		searchText = string.Empty;
 
 		context = DbFactory.CreateDbContext();
 
