@@ -106,7 +106,7 @@
 	private void SelectYear()
 	{
 		courses = context.Courses
-			.Where(course => course.Year == year)
+			.Where(course => course.Year.Contains(year!))
 			.OrderBy(course => course.Title);
 
 		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
