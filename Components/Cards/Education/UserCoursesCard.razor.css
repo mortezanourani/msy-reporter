@@ -85,6 +85,10 @@
                         justify-content: right;
                     }
 
+                    .user-courses-card .card-body .courses-list ::deep.courses-table thead tr th:last-child .col-title {
+                        justify-content: left;
+                    }
+
             .user-courses-card .card-body .courses-list ::deep.courses-table tbody tr {
                 background: #ffffff;
             }
@@ -110,9 +114,16 @@
                         text-align: right;
                     }
 
+                    .user-courses-card .card-body .courses-list ::deep.courses-table tbody tr td:last-child {
+                        text-align: left;
+                    }
+
     .user-courses-card .card-body .total-hour {
         margin-top: 8px;
-        padding: 12px 8px 0;
+        padding: 12px 12px 0;
         border-top: 1px solid lightgray;
         text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }

@@ -1,0 +1,18 @@
+﻿@page "/Dashboard/HumanResource/Employees/Courses/{EmployeeId:guid}"
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@rendermode InteractiveServer
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+	<div class="row">
+		<div class="col1-1">
+			<UserCoursesCard EmployeeId="@EmployeeId" />
+		</div>
+	</div>
+</AuthorizeView>
+
+@code {
+	[Parameter]
+	public Guid? EmployeeId { get; set; }
+}
