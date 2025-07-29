@@ -45,10 +45,11 @@
 							@if (Insurances is not null)
 							{
 								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="insurance-table">
-									<PropertyColumn Title="تاریخ" Property="@(insured => $"{insured.Year:0000}/{insured.Month:00}")" />
 									<PropertyColumn Title="هیات ورزشی" Property="@(insured => insured.Federation.PersianName)" />
-									<PropertyColumn Title="جنسیت" Property="@(insured => insured.Gender.PersianName)" />
-									<PropertyColumn Title="تعداد ورزشکاران سازمان یافته" Property="@(insured => insured.Count)" />
+									<PropertyColumn Title="تاریخ" Property="@(insured => $"{insured.Year:0000}/{insured.Month:00}")" />
+									<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insured => insured.MenCount)" />
+									<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insured => insured.WomenCount)" />
+									<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insured => insured.MenCount + insured.WomenCount)" />
 									<TemplateColumn>
 										<a class="edit-link" href="/Dashboard/M5/Edit/@context.Id">
 											<img src="/icons/square-edit.svg" />
@@ -87,7 +88,7 @@
 								}
 							</nav>
 							<div class="total">
-								@string.Format("{0} مکان", pagination.TotalItemCount)
+								@($"{pagination.TotalItemCount} هیات ورزشی")
 							</div>
 						</div>
 					</div>
@@ -135,7 +136,6 @@
 
 		Insurances = await context.Insurances
 			.Include(insurance => insurance.City)
-			.Include(insurance => insurance.Gender)
 			.Include(insurance => insurance.Federation)
 			.Where(insurance => insurance.CityId == CityId)
 			.OrderBy(insurance => insurance.Federation.PersianName)

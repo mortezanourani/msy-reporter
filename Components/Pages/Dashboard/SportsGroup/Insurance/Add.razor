@@ -68,14 +68,14 @@
             </div>
         </div>
         <div class="col2-5 mb-auto">
-            @if (Cities is null || Federations is null || Genders is null)
+            @if (Cities is null || Federations is null)
             {
                 <Loading CardMode=true />
             }
             else
             {
                 <div class="card p-3">
-                    <EditForm method="post" Model="Model" OnValidSubmit="AddInsurance" FormName="create" Enhance>
+                    <EditForm method="post" Model="Insurance" OnValidSubmit="AddInsurance" FormName="create" Enhance>
                         <DataAnnotationsValidator />
                         <ValidationSummary class="text-danger" role="alert" />
                         <div class="form-row">
@@ -83,7 +83,7 @@
                                 <label for="cityid" class="form-label">
                                     <img src="/icons/dropdown.svg" />
                                 </label>
-                                <InputSelect id="cityid" @bind-Value="Model.CityId" class="form-control">
+                                <InputSelect id="cityid" @bind-Value="Insurance.CityId" class="form-control">
                                     @foreach (City city in Cities!)
                                     {
                                         <option value="@city.Id">@city.PersianName</option>
@@ -94,7 +94,7 @@
                                 <label for="federationid" class="form-label">
                                     <img src="/icons/dropdown.svg" />
                                 </label>
-                                <InputSelect id="federationid" @bind-Value="Model.FederationId" class="form-control">
+                                <InputSelect id="federationid" @bind-Value="Insurance.FederationId" class="form-control">
                                     @foreach (Federation federation in Federations!)
                                     {
                                         <option value="@federation.Id">@federation.PersianName</option>
@@ -107,7 +107,7 @@
                                 <label for="month" class="form-label">
                                     <img src="/icons/calendar.svg" />
                                 </label>
-                                <InputSelect id="month" @bind-Value="Model.Month" class="form-control">
+                                <InputSelect id="month" @bind-Value="Insurance.Month" class="form-control">
                                     @for(int i = 1; i <= 12; i++)
                                     {
                                         <option value="@i">@($"{i:00}")</option>
@@ -118,7 +118,7 @@
                                 <label for="year" class="form-label">
                                     <img src="/icons/calendar.svg" />
                                 </label>
-                                <InputSelect id="year" @bind-Value="Model.Year" class="form-control">
+                                <InputSelect id="year" @bind-Value="Insurance.Year" class="form-control">
                                     @{
                                         PersianCalendar persianCalendar = new PersianCalendar();
                                         int currentYear = persianCalendar.GetYear(DateTime.Now);
@@ -135,13 +135,13 @@
                                 <label for="mencount" class="form-label">
                                     <img src="/icons/man.svg" />
                                 </label>
-                                <InputNumber id="mencount" @bind-Value="Model.MenCount" class="form-control" />
+                                <InputNumber id="mencount" @bind-Value="Insurance.MenCount" class="form-control" />
                             </div>
                             <div class="form-group en mb-3">
                                 <label for="womencount" class="form-label">
                                     <img src="/icons/woman.svg" />
                                 </label>
-                                <InputNumber id="womencount" @bind-Value="Model.WomenCount" class="form-control" />
+                                <InputNumber id="womencount" @bind-Value="Insurance.WomenCount" class="form-control" />
                             </div>
                         </div>
                         @if (!string.IsNullOrEmpty(statusMessage))
@@ -164,16 +164,12 @@
 
 @code {
     [SupplyParameterFromForm]
-    private InputModel Model { get; set; } = new();
+    private Insurance Insurance { get; set; } = new();
 
     private AppDbContext? context { get; set; } = null!;
 
     private List<City>? Cities;
     private List<Federation>? Federations;
-    private List<Gender>? Genders;
-
-    private Insurance MenInsurance { get; set; } = new();
-    private Insurance WomenInsurance { get; set; } = new();
 
     private string? statusMessage;
     private string? statusMessageClass;
@@ -188,33 +184,13 @@
 
         Federations = await context.Federations
             .ToListAsync();
-
-        Genders = await context.Genders
-            .ToListAsync();
     }
 
     private async Task AddInsurance()
     {
         context = DbFactory.CreateDbContext();
 
-        MenInsurance = new();
-        MenInsurance.GenderId = 1;
-        MenInsurance.CityId = Model.CityId;
-        MenInsurance.FederationId = Model.FederationId;
-        MenInsurance.Month = Model.Month;
-        MenInsurance.Year = Model.Year;
-        MenInsurance.Count = Model.MenCount;
-
-        WomenInsurance = new();
-        WomenInsurance.GenderId = 2;
-        WomenInsurance.CityId = Model.CityId;
-        WomenInsurance.FederationId = Model.FederationId;
-        WomenInsurance.Month = Model.Month;
-        WomenInsurance.Year = Model.Year;
-        WomenInsurance.Count = Model.WomenCount;
-
-        context.Insurances.Add(MenInsurance);
-        context.Insurances.Add(WomenInsurance);
+        context.Insurances.Add(Insurance);
 
         try
         {
@@ -229,15 +205,5 @@
         }
 
         return;
-    }
-
-    private class InputModel
-    {
-        public int CityId { get; set; }
-        public int FederationId { get; set; }
-        public int Month { get; set; }
-        public int Year{ get; set; }
-        public int MenCount { get; set; }
-        public int WomenCount{ get; set; }
     }
 }

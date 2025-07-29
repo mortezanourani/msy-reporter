@@ -11,17 +11,15 @@ public partial class Insurance
 
     public int FederationId { get; set; }
 
-    public int GenderId { get; set; }
-
     public int Year { get; set; }
 
     public int Month { get; set; }
 
-    public int Count { get; set; }
+    public int MenCount { get; set; }
+
+    public int WomenCount { get; set; }
 
     public virtual City City { get; set; } = null!;
 
     public virtual Federation Federation { get; set; } = null!;
-
-    public virtual Gender Gender { get; set; } = null!;
 }

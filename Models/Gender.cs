@@ -16,6 +16,4 @@ public partial class Gender
     public virtual ICollection<Athlete> Athletes { get; set; } = new List<Athlete>();
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
-
-    public virtual ICollection<Insurance> Insurances { get; set; } = new List<Insurance>();
 }

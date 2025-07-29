@@ -327,7 +327,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Insurance>(entity =>
         {
-            entity.HasIndex(e => new { e.CityId, e.FederationId, e.GenderId, e.Year, e.Month }, "IX_Insurances").IsUnique();
+            entity.HasIndex(e => new { e.CityId, e.FederationId, e.Year, e.Month }, "IX_Insurances").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
@@ -337,10 +337,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Federation).WithMany(p => p.Insurances)
                 .HasForeignKey(d => d.FederationId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            entity.HasOne(d => d.Gender).WithMany(p => p.Insurances)
-                .HasForeignKey(d => d.GenderId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
