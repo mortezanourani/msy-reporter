@@ -1,0 +1,243 @@
+﻿@page "/Dashboard/Insurance/Add"
+
+@using Microsoft.EntityFrameworkCore
+@using System.Globalization
+
+<PageTitle>ورزشکاران سازمان یافته</PageTitle>
+
+<div class="page-top-menu">
+    <h6 class="panel-title">ثبت آمار ورزشکاران سازمان یافته</h6>
+</div>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+    <div class="row form-wrapper">
+        <div class="col3-5 mb-0">
+            <div class="instructions">
+                <p class="mb-3">فرم مقابل جهت ثبت اطلاعات باشگاه های ورزشی خصوصی بر اساس پروانه فعالیت صادر شده از سامانه طراحی شده است.</p>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/title-blue.svg">
+                        <h6>عنوان باشگاه:</h6>
+                    </div>
+                    <p>عنوان باشگاه بر اساس پروانه فعالیت صادر شده از درگاه ملی مجوزها</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/verified-blue.svg">
+                        <h6>وضعیت باشگاه:</h6>
+                    </div>
+                    <p>وضعیت فعالیت باشگاه به صورت یک کلید دو حالته قابل تنظیم است.</p>
+                    <p>چنانچه کلید در حالت قرمز باشد به معنی غیرفعال بودن باشگاه خواهد بود، و در صورتی که باشگاه فعال باشد لطفا کلید مربوطه را در وضعیت سبز قرار دهید.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/location-map-blue.svg">
+                        <h6>بخش / روستا:</h6>
+                    </div>
+                    <p>در صورتی که باشگاه مربوطه در بخش یا روستا است لطفا نام بخش یا روستا را وارد نمایید.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/location-blue.svg">
+                        <h6>آدرس پستی:</h6>
+                    </div>
+                    <p>آدرس پستی محل باشگاه ورزشی مربوطه که در گواهی تاییدیه کد پستی درج شده است.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/zipcode-blue.svg">
+                        <h6>کد پستی:</h6>
+                    </div>
+                    <p>کد پستی ده رقمی محل باشگاه یا دفتر باشگاه بر اساس تاییدیه کد پستی ارائه شده بدون خط فاصله و فقط با ده رقم وارد گردد.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/phone-blue.svg">
+                        <h6>شماره تلفن باشگاه:</h6>
+                    </div>
+                    <p>شماره تلفن مربوط به تلفن ثابت باشگاه بوده و ترجیحا به همراه کد استان ثبت گردد.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/area-blue.svg">
+                        <h6>مساحت:</h6>
+                    </div>
+                    <p>مساحت باشگاه در سه بخش مساحت کل (مجموع فضای سرپوشیده و روباز)، مساحت فضای سرپوشیده و مساحت فضای روباز در نظر گرفته شده است.</p>
+                    <p>چنانچه باشگاه فاقد فضای سرپوشیده یا فاقد فضای روباز بوده و مساحت یکی از این دو فضا صفر باشید، فیلد مربوطه می تواند خالی باشد.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col2-5 mb-auto">
+            @if (Cities is null || Federations is null || Genders is null)
+            {
+                <Loading CardMode=true />
+            }
+            else
+            {
+                <div class="card p-3">
+                    <EditForm method="post" Model="Model" OnValidSubmit="AddInsurance" FormName="create" Enhance>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" role="alert" />
+                        <div class="form-row">
+                            <div class="form-group fa mb-3">
+                                <label for="cityid" class="form-label">
+                                    <img src="/icons/dropdown.svg" />
+                                </label>
+                                <InputSelect id="cityid" @bind-Value="Model.CityId" class="form-control">
+                                    @foreach (City city in Cities!)
+                                    {
+                                        <option value="@city.Id">@city.PersianName</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="form-group fa mb-3">
+                                <label for="federationid" class="form-label">
+                                    <img src="/icons/dropdown.svg" />
+                                </label>
+                                <InputSelect id="federationid" @bind-Value="Model.FederationId" class="form-control">
+                                    @foreach (Federation federation in Federations!)
+                                    {
+                                        <option value="@federation.Id">@federation.PersianName</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group en mb-3">
+                                <label for="month" class="form-label">
+                                    <img src="/icons/calendar.svg" />
+                                </label>
+                                <InputSelect id="month" @bind-Value="Model.Month" class="form-control">
+                                    @for(int i = 1; i <= 12; i++)
+                                    {
+                                        <option value="@i">@($"{i:00}")</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="form-group en mb-3">
+                                <label for="year" class="form-label">
+                                    <img src="/icons/calendar.svg" />
+                                </label>
+                                <InputSelect id="year" @bind-Value="Model.Year" class="form-control">
+                                    @{
+                                        PersianCalendar persianCalendar = new PersianCalendar();
+                                        int currentYear = persianCalendar.GetYear(DateTime.Now);
+                                        for(int i = currentYear; i >= currentYear -1; i--)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group en mb-3">
+                                <label for="mencount" class="form-label">
+                                    <img src="/icons/man.svg" />
+                                </label>
+                                <InputNumber id="mencount" @bind-Value="Model.MenCount" class="form-control" />
+                            </div>
+                            <div class="form-group en mb-3">
+                                <label for="womencount" class="form-label">
+                                    <img src="/icons/woman.svg" />
+                                </label>
+                                <InputNumber id="womencount" @bind-Value="Model.WomenCount" class="form-control" />
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(statusMessage))
+                        {
+                            <div class="alert alert-@statusMessageClass" role="alert">
+                                @statusMessage
+                            </div>
+                        }
+                        <button type="submit" class="btn btn-primary w-100">ثبت</button>
+                    </EditForm>
+                </div>
+            }
+        </div>
+    </div>
+</AuthorizeView>
+
+<div>
+    <a href="/insurances">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Model { get; set; } = new();
+
+    private AppDbContext? context { get; set; } = null!;
+
+    private List<City>? Cities;
+    private List<Federation>? Federations;
+    private List<Gender>? Genders;
+
+    private Insurance MenInsurance { get; set; } = new();
+    private Insurance WomenInsurance { get; set; } = new();
+
+    private string? statusMessage;
+    private string? statusMessageClass;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        Cities = await context.Cities
+            .Where(city => city.Id != 0)
+            .ToListAsync();
+
+        Federations = await context.Federations
+            .ToListAsync();
+
+        Genders = await context.Genders
+            .ToListAsync();
+    }
+
+    private async Task AddInsurance()
+    {
+        context = DbFactory.CreateDbContext();
+
+        MenInsurance = new();
+        MenInsurance.GenderId = 1;
+        MenInsurance.CityId = Model.CityId;
+        MenInsurance.FederationId = Model.FederationId;
+        MenInsurance.Month = Model.Month;
+        MenInsurance.Year = Model.Year;
+        MenInsurance.Count = Model.MenCount;
+
+        WomenInsurance = new();
+        WomenInsurance.GenderId = 2;
+        WomenInsurance.CityId = Model.CityId;
+        WomenInsurance.FederationId = Model.FederationId;
+        WomenInsurance.Month = Model.Month;
+        WomenInsurance.Year = Model.Year;
+        WomenInsurance.Count = Model.WomenCount;
+
+        context.Insurances.Add(MenInsurance);
+        context.Insurances.Add(WomenInsurance);
+
+        try
+        {
+            await context.SaveChangesAsync();
+            statusMessageClass = "success";
+            statusMessage = $"اطلاعات وارد شده با موفقیت ثبت شد.";
+        }
+        catch (Exception exception)
+        {
+            statusMessageClass = "danger";
+            statusMessage = $"{exception.InnerException!.Message}";
+        }
+
+        return;
+    }
+
+    private class InputModel
+    {
+        public int CityId { get; set; }
+        public int FederationId { get; set; }
+        public int Month { get; set; }
+        public int Year{ get; set; }
+        public int MenCount { get; set; }
+        public int WomenCount{ get; set; }
+    }
+}

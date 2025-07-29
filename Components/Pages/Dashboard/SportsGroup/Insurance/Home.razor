@@ -1,0 +1,159 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@page "/Dashboard/SportsGroup/Insurance"
+
+@rendermode InteractiveServer
+
+@layout _Layout
+
+<PageTitle>ورزشکاران سازمان یافته</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+	<div class="page-top-menu">
+		@*
+		<div class="paginator-search form-group fa">
+			<label class="form-label" for="paginator-search-input">
+				<img src="/icons/search-gray.svg" />
+			</label>
+			<InputText class="form-control" placeholder=@($"جستجو در باشگاه های ماده 5 شهرستان {City?.PersianName}") id="paginator-search-input" @bind-Value="searchText" @oninput="SearchName"></InputText>
+		</div>
+		*@
+		<div class="top-menu-links">
+			<NavLink class="panel-link" href="/Dashboard/Insurance/Add">ثبت آمار ورزشکاران سازمان یافته</NavLink>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col1-1">
+			<div class="card insurance-list-card">
+				<div class="card-header border-bottom">
+					<h6 class="title">فهرست باشگاه های خصوصی شهرستان @City?.PersianName</h6>
+					<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
+						@foreach (City city in Cities!)
+						{
+							<option value="@city.Id">@city.PersianName</option>
+						}
+					</InputSelect>
+				</div>
+				@if (Insurances is null)
+				{
+					<Loading CardMode=true />
+				}
+				else
+				{
+					<div class="card-body">
+						<div class="insurance-list">
+							@if (Insurances is not null)
+							{
+								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="insurance-table">
+									<PropertyColumn Title="تاریخ" Property="@(insured => $"{insured.Year:0000}/{insured.Month:00}")" />
+									<PropertyColumn Title="هیات ورزشی" Property="@(insured => insured.Federation.PersianName)" />
+									<PropertyColumn Title="جنسیت" Property="@(insured => insured.Gender.PersianName)" />
+									<PropertyColumn Title="تعداد ورزشکاران سازمان یافته" Property="@(insured => insured.Count)" />
+									<TemplateColumn>
+										<a class="edit-link" href="/Dashboard/M5/Edit/@context.Id">
+											<img src="/icons/square-edit.svg" />
+										</a>
+									</TemplateColumn>
+								</QuickGrid>
+							}
+						</div>
+					</div>
+					<div class="card-footer pt-0">
+						<div class="paginator border-top pt-3">
+							<nav role="navigation">
+								@if (pagination.TotalItemCount.HasValue)
+								{
+									var totalPages = pagination.TotalItemCount;
+									var pageIndex = pagination.CurrentPageIndex;
+									var currentPage = pageIndex + 1;
+									var lastPage = pagination.LastPageIndex + 1;
+									var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+									var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+									<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+									class="btn"
+									aria-current="@AriaCurrentValue(pageIndex - 1)"
+									aria-label="@(pageIndex - 1)"
+									disabled=@((pageIndex <= 0) ? "disabled" : false)>
+										<span class="material-symbols-rounded">chevron_right</span>
+									</button>
+									<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+									<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+									class="btn"
+									aria-current="@AriaCurrentValue(pageIndex + 1)"
+									aria-label="@(pageIndex + 1)"
+									disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+										<span class="material-symbols-rounded">chevron_left</span>
+									</button>
+								}
+							</nav>
+							<div class="total">
+								@string.Format("{0} مکان", pagination.TotalItemCount)
+							</div>
+						</div>
+					</div>
+
+				}
+			</div>
+		</div>
+	</div>
+</AuthorizeView>
+
+@code {
+	private AppDbContext context = default!;
+
+	private IQueryable<City>? Cities;
+	private int CityId = 1;
+	private City? City;
+
+	private List<Insurance>? Insurances;
+
+	private string? searchText;
+
+	protected override async Task OnInitializedAsync()
+	{
+		context = DbFactory.CreateDbContext();
+
+		Cities = context.Cities
+			.Where(city => city.Id != 0);
+
+		await UpdateList();
+	}
+
+	private async Task SearchName(ChangeEventArgs args)
+	{
+		searchText = args.Value!.ToString();
+	}
+
+	private async Task UpdateList()
+	{
+		Insurances = null;
+		searchText = string.Empty;
+
+		context = DbFactory.CreateDbContext();
+
+		City = Cities!.FirstOrDefault(c => c.Id == CityId);
+
+		Insurances = await context.Insurances
+			.Include(insurance => insurance.City)
+			.Include(insurance => insurance.Gender)
+			.Include(insurance => insurance.Federation)
+			.Where(insurance => insurance.CityId == CityId)
+			.OrderBy(insurance => insurance.Federation.PersianName)
+			.ToListAsync();
+
+		await pagination.SetCurrentPageIndexAsync(0);
+		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+
+		StateHasChanged();
+	}
+
+	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+	private async Task GoToPageAsync(int pageIndex)
+	{
+		await pagination.SetCurrentPageIndexAsync(pageIndex);
+	}
+
+	private string? AriaCurrentValue(int pageIndex)
+		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;
+}
