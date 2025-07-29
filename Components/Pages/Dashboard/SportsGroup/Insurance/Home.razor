@@ -10,15 +10,13 @@
 
 <AuthorizeView Roles="Administrators" Context="authContext">
 	<div class="page-top-menu">
-		@*
 		<div class="paginator-search form-group fa">
 			<label class="form-label" for="paginator-search-input">
 				<img src="/icons/search-gray.svg" />
 			</label>
-			<InputText class="form-control" placeholder=@($"جستجو در باشگاه های ماده 5 شهرستان {City?.PersianName}") id="paginator-search-input" @bind-Value="searchText" @oninput="SearchName"></InputText>
+			<InputText class="form-control" placeholder=@($"جستجو در آمار ورزشکاران سازمان یافته شهرستان {City?.PersianName} بر اساس هیات ورزشی") id="paginator-search-input" @bind-Value="searchText" @oninput="Search"></InputText>
 		</div>
-		*@
-		<div class="top-menu-links">
+		<div class="top-menu-links justify-content-end">
 			<NavLink class="panel-link" href="/Dashboard/Insurance/Add">ثبت آمار ورزشکاران سازمان یافته</NavLink>
 		</div>
 	</div>
@@ -51,7 +49,7 @@
 									<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insured => insured.WomenCount)" />
 									<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insured => insured.MenCount + insured.WomenCount)" />
 									<TemplateColumn>
-										<a class="edit-link" href="/Dashboard/M5/Edit/@context.Id">
+										<a class="edit-link" href="/Dashboard/Insurance/Edit/@context.Id">
 											<img src="/icons/square-edit.svg" />
 										</a>
 									</TemplateColumn>
@@ -120,9 +118,24 @@
 		await UpdateList();
 	}
 
-	private async Task SearchName(ChangeEventArgs args)
+	private async Task Search(ChangeEventArgs args)
 	{
 		searchText = args.Value!.ToString();
+
+		Insurances = string.IsNullOrEmpty(searchText)
+		? await context.Insurances
+			.Include(insurance => insurance.City)
+			.Include(insurance => insurance.Federation)
+			.Where(insurance => insurance.CityId == CityId)
+			.OrderBy(insurance => insurance.Federation.PersianName)
+			.ToListAsync()
+		: await context.Insurances
+			.Include(insurance => insurance.City)
+			.Include(insurance => insurance.Federation)
+			.Where(insurance => insurance.CityId == CityId)
+			.Where(insurance => insurance.Federation.PersianName.Contains(searchText))
+			.OrderBy(insurance => insurance.Federation.PersianName)
+			.ToListAsync();
 	}
 
 	private async Task UpdateList()

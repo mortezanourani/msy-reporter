@@ -1,4 +1,8 @@
-﻿.insurance-list-card {
+﻿::deep.page-top-menu > * {
+    flex: 1 1 50%;
+}
+
+.insurance-list-card {
     background: none;
     box-shadow: none;
     overflow: visible;
