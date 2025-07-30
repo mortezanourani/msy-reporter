@@ -85,12 +85,19 @@
 									</button>
 								}
 							</nav>
-							<div class="total">
-								@($"{pagination.TotalItemCount} هیات ورزشی")
+							<div class="total border-0 p-0">
+								<div class="total">
+									@($"آقایان: {Insurances!.Sum(insurance => insurance.MenCount)}")
+								</div>
+								<div class="total">
+									@($"بانوان: {Insurances!.Sum(insurance => insurance.WomenCount)}")
+								</div>
+								<div class="total">
+									@($"مجموع: {Insurances!.Sum(insurance => insurance.WomenCount + insurance.MenCount)}")
+								</div>
 							</div>
 						</div>
 					</div>
-
 				}
 			</div>
 		</div>
