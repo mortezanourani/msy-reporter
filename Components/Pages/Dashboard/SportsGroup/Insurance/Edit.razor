@@ -3,6 +3,8 @@
 @using Microsoft.EntityFrameworkCore
 @using System.Globalization
 
+@rendermode InteractiveServer
+
 <PageTitle>ورزشکاران سازمان یافته</PageTitle>
 
 <div class="page-top-menu">
@@ -132,7 +134,7 @@
     public Guid? Id { get; set; }
 
     [SupplyParameterFromForm]
-    private Insurance? Insurance { get; set; } = null!;
+    private Insurance? Insurance { get; set; }
 
     private AppDbContext? context { get; set; } = null!;
 
@@ -163,12 +165,13 @@
         try
         {
             await context.SaveChangesAsync();
-            NavigationManager.NavigateTo($"/Dashboard/SportsGroup/Insurance/List/{Insurance!.CityId}/{Insurance!.FederationId}");
+            statusMessageClass = "success";
+            statusMessage = $"اطلاعات با موفقیت به روز رسانی شد.";
         }
         catch (Exception exception)
         {
             statusMessageClass = "danger";
-            statusMessage = $"{exception.InnerException!.Message}";
+            statusMessage = $"{exception?.InnerException?.Message}";
         }
 
         return;
