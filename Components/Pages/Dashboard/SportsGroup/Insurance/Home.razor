@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNetCore.Components.QuickGrid
+﻿@page "/Dashboard/SportsGroup/Insurance"
 
-@page "/Dashboard/SportsGroup/Insurance"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using System.Globalization
 
 @rendermode InteractiveServer
 
@@ -24,7 +25,7 @@
 		<div class="col1-1">
 			<div class="card insurance-list-card">
 				<div class="card-header border-bottom">
-					<h6 class="title">فهرست باشگاه های خصوصی شهرستان @City?.PersianName</h6>
+					<h6 class="title">آمار ورزشکاران سازمان یافته شهرستان @City?.PersianName</h6>
 					<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
 						@foreach (City city in Cities!)
 						{
@@ -43,14 +44,13 @@
 							@if (Insurances is not null)
 							{
 								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="insurance-table">
-									<PropertyColumn Title="هیات ورزشی" Property="@(insured => insured.Federation.PersianName)" />
-									<PropertyColumn Title="تاریخ" Property="@(insured => $"{insured.Year:0000}/{insured.Month:00}")" />
-									<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insured => insured.MenCount)" />
-									<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insured => insured.WomenCount)" />
-									<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insured => insured.MenCount + insured.WomenCount)" />
+									<PropertyColumn Title="هیات ورزشی" Property="@(insurance => insurance.Key.PersianName)" />
+									<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insurance => insurance.MenCount)" />
+									<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insurance => insurance.WomenCount)" />
+									<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insurance => insurance.MenCount + insurance.WomenCount)" />
 									<TemplateColumn>
-										<a class="edit-link" href="/Dashboard/Insurance/Edit/@context.Id">
-											<img src="/icons/square-edit.svg" />
+										<a class="edit-link" href="/Dashboard/SportsGroup/Insurance/List/@City!.Id/@context.Key.Id">
+											<img src="/icons/calendar-blue.svg" />
 										</a>
 									</TemplateColumn>
 								</QuickGrid>
@@ -111,7 +111,7 @@
 	private int CityId = 1;
 	private City? City;
 
-	private List<Insurance>? Insurances;
+	private List<ViewModel>? Insurances;
 
 	private string? searchText;
 
@@ -129,19 +129,45 @@
 	{
 		searchText = args.Value!.ToString();
 
+		var current = getDateString(DateTime.Today);
+		var old = getDateString(DateTime.Now.AddYears(-1));
 		Insurances = string.IsNullOrEmpty(searchText)
 		? await context.Insurances
 			.Include(insurance => insurance.City)
 			.Include(insurance => insurance.Federation)
 			.Where(insurance => insurance.CityId == CityId)
-			.OrderBy(insurance => insurance.Federation.PersianName)
+			.Where(insurance =>
+				old < insurance.Year * 100 + insurance.Month
+				&&
+				insurance.Year * 100 + insurance.Month <= current
+			)
+			.GroupBy(insurance => insurance.Federation)
+				.Select(group => new ViewModel
+				{
+					Key = group.Key,
+					MenCount = group.Sum(i => i.MenCount),
+					WomenCount = group.Sum(i => i.WomenCount),
+				})
+			.OrderBy(select => select.Key.PersianName)
 			.ToListAsync()
 		: await context.Insurances
 			.Include(insurance => insurance.City)
 			.Include(insurance => insurance.Federation)
 			.Where(insurance => insurance.CityId == CityId)
 			.Where(insurance => insurance.Federation.PersianName.Contains(searchText))
-			.OrderBy(insurance => insurance.Federation.PersianName)
+			.Where(insurance =>
+				old < insurance.Year * 100 + insurance.Month
+				&&
+				insurance.Year * 100 + insurance.Month <= current
+			)
+			.GroupBy(insurance => insurance.Federation)
+				.Select(group => new ViewModel
+					{
+						Key = group.Key,
+						MenCount = group.Sum(i => i.MenCount),
+						WomenCount = group.Sum(i => i.WomenCount),
+					})
+			.OrderBy(select => select.Key.PersianName)
 			.ToListAsync();
 	}
 
@@ -154,11 +180,25 @@
 
 		City = Cities!.FirstOrDefault(c => c.Id == CityId);
 
+		var current = getDateString(DateTime.Today);
+		var old = getDateString(DateTime.Now.AddYears(-1));
 		Insurances = await context.Insurances
 			.Include(insurance => insurance.City)
 			.Include(insurance => insurance.Federation)
 			.Where(insurance => insurance.CityId == CityId)
-			.OrderBy(insurance => insurance.Federation.PersianName)
+			.Where(insurance =>
+				old < insurance.Year * 100 + insurance.Month
+				&&
+				insurance.Year * 100 + insurance.Month <= current
+			)
+			.GroupBy(insurance => insurance.Federation)
+				.Select(group => new ViewModel
+				{
+					Key = group.Key,
+					MenCount = group.Sum(i => i.MenCount),
+					WomenCount = group.Sum(i => i.WomenCount),
+				})
+			.OrderBy(select => select.Key.PersianName)
 			.ToListAsync();
 
 		await pagination.SetCurrentPageIndexAsync(0);
@@ -176,4 +216,19 @@
 
 	private string? AriaCurrentValue(int pageIndex)
 		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;
+
+	private int getDateString(DateTime date)
+	{
+		PersianCalendar pc = new PersianCalendar();
+		var year = pc.GetYear(date);
+		var month = pc.GetMonth(date);
+		return year * 100 + month;
+	}
+
+	private class ViewModel
+	{
+		public Federation Key { get; set; }
+		public int MenCount { get; set; }
+		public int WomenCount { get; set; }
+	}
 }

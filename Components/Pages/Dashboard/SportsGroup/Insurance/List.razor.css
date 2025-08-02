@@ -1,0 +1,106 @@
+﻿::deep.page-top-menu > * {
+    flex: 1 1 50%;
+}
+
+.insurance-list-card {
+    background: none;
+    box-shadow: none;
+    overflow: visible;
+    padding: 0;
+}
+
+    .insurance-list-card .card-header {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+
+    .insurance-list-card .card-body,
+    .insurance-list-card .card-footer {
+        padding: var(--spacing-x);
+        background: var(--card-bg);
+        box-shadow: var(--card-box-shadow);
+    }
+
+        .insurance-list-card .card-body .insurance-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+            .insurance-list-card .card-body .insurance-list ::deep.insurance-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+                .insurance-list-card .card-body .insurance-list ::deep.insurance-table thead tr {
+                    background-color: var(--primary-color);
+                    color: var(--light-color);
+                }
+
+                    .insurance-list-card .card-body .insurance-list ::deep.insurance-table thead tr th {
+                        padding: 12px 12px 8px;
+                        text-align: center;
+                        font-size: 13px;
+                        font-weight: 600;
+                    }
+
+                        .insurance-list-card .card-body .insurance-list ::deep.insurance-table thead tr th .col-title {
+                            justify-content: center;
+                            font-size: 13px;
+                            font-weight: 600;
+                        }
+
+                        .insurance-list-card .card-body .insurance-list ::deep.insurance-table thead tr th:first-child .col-title {
+                            justify-content: right;
+                        }
+
+                .insurance-list-card .card-body .insurance-list ::deep.insurance-table tbody tr {
+                    background: #ffffff;
+                }
+
+                    .insurance-list-card .card-body .insurance-list ::deep.insurance-table tbody tr:nth-child(2n) {
+                        background: var(--light-color);
+                    }
+
+                    .insurance-list-card .card-body .insurance-list ::deep.insurance-table tbody tr:hover {
+                        transform: scale(1.01);
+                        box-shadow: 0 0 8px 0px dimgray;
+                    }
+
+                    .insurance-list-card .card-body .insurance-list ::deep.insurance-table tbody tr td {
+                        padding: 8px 12px;
+                        text-align: center;
+                        font-size: 13px;
+                        font-weight: 400;
+                    }
+
+                        .insurance-list-card .card-body .insurance-list ::deep.insurance-table tbody tr td:first-child {
+                            font-weight: 500;
+                            text-align: right;
+                        }
+
+                        .insurance-list-card .card-body .insurance-list ::deep.insurance-table tbody tr td:last-child {
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: flex-end;
+                            align-items: center;
+                            gap: 16px;
+                        }
+
+                            .insurance-list-card .card-body .insurance-list ::deep.insurance-table tbody tr td:last-child .edit-link {
+                                opacity: 0;
+                            }
+
+                    .insurance-list-card .card-body .insurance-list ::deep.insurance-table tbody tr:hover td:last-child .edit-link {
+                        opacity: 1;
+                    }
+
+    .insurance-list-card .paginator {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        border: none;
+    }

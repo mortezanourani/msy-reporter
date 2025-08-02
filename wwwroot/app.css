@@ -303,7 +303,7 @@ form .form-row {
 
     .form-group .form-control {
         font-size: 14px;
-        padding: 8px 8px 8px 42px;
+        padding: 10px 10px 10px 42px;
         border: 1px solid #a9a9a9;
         height: 100%;
     }
@@ -332,7 +332,7 @@ form .form-row {
 
     .form-group.fa .form-control {
         font-size: 14px;
-        padding: 8px 42px 8px 8px;
+        padding: 10px 42px 10px 10px;
         border: 1px solid #a9a9a9;
         direction: rtl;
         height: 100%;
@@ -352,7 +352,7 @@ form .form-row {
 
     .form-group.en .form-control {
         font-size: 14px;
-        padding: 8px 8px 8px 42px;
+        padding: 10px 10px 10px 42px;
         border: 1px solid #a9a9a9;
         direction: ltr;
         height: 100%;
