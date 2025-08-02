@@ -17,7 +17,7 @@
 	</div>
 	<div class="row">
 		<div class="col1-1">
-			<div class="card insurance-list-card">
+			<div class="card list-card">
 				<div class="card-header border-bottom">
 					<h6 class="title">آمار ورزشکاران سازمان یافته هیات @Federation?.PersianName شهرستان @City?.PersianName</h6>
 				</div>
@@ -28,10 +28,10 @@
 				else
 				{
 					<div class="card-body">
-						<div class="insurance-list">
+						<div class="table-wrapper">
 							@if (Insurances is not null)
 							{
-								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="insurance-table">
+								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
 									<PropertyColumn Title="هیات ورزشی" Property="@(insured => insured.Federation.PersianName)" />
 									<PropertyColumn Title="تاریخ" Property="@(insured => $"{insured.Year:0000}/{insured.Month:00}")" />
 									<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insured => insured.MenCount)" />

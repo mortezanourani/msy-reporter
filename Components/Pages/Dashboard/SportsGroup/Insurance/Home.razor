@@ -23,7 +23,7 @@
 	</div>
 	<div class="row">
 		<div class="col1-1">
-			<div class="card insurance-list-card">
+			<div class="card list-card">
 				<div class="card-header border-bottom">
 					<h6 class="title">آمار ورزشکاران سازمان یافته شهرستان @City?.PersianName</h6>
 					<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
@@ -40,10 +40,10 @@
 				else
 				{
 					<div class="card-body">
-						<div class="insurance-list">
+						<div class="table-wrapper">
 							@if (Insurances is not null)
 							{
-								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="insurance-table">
+								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
 									<PropertyColumn Title="هیات ورزشی" Property="@(insurance => insurance.Key.PersianName)" />
 									<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insurance => insurance.MenCount)" />
 									<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insurance => insurance.WomenCount)" />

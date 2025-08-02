@@ -1,0 +1,214 @@
+﻿@page "/Dashboard/SportsGroup/Federations"
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@layout _Layout
+
+@rendermode InteractiveServer
+
+<PageTitle>هیات های ورزشی</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+	<div class="page-top-menu">
+		<div class="paginator-search form-group fa">
+			<label class="form-label" for="paginator-search-input">
+				<img src="/icons/search-gray.svg" />
+			</label>
+			<InputText class="form-control" placeholder=@($"جستجو در فهرست هیات های ورزشی بر اساس نام هیات") id="paginator-search-input" @bind-Value="searchText" @oninput="Search"></InputText>
+		</div>
+		<div class="top-menu-links justify-content-end">
+			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Federations/Add">ثبت هیات ورزشی</NavLink>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col1-1">
+			<div class="card list-card">
+				<div class="card-header border-bottom">
+					<h6 class="title">فهرست هیات های ورزشی @City?.PersianName</h6>
+					<InputSelect class="select" @bind-Value="cityId" @bind-Value:after="UpdateList">
+						@foreach (City city in Cities!)
+						{
+							<option value="@city.Id">@city.PersianName</option>
+						}
+					</InputSelect>
+				</div>
+				@if (Federations is null)
+				{
+					<Loading CardMode=true />
+				}
+				else
+				{
+					<div class="card-body">
+						@if (Federations is null)
+						{
+							<Loading />
+						}
+						else
+						{
+							<div class="table-wrapper">
+								@if (Federations is not null)
+								{
+									<QuickGrid Pagination="pagination" Items="Federations.AsQueryable()" Theme="" Class="quickgrid-table">
+										<PropertyColumn Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
+										@if (cityId != 0)
+										{
+											<PropertyColumn Title="بخش" Property="@(federation => federation.District)" />
+										}
+										<PropertyColumn Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
+										<PropertyColumn Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name)" />
+										<PropertyColumn Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
+										<TemplateColumn>
+											<a class="edit-link" href="/SportsGroup/Federations/@context.Id">
+												<img src="/icons/square-edit.svg" />
+											</a>
+										</TemplateColumn>
+									</QuickGrid>
+								}
+							</div>
+						}
+					</div>
+					<div class="card-footer pt-0">
+						<div class="paginator border-top pt-3">
+							<nav role="navigation">
+								@if (pagination.TotalItemCount.HasValue)
+								{
+									var totalPages = pagination.TotalItemCount;
+									var pageIndex = pagination.CurrentPageIndex;
+									var currentPage = pageIndex + 1;
+									var lastPage = pagination.LastPageIndex + 1;
+									var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+									var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+									<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+									class="btn"
+									aria-current="@AriaCurrentValue(pageIndex - 1)"
+									aria-label="@(pageIndex - 1)"
+									disabled=@((pageIndex <= 0) ? "disabled" : false)>
+										<span class="material-symbols-rounded">chevron_right</span>
+									</button>
+									<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+									<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+									class="btn"
+									aria-current="@AriaCurrentValue(pageIndex + 1)"
+									aria-label="@(pageIndex + 1)"
+									disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+										<span class="material-symbols-rounded">chevron_left</span>
+									</button>
+								}
+							</nav>
+							<div class="total border-0 p-0">
+								<div class="total">
+									@($"هیات فعال: {activeFederationsCount}")
+								</div>
+								<div class="total">
+									@($"هیات های دارای شناسه: {identifiedFederationsCount}")
+								</div>
+								<div class="total">
+									@($"تعداد احکام سرپرستی: {federationInterimPresidentsCount}")
+								</div>
+							</div>
+						</div>
+
+					</div>
+				}
+
+			</div>
+		</div>
+	</div>
+</AuthorizeView>
+
+@code {
+	private AppDbContext context = default!;
+
+	private int cityId;
+
+	private City? City;
+	private List<City> Cities = new List<City>();
+
+	private List<LocalFederation>? Federations;
+
+	private int activeFederationsCount;
+	private int identifiedFederationsCount;
+	private int federationPresidentsCount;
+	private int federationInterimPresidentsCount;
+
+	private string? searchText;
+
+	protected override async Task OnInitializedAsync()
+	{
+		context = DbFactory.CreateDbContext();
+
+		Cities = await context.Cities.ToListAsync();
+
+		await UpdateList();
+	}
+
+	private async Task Search(ChangeEventArgs args)
+	{
+		searchText = args.Value!.ToString();
+
+		Federations = string.IsNullOrEmpty(searchText)
+			? await context.LocalFederations
+				.Include(federation => federation.City)
+				.Include(federation => federation.Federation)
+				.Include(federation => federation.LocalFederationPresidents)
+				.Where(federation => federation.City!.Id == cityId)
+				.OrderBy(federation => federation.Federation.PersianName)
+				.ToListAsync()
+			: await context.LocalFederations
+				.Include(federation => federation.City)
+				.Include(federation => federation.Federation)
+				.Include(federation => federation.LocalFederationPresidents)
+				.Where(federation => federation.City!.Id == cityId)
+				.Where(federation => federation.Federation.PersianName.Contains(searchText))
+				.OrderBy(federation => federation.Federation.PersianName)
+				.ToListAsync();
+	}
+
+	private async Task UpdateList()
+	{
+		Federations = null;
+
+		context = DbFactory.CreateDbContext();
+
+		City = Cities!.FirstOrDefault(city => city.Id == cityId);
+
+		Federations = await context.LocalFederations
+			.Include(federation => federation.City)
+			.Include(federation => federation.Federation)
+			.Include(federation => federation.LocalFederationPresidents)
+			.Where(federation => federation.City!.Id == cityId)
+			.OrderBy(federation => federation.Federation.PersianName)
+			.ToListAsync();
+
+		activeFederationsCount = Federations!
+			.Count(federation => federation.LocalFederationPresidents.Any());
+
+		identifiedFederationsCount = Federations!
+			.Count(federation => !string.IsNullOrEmpty(federation.NationalId));
+
+		federationPresidentsCount = Federations!
+			.Count(federation => federation.LocalFederationPresidents
+				.OrderByDescending(president => president.AppointmentDate)
+				.FirstOrDefault()!
+				.IsPresident == true);
+
+		federationInterimPresidentsCount = Federations!
+			.Count(federation => federation.LocalFederationPresidents
+				.OrderByDescending(president => president.AppointmentDate)
+				.FirstOrDefault()!
+				.IsPresident == false);
+
+		await pagination.SetCurrentPageIndexAsync(0);
+		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+	}
+
+	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+	private async Task GoToPageAsync(int pageIndex)
+	{
+		await pagination.SetCurrentPageIndexAsync(pageIndex);
+	}
+
+	private string? AriaCurrentValue(int pageIndex)
+		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;
+}
