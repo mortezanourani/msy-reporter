@@ -58,7 +58,7 @@
 										<PropertyColumn Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name)" />
 										<PropertyColumn Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
 										<TemplateColumn>
-											<a class="edit-link" href="/SportsGroup/Federations/@context.Id">
+											<a class="edit-link" href="/Dashboard/SportsGroup/Federations/Edit/@context.Id">
 												<img src="/icons/square-edit.svg" />
 											</a>
 										</TemplateColumn>
