@@ -1,134 +1,173 @@
 ﻿@page "/Dashboard/SportsGroup/Federations/Edit/{Id:guid}"
-@using Microsoft.EntityFrameworkCore
-@using Reporter.Models
-@inject NavigationManager NavigationManager
 
-<PageTitle>Edit</PageTitle>
+@rendermode InteractiveServer
 
-<h1>Edit</h1>
+<PageTitle>هیات ورزشی</PageTitle>
 
-<h2>LocalFederationPresident</h2>
-<hr />
-@if (LocalFederationPresident is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="LocalFederationPresident" OnValidSubmit="UpdateLocalFederationPresident" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
-                <input type="hidden" name="LocalFederationPresident.Id" value="@Id" />
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name:</label>
-                    <InputText id="name" @bind-Value="LocalFederationPresident.Name" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.Name" class="text-danger" />
+<div class="page-top-menu">
+    <h6 class="panel-title">ویرایش هیات ورزشی</h6>
+</div>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+    <div class="row form-wrapper">
+        <div class="col3-5 mb-0">
+            <div class="instructions">
+                <p class="mb-0">در فرم مقابل آمار ورزشکاران سازمان یافته بر اساس هر هیات در هر شهرستان مربوط به ماه مشخصی ثبت می شوند.</p>
+                <p class="mb-3">بدیهی است که آمار مربوطه معادل تعداد ورزشکاران آقا و خانم بیمه شده از ابتدای ماه تا انتهای همان خواهد بود.</p>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/calendar-blue.svg">
+                        <h6>ماه و سال:</h6>
+                    </div>
+                    <p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
+                    <p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
                 </div>
-                <div class="mb-3">
-                    <label for="seencode" class="form-label">SeenCode:</label>
-                    <InputText id="seencode" @bind-Value="LocalFederationPresident.SeenCode" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.SeenCode" class="text-danger" />
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/man-blue.svg">
+                        <h6>تعداد بیمه های ورزشی آقایان:</h6>
+                    </div>
+                    <p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
                 </div>
-                <div class="mb-3">
-                    <label for="birthdate" class="form-label">BirthDate:</label>
-                    <InputText id="birthdate" @bind-Value="LocalFederationPresident.BirthDate" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.BirthDate" class="text-danger" />
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/woman-blue.svg">
+                        <h6>تعداد بیمه های ورزشی بانوان:</h6>
+                    </div>
+                    <p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
                 </div>
-                <div class="mb-3">
-                    <label for="phone" class="form-label">Phone:</label>
-                    <InputText id="phone" @bind-Value="LocalFederationPresident.Phone" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.Phone" class="text-danger" />
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <h6>تذکر:</h6>
+                    </div>
+                    <p>فرم به گونه ای طراحی شده است که پس از ثبت آمار یک هیات در تاریخ مشخصی نیاز به رفرش کردن صفحه نبوده و می توانید دیگر آمارها را نیز وارد نمایید.</p>
+                    <p>همچنین چنانچه تعداد ورزشکاران سازمان یافته هیات مربوطه برای ماه و سال انتخاب شده در فرم قبلا ثبت شده باشد، خطایی در خصوص عدم امکان ثبت اطلاعات جدید، نمایش داده خواهد شد.</p>
                 </div>
-                <div class="mb-3">
-                    <label for="educationalqualification" class="form-label">EducationalQualification:</label>
-                    <InputText id="educationalqualification" @bind-Value="LocalFederationPresident.EducationalQualification" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.EducationalQualification" class="text-danger" />
+            </div>
+        </div>
+        <div class="col2-5 mb-auto">
+            @if (LocalFederation is null)
+            {
+                <Loading CardMode=true />
+            }
+            else
+            {
+                <div class="card p-3">
+                    <EditForm method="post" Model="LocalFederation" OnValidSubmit="UpdateLocalFederation" FormName="edit" Enhance>
+                        <DataAnnotationsValidator />
+                        <input type="hidden" name="LocalFederation.Id" value="@LocalFederation!.Id" />
+                        <input type="hidden" name="LocalFederation.FederationId" value="@LocalFederation!.FederationId" />
+                        <input type="hidden" name="LocalFederation.CityId" value="@LocalFederation!.CityId" />
+                        <input type="hidden" name="LocalFederation.District" value="@LocalFederation!.District" />
+                        <div class="form-group fa mb-3">
+                            <label for="federationid" class="form-label">
+                                <img src="/icons/dropdown.svg" />
+                            </label>
+                            <div class="form-control">
+                                @LocalFederation!.Federation?.PersianName
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group fa mb-3">
+                                <label for="cityid" class="form-label">
+                                    <img src="/icons/dropdown.svg" />
+                                </label>
+                                <div class="form-control">
+                                    @LocalFederation!.City?.PersianName
+                                </div>
+                            </div>
+                            <div class="form-group fa mb-3">
+                                <label for="district" class="form-label">
+                                    <img src="/icons/location-map.svg" />
+                                </label>
+                                <div class="form-control">
+                                    @LocalFederation!.District
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group en mb-3">
+                            <label for="nationalid" class="form-label">
+                                <img src="/icons/qrcode.svg" />
+                            </label>
+                            <InputText id="nationalid" @bind-Value="LocalFederation.NationalId" class="form-control" placeholder="شناسه ملی هیات" />
+                        </div>
+                        <hr />
+                        <div class="form-group fa mb-3">
+                            <label for="address" class="form-label">
+                                <img src="/icons/location.svg" />
+                            </label>
+                            <InputText id="address" @bind-Value="LocalFederation.Address" class="form-control" placeholder="آدرس دفتر هیات" />
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group en mb-3">
+                                <label for="zipcode" class="form-label">
+                                    <img src="/icons/zipcode.svg" />
+                                </label>
+                                <InputText id="zipcode" @bind-Value="LocalFederation.ZipCode" class="form-control" placeholder="کد پستی دفتر هیات" />
+                            </div>
+                            <div class="form-group en mb-3">
+                                <label for="phone" class="form-label">
+                                    <img src="/icons/phone.svg" />
+                                </label>
+                                <InputText id="phone" @bind-Value="LocalFederation.Phone" class="form-control" placeholder="تلفن دفتر هیات" />
+                            </div>
+                        </div>
+                        <ValidationSummary class="text-danger" role="alert" />
+                        @if (!string.IsNullOrEmpty(statusMessage))
+                        {
+                            <div class="alert alert-@statusMessageClass" role="alert">
+                                @statusMessage
+                            </div>
+                        }
+                        <button type="submit" class="btn btn-primary w-100">به روز رسانی</button>
+                    </EditForm>
                 </div>
-                <div class="mb-3">
-                    <label for="educationalmajor" class="form-label">EducationalMajor:</label>
-                    <InputText id="educationalmajor" @bind-Value="LocalFederationPresident.EducationalMajor" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.EducationalMajor" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="appointmentorder" class="form-label">AppointmentOrder:</label>
-                    <InputText id="appointmentorder" @bind-Value="LocalFederationPresident.AppointmentOrder" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.AppointmentOrder" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="appointmentdate" class="form-label">AppointmentDate:</label>
-                    <InputText id="appointmentdate" @bind-Value="LocalFederationPresident.AppointmentDate" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.AppointmentDate" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="termend" class="form-label">TermEnd:</label>
-                    <InputText id="termend" @bind-Value="LocalFederationPresident.TermEnd" class="form-control" />
-                    <ValidationMessage For="() => LocalFederationPresident.TermEnd" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="ispresident" class="form-label">IsPresident:</label>
-                    <InputCheckbox id="ispresident" @bind-Value="LocalFederationPresident.IsPresident" class="form-check-input" />
-                    <ValidationMessage For="() => LocalFederationPresident.IsPresident" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Update</button>
-            </EditForm>
+            }
         </div>
     </div>
-}
-
-<div>
-    <a href="/Federations/@LocalFederationPresident?.FederationId">Back to Local Federation</a>
-</div>
+</AuthorizeView>
 
 @code {
     [Parameter]
-    public Guid Id { get; set; }
+    public Guid? Id { get; set; }
 
     [SupplyParameterFromForm]
-    private LocalFederationPresident? LocalFederationPresident { get; set; }
+    private LocalFederation? LocalFederation { get; set; } = null!;
+
+    private AppDbContext? context { get; set; } = null!;
+
+    private string? statusMessage;
+    private string? statusMessageClass = "success";
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        LocalFederationPresident ??= await context.LocalFederationPresidents
-            .FirstOrDefaultAsync(m => m.Id == Id);
+        context = DbFactory.CreateDbContext();
 
-        if (LocalFederationPresident is null)
-        {
-            NavigationManager.NavigateTo("notfound");
-        }
+        LocalFederation ??= await context.LocalFederations
+            .Include(federation => federation.City)
+            .Include(federation => federation.Federation)
+            .Include(federation => federation.LocalFederationPresidents)
+            .FirstOrDefaultAsync(federation => federation.Id == Id);
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
-    private async Task UpdateLocalFederationPresident()
+    private async Task UpdateLocalFederation()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Attach(LocalFederationPresident!).State = EntityState.Modified;
+        context = DbFactory.CreateDbContext();
+
+        context.Attach(LocalFederation!).State = EntityState.Modified;
 
         try
         {
             await context.SaveChangesAsync();
+            statusMessageClass = "success";
+            statusMessage = $"اطلاعات با موفقیت به روز رسانی شد.";
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception exception)
         {
-            if (!LocalFederationPresidentExists(LocalFederationPresident!.Id))
-            {
-                NavigationManager.NavigateTo("notfound");
-            }
-            else
-            {
-                throw;
-            }
+            statusMessageClass = "danger";
+            statusMessage = $"{exception?.InnerException?.Message}";
         }
 
-        NavigationManager.NavigateTo("/Federations/" + LocalFederationPresident.FederationId);
-    }
-
-    private bool LocalFederationPresidentExists(Guid id)
-    {
-        using var context = DbFactory.CreateDbContext();
-        return context.LocalFederationPresidents.Any(e => e.Id == id);
+        return;
     }
 }

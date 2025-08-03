@@ -55,8 +55,14 @@
 											<PropertyColumn Title="بخش" Property="@(federation => federation.District)" />
 										}
 										<PropertyColumn Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
-										<PropertyColumn Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name)" />
-										<PropertyColumn Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست")" />
+										<PropertyColumn Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents!.Count > 0 
+											? federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name
+											: string.Empty
+											)" />
+										<PropertyColumn Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents!.Count > 0
+											? federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست"
+											: string.Empty
+											)" />
 										<TemplateColumn>
 											<a class="edit-link" href="/Dashboard/SportsGroup/Federations/Edit/@context.Id">
 												<img src="/icons/square-edit.svg" />
@@ -187,16 +193,24 @@
 			.Count(federation => !string.IsNullOrEmpty(federation.NationalId));
 
 		federationPresidentsCount = Federations!
-			.Count(federation => federation.LocalFederationPresidents
-				.OrderByDescending(president => president.AppointmentDate)
-				.FirstOrDefault()!
-				.IsPresident == true);
+			.Count(federation => 
+				federation.LocalFederationPresidents.Count > 0
+				&&
+				federation.LocalFederationPresidents
+					.OrderByDescending(president => president.AppointmentDate)
+					.FirstOrDefault()!
+					.IsPresident == true
+			);
 
 		federationInterimPresidentsCount = Federations!
-			.Count(federation => federation.LocalFederationPresidents
-				.OrderByDescending(president => president.AppointmentDate)
-				.FirstOrDefault()!
-				.IsPresident == false);
+			.Count(federation => 
+				federation.LocalFederationPresidents.Count > 0
+				&&
+				federation.LocalFederationPresidents
+					.OrderByDescending(president => president.AppointmentDate)
+					.FirstOrDefault()!
+					.IsPresident == false
+			);
 
 		await pagination.SetCurrentPageIndexAsync(0);
 		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
