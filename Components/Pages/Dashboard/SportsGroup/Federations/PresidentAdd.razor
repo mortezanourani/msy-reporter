@@ -116,6 +116,12 @@
                         </div>
                     </div>
                     <ValidationSummary class="text-danger" role="alert" />
+                    @if (!string.IsNullOrEmpty(statusMessage))
+                    {
+                        <div class="alert alert-@statusMessageClass" role="alert">
+                            @statusMessage
+                        </div>
+                    }
                     <button type="submit" class="btn btn-primary w-100">ثبت</button>
                 </EditForm>
             </div>
@@ -130,12 +136,28 @@
     [SupplyParameterFromForm]
     private LocalFederationPresident LocalFederationPresident { get; set; } = new();
 
+    private AppDbContext? context { get; set; } = default!;
+
+    private string? statusMessage;
+    private string? statusMessageClass;
+
     private async Task AddPresident()
     {
-        using var context = DbFactory.CreateDbContext();
+        context = DbFactory.CreateDbContext();
+
         LocalFederationPresident.FederationId = Id;
         context.LocalFederationPresidents.Add(LocalFederationPresident);
-        await context.SaveChangesAsync();
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (Exception exception)
+        {
+            statusMessageClass = "danger";
+            statusMessage = $"{exception.InnerException!.Message}";
+            return;
+        }
+
         NavigationManager.NavigateTo("/Dashboard/SportsGroup/Federations/Edit/" + LocalFederationPresident.FederationId);
     }
 }
