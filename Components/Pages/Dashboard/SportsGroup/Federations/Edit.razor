@@ -6,11 +6,13 @@
 
 <PageTitle>هیات ورزشی</PageTitle>
 
-<div class="page-top-menu">
-    <h6 class="panel-title">ویرایش هیات ورزشی</h6>
-</div>
-
 <AuthorizeView Roles="Administrators" Context="authContext">
+    <div class="page-top-menu">
+        <h6 class="panel-title">ویرایش هیات ورزشی</h6>
+        <div class="top-menu-links justify-content-end">
+            <NavLink class="panel-link" href=@($"/Dashboard/SportsGroup/Federations/President/Add/{Id}")>ثبت اطلاعات تصدی جدید</NavLink>
+        </div>
+    </div>
     <div class="row form-wrapper">
         <div class="col3-5 mb-0">
             <div class="instructions">
@@ -168,6 +170,7 @@
                         <PropertyColumn Title="نام و نام خانوداگی" Property="@(president => president.Name)" />
                         <PropertyColumn Title="کد ملی" Property="@(president => president.SeenCode)" />
                         <PropertyColumn Title="شماره همراه" Property="@(president => president.Phone)" />
+                        <PropertyColumn Title="وضعیت تصدی" Property="@(president => president.IsPresident ? "رئیس" : "سرپرست")" />
                         <PropertyColumn Title="آغاز تصدی" Property="@(president => president.AppointmentDate)" />
                         <PropertyColumn Title="اتمام تصدی" Property="@(president => president.TermEnd)" />
                         <TemplateColumn>
@@ -178,12 +181,6 @@
                     </QuickGrid>
                 }
             </div>
-            @*
-                <a class="edit-link" href="/Dashboard/HumanResource/Federations/Presidents/Edit/@context.">
-                    <img src="/icons/course-users.svg" />
-                    ویرایش شرکت کنندگان در دوره
-                </a>
-                *@
         </div>
     </div>
 </AuthorizeView>
