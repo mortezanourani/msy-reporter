@@ -118,7 +118,7 @@
                     <ValidationSummary class="text-danger" role="alert" />
                     @if (!string.IsNullOrEmpty(statusMessage))
                     {
-                        <div class="alert alert-@statusMessageClass" role="alert">
+                        <div class="alert alert-danger" role="alert">
                             @statusMessage
                         </div>
                     }
@@ -139,7 +139,6 @@
     private AppDbContext? context { get; set; } = default!;
 
     private string? statusMessage;
-    private string? statusMessageClass;
 
     private async Task AddPresident()
     {
@@ -153,7 +152,6 @@
         }
         catch (Exception exception)
         {
-            statusMessageClass = "danger";
             statusMessage = $"{exception.InnerException!.Message}";
             return;
         }

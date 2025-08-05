@@ -174,7 +174,7 @@
                         <PropertyColumn Title="آغاز تصدی" Property="@(president => president.AppointmentDate)" />
                         <PropertyColumn Title="اتمام تصدی" Property="@(president => president.TermEnd)" />
                         <TemplateColumn>
-                            <a class="edit-link" href="/Dashboard/SportsGroup/Federations/Presidents/Edit/@context.Id">
+                            <a class="edit-link" href="/Dashboard/SportsGroup/Federations/President/Edit/@context.Id">
                                 <img src="/icons/user-edit.svg" />
                             </a>
                         </TemplateColumn>
@@ -211,7 +211,7 @@
 
         Presidents ??= await context.LocalFederationPresidents
             .Where(president => president.Federation.Id == Id)
-            .OrderBy(president => president.AppointmentDate)
+            .OrderByDescending(president => president.AppointmentDate)
             .ToListAsync();
 
         pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
