@@ -39,39 +39,29 @@
 				else
 				{
 					<div class="card-body">
-						@if (Federations is null)
-						{
-							<Loading />
-						}
-						else
-						{
-							<div class="table-wrapper">
-								@if (Federations is not null)
+						<div class="table-wrapper">
+							<QuickGrid Pagination="pagination" Items="Federations.AsQueryable()" Theme="" Class="quickgrid-table">
+								<PropertyColumn Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
+								@if (cityId != 0)
 								{
-									<QuickGrid Pagination="pagination" Items="Federations.AsQueryable()" Theme="" Class="quickgrid-table">
-										<PropertyColumn Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
-										@if (cityId != 0)
-										{
-											<PropertyColumn Title="بخش" Property="@(federation => federation.District)" />
-										}
-										<PropertyColumn Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
-										<PropertyColumn Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents!.Count > 0 
-											? federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name
-											: string.Empty
-											)" />
-										<PropertyColumn Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents!.Count > 0
-											? federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست"
-											: string.Empty
-											)" />
-										<TemplateColumn>
-											<a class="edit-link" href="/Dashboard/SportsGroup/Federations/Edit/@context.Id">
-												<img src="/icons/square-edit.svg" />
-											</a>
-										</TemplateColumn>
-									</QuickGrid>
+									<PropertyColumn Title="بخش" Property="@(federation => federation.District)" />
 								}
-							</div>
-						}
+								<PropertyColumn Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
+								<PropertyColumn Title="رئیس / سرپرست" Property="@(federation => federation.LocalFederationPresidents!.Count > 0 
+									? federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.Name
+									: string.Empty
+									)" />
+								<PropertyColumn Title="نوع حکم" Property="@(federation => federation.LocalFederationPresidents!.Count > 0
+									? federation.LocalFederationPresidents.OrderByDescending(p => p.AppointmentDate).FirstOrDefault()!.IsPresident ? "رئیس" : "سرپرست"
+									: string.Empty
+									)" />
+								<TemplateColumn>
+									<a class="edit-link" href="/Dashboard/SportsGroup/Federations/Edit/@context.Id">
+										<img src="/icons/square-edit.svg" />
+									</a>
+								</TemplateColumn>
+							</QuickGrid>
+						</div>
 					</div>
 					<div class="card-footer pt-0">
 						<div class="paginator border-top pt-3">

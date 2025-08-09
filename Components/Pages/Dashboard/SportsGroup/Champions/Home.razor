@@ -1,0 +1,241 @@
+﻿@page "/Dashboard/SportsGroup/Champions"
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@layout _Layout
+
+@rendermode InteractiveServer
+
+<PageTitle>ورزش قهرمانی</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+	<div class="page-top-menu">
+		<div class="paginator-search form-group fa">
+			<label class="form-label" for="paginator-search-input">
+				<img src="/icons/search-gray.svg" />
+			</label>
+			<InputText class="form-control" placeholder=@($"جستجو براساس عنوان، سطح یا محل برگزاری مسابقات") id="paginator-search-input" @bind-Value="searchText" @oninput="Search"></InputText>
+		</div>
+		<div class="top-menu-links justify-content-end">
+			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Champions/Tournament/Add">ثبت مسابقه ورزشی</NavLink>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col1-1">
+			<div class="card list-card">
+				<div class="card-header border-bottom">
+					<h6 class="title">اعزام به مسابقات ورزشی در سال @Year</h6>
+					<InputSelect class="select" @bind-Value="Year" @bind-Value:after="UpdateList">
+						@foreach (int year in Years!)
+						{
+							<option value="@year">@year</option>
+						}
+					</InputSelect>
+				</div>
+				@if (Tournaments is null)
+				{
+					<Loading CardMode=true />
+				}
+				else
+				{
+					<div class="card-body">
+						<div class="table-wrapper">
+							<QuickGrid Pagination="pagination" Items="Tournaments!.AsQueryable()" Theme="" Class="quickgrid-table">
+								<PropertyColumn Title="عنوان مسابقات" Property="@(tournament => $"{tournament.Level.PersianTitle} {tournament.Sport}")" />
+								<PropertyColumn Title="محل برگزاری" Property="@(tournament => tournament.Host)" />
+								<PropertyColumn Title="تاریخ مسابقات" Property="@(tournament => TournamentDate(tournament))" />
+								<PropertyColumn Title="تعداد اعزام شدگان" Property="@(tournament => tournament.Champions.Count())" />
+								<PropertyColumn Title="تعداد مدال آور" Property="@(tournament => tournament.Champions.Count(champion => champion.MedalsCount > 0))" />
+								<PropertyColumn Title="تعداد مدال" Property="@(tournament => tournament.Champions.Sum(champion => champion.MedalsCount))" />
+								<TemplateColumn>
+									<a class="edit-link" href="/Dashboard/SportsGroup/Champions/Tournament/Edit/@context.Id">
+										<img src="/icons/square-edit.svg" />
+									</a>
+								</TemplateColumn>
+							</QuickGrid>
+						</div>
+					</div>
+					<div class="card-footer pt-0">
+						<div class="paginator border-top pt-3">
+							<nav role="navigation">
+								@if (pagination.TotalItemCount.HasValue)
+								{
+									var totalPages = pagination.TotalItemCount;
+									var pageIndex = pagination.CurrentPageIndex;
+									var currentPage = pageIndex + 1;
+									var lastPage = pagination.LastPageIndex + 1;
+									var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+									var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+									<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+									class="btn"
+									aria-current="@AriaCurrentValue(pageIndex - 1)"
+									aria-label="@(pageIndex - 1)"
+									disabled=@((pageIndex <= 0) ? "disabled" : false)>
+										<span class="material-symbols-rounded">chevron_right</span>
+									</button>
+									<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+									<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+									class="btn"
+									aria-current="@AriaCurrentValue(pageIndex + 1)"
+									aria-label="@(pageIndex + 1)"
+									disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+										<span class="material-symbols-rounded">chevron_left</span>
+									</button>
+								}
+							</nav>
+							<div class="total border-0 p-0">
+								<div class="total">
+									@($"اعزام شدگان: {athletesCount}")
+								</div>
+								<div class="total">
+									@($"مدال آوران: {championsCount}")
+								</div>
+								<div class="total">
+									@($"مدال ها: {medalsCount}")
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</AuthorizeView>
+
+@code {
+	private AppDbContext? context = default!;
+
+	private List<int>? Years = new List<int>();
+	private int Year;
+
+	private List<Tournament>? Tournaments;
+
+	private int athletesCount;
+	private int championsCount;
+	private int medalsCount;
+
+	private string? searchText;
+
+	protected override async Task OnInitializedAsync()
+	{
+		context = DbFactory.CreateDbContext();
+
+		Years = await context.Tournaments
+			.GroupBy(tournament => tournament.Year)
+			.OrderByDescending(group => group.Key)
+			.Select(group => group.Key)
+			.ToListAsync();
+
+		Year = Years.FirstOrDefault();
+
+		await UpdateList();
+	}
+
+	private async Task Search(ChangeEventArgs args)
+	{
+		searchText = args.Value!.ToString();
+
+		Tournaments = await context.Tournaments
+			.Include(tournament => tournament.Level)
+			.Include(tournament => tournament.Champions)
+				.ThenInclude(champion => champion.Athlete)
+			.Include(tournament => tournament.Federation)
+			.Where(tournament => 
+				tournament.Year == Year
+				&&
+				(tournament.Host.Contains(searchText!)
+				||
+				tournament.Level.PersianTitle.Contains(searchText!)
+				||
+				tournament.Federation.PersianName.Contains(searchText!)
+				||
+				tournament.Sport!.Contains(searchText!)))
+			.OrderBy(tournament => tournament.Day!)
+			.OrderBy(tournament => tournament.Month!)
+			.ToListAsync();
+
+		athletesCount = Tournaments
+			.SelectMany(tournament => tournament.Champions)
+			.Select(champion => champion.Athlete)
+			.DistinctBy(athlete => athlete.Id)
+			.Count();
+
+		championsCount = Tournaments
+			.SelectMany(tournament => tournament.Champions
+				.Where(champion => champion.MedalsCount > 0))
+			.Select(champion => champion.Athlete)
+			.DistinctBy(athlete => athlete.Id)
+			.Count();
+
+		medalsCount = Tournaments
+			.Sum(tournament => tournament.Champions
+				.Sum(champion => champion.MedalsCount)!
+				.Value);
+	}
+
+	private async Task UpdateList()
+	{
+		Tournaments = null;
+		searchText = string.Empty;
+
+		context = DbFactory.CreateDbContext();
+
+		Tournaments = await context.Tournaments
+			.Include(tournament => tournament.Level)
+			.Include(tournament => tournament.Champions)
+				.ThenInclude(champion => champion.Athlete)
+			.Include(tournament => tournament.Federation)
+			.Where(tournament => tournament.Year == Year)
+			.OrderBy(tournament => tournament.Day!)
+			.OrderBy(tournament => tournament.Month!)
+			.ToListAsync();
+
+		athletesCount = Tournaments
+			.SelectMany(tournament => tournament.Champions)
+			.Select(champion => champion.Athlete)
+			.DistinctBy(athlete => athlete.Id)
+			.Count();
+
+		championsCount = Tournaments
+			.SelectMany(tournament => tournament.Champions
+				.Where(champion => champion.MedalsCount > 0))
+			.Select(champion => champion.Athlete)
+			.DistinctBy(athlete => athlete.Id)
+			.Count();
+
+		medalsCount = Tournaments
+			.Sum(tournament => tournament.Champions
+				.Sum(champion => champion.MedalsCount)!
+				.Value);
+
+		await pagination.SetCurrentPageIndexAsync(0);
+		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+	}
+
+	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+	private async Task GoToPageAsync(int pageIndex)
+	{
+		await pagination.SetCurrentPageIndexAsync(pageIndex);
+	}
+
+	private string? AriaCurrentValue(int pageIndex)
+		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;
+
+	private string TournamentDate(Tournament tournament)
+	{
+		string date = $"{tournament.Year:0000}";
+		
+		if (tournament.Month is not null)
+		{
+			date += $"/{tournament.Month:00}";
+		}
+
+		if(tournament.Day is not null)
+		{
+			date += $"/{tournament.Day:00}";
+		}
+
+		return date;
+	}
+}
