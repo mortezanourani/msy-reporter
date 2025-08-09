@@ -12,7 +12,7 @@
 <AuthorizeView Roles="Administrators" Context="authContext">
 	<div class="page-top-menu">
 		<div class="top-menu-links justify-content-end">
-			<NavLink class="panel-link" href="/Dashboard/Insurance/Add">ثبت آمار ورزشکاران سازمان یافته</NavLink>
+			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Insurance/Add">ثبت آمار ورزشکاران سازمان یافته</NavLink>
 		</div>
 	</div>
 	<div class="row">
@@ -38,7 +38,7 @@
 									<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insured => insured.WomenCount)" />
 									<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insured => insured.MenCount + insured.WomenCount)" />
 									<TemplateColumn>
-										<a class="edit-link" href="/Dashboard/Insurance/Edit/@context.Id">
+										<a class="edit-link" href="/Dashboard/SportsGroup/Insurance/Edit/@context.Id">
 											<img src="/icons/square-edit.svg" />
 										</a>
 									</TemplateColumn>
