@@ -1,0 +1,185 @@
+﻿@page "/Dashboard/SportsGroup/Champions/Tournament/Edit/{Id:guid}"
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@layout _Layout
+
+@rendermode InteractiveServer
+
+<PageTitle>ورزش قهرمانی</PageTitle>
+
+<AuthorizeView Roles="Administrators" Context="authContext">
+	<div class="page-top-menu">
+		<div class="top-menu-links justify-content-end">
+			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Champions/Tournament/Add">ثبت مسابقه ورزشی</NavLink>
+		</div>
+	</div>
+	<div class="row form-wrapper">
+		<div class="col3-5 mb-0">
+			<div class="instructions">
+				<p class="mb-0">در فرم مقابل آمار ورزشکاران سازمان یافته بر اساس هر هیات در هر شهرستان مربوط به ماه مشخصی ثبت می شوند.</p>
+				<p class="mb-3">بدیهی است که آمار مربوطه معادل تعداد ورزشکاران آقا و خانم بیمه شده از ابتدای ماه تا انتهای همان خواهد بود.</p>
+				<div class="instruction-item">
+					<div class="icon-title mb-2">
+						<img src="/icons/calendar-blue.svg">
+						<h6>ماه و سال:</h6>
+					</div>
+					<p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
+					<p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+				</div>
+				<div class="instruction-item">
+					<div class="icon-title mb-2">
+						<img src="/icons/man-blue.svg">
+						<h6>تعداد بیمه های ورزشی آقایان:</h6>
+					</div>
+					<p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+				</div>
+				<div class="instruction-item">
+					<div class="icon-title mb-2">
+						<img src="/icons/woman-blue.svg">
+						<h6>تعداد بیمه های ورزشی بانوان:</h6>
+					</div>
+					<p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+				</div>
+				<div class="instruction-item">
+					<div class="icon-title mb-2">
+						<h6>تذکر:</h6>
+					</div>
+					<p>فرم به گونه ای طراحی شده است که پس از ثبت آمار یک هیات در تاریخ مشخصی نیاز به رفرش کردن صفحه نبوده و می توانید دیگر آمارها را نیز وارد نمایید.</p>
+					<p>همچنین چنانچه تعداد ورزشکاران سازمان یافته هیات مربوطه برای ماه و سال انتخاب شده در فرم قبلا ثبت شده باشد، خطایی در خصوص عدم امکان ثبت اطلاعات جدید، نمایش داده خواهد شد.</p>
+				</div>
+			</div>
+		</div>
+		<div class="col2-5 mb-auto">
+			@if (Tournament is null)
+			{
+				<Loading CardMode=true />
+			}
+			else
+			{
+				<div class="card">
+					<div class="card-body">
+						<EditForm method="post" Model="Tournament" OnValidSubmit="UpdateTournament" FormName="edit" Enhance>
+							<input type="hidden" name="Tournament.Id" value="@Tournament.Id" />
+							<div class="form-row">
+								<div class="form-group mb-3">
+									<label for="federationid" class="form-label">
+										<img src="/icons/dropdown.svg" />
+									</label>
+									<InputSelect id="federationid" @bind-Value="Tournament.FederationId" class="form-control">
+										@foreach (Federation federation in Federations!)
+										{
+											<option value="@federation.Id">@federation.PersianName</option>
+										}
+									</InputSelect>
+								</div>
+								<div class="form-group fa mb-3">
+									<label for="sport" class="form-label">
+										<img src="/icons/sport.svg" />
+									</label>
+									<InputText id="sport" @bind-Value="Tournament.Sport" class="form-control" placeholder="رشته ورزشی" />
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-group mb-3">
+									<label for="levelid" class="form-label">
+										<img src="/icons/dropdown.svg" />
+									</label>
+									<InputSelect id="levelid" @bind-Value="Tournament.LevelId" class="form-control">
+										@foreach(TournamentLevel level in TournamentLevels!)
+										{
+											<option value="@level.Id">@level.PersianTitle</option>
+										}
+									</InputSelect>
+								</div>
+								<div class="form-group fa mb-3">
+									<label for="host" class="form-label">
+										<img src="/icons/location-province.svg" />
+									</label>
+									<InputText id="host" @bind-Value="Tournament.Host" class="form-control" placeholder="محل برگزاری" />
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-group en mb-3">
+									<label for="day" class="form-label">
+										<img src="/icons/calendar.svg" />
+									</label>
+									<InputNumber id="day" @bind-Value="Tournament.Day" class="form-control" placeholder="روز" />
+								</div>
+								<div class=" form-group en mb-3">
+									<label for="month" class="form-label">
+										<img src="/icons/calendar.svg" />
+									</label>
+									<InputNumber id="month" @bind-Value="Tournament.Month" class="form-control" placeholder="ماه" />
+								</div>
+								<div class="form-group en mb-3">
+									<label for="year" class="form-label">
+										<img src="/icons/calendar.svg" />
+									</label>
+									<InputNumber id="year" @bind-Value="Tournament.Year" class="form-control" placeholder="سال" />
+								</div>
+							</div>
+							<DataAnnotationsValidator />
+							<ValidationSummary role="alert" />
+							<button type="submit" class="btn btn-primary w-100">به روز رسانی</button>
+						</EditForm>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</AuthorizeView>
+
+@code {
+	[Parameter]
+	public Guid? Id { get; set; }
+
+	private AppDbContext? context = default!;
+
+	private Tournament? Tournament { get; set; }
+
+	private List<Federation>? Federations;
+	private List<TournamentLevel>? TournamentLevels;
+
+	protected override async Task OnInitializedAsync()
+	{
+		context = DbFactory.CreateDbContext();
+
+		Tournament ??= await context.Tournaments
+			.Include(tournament => tournament.Federation)
+			.Include(tournament => tournament.Champions)
+				.ThenInclude(champion => champion.Athlete)
+			.Include(tournament => tournament.Level)
+			.FirstOrDefaultAsync(tournament => tournament.Id == Id!);
+
+		Federations = await context.Federations
+			.OrderBy(federation => federation.PersianName)
+			.ToListAsync();
+
+		TournamentLevels = await context.TournamentLevels
+			.OrderBy(level => level.Id)
+			.ToListAsync();
+
+		if (Tournament is null)
+		{
+			NavigationManager.NavigateTo("notfound");
+		}
+	}
+
+	private async Task UpdateTournament()
+	{
+		using var context = DbFactory.CreateDbContext();
+		context.Attach(Tournament!).State = EntityState.Modified;
+
+		try
+		{
+			await context.SaveChangesAsync();
+		}
+		catch (Exception exception)
+		{
+			Console.WriteLine(exception.InnerException!.Message);
+		}
+
+		NavigationManager.NavigateTo("/tournaments");
+	}
+}
