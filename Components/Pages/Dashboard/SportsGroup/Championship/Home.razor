@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/SportsGroup/Champions"
+﻿@page "/Dashboard/SportsGroup/Championship"
 
 @using Microsoft.AspNetCore.Components.QuickGrid
 
@@ -17,7 +17,7 @@
 			<InputText class="form-control" placeholder=@($"جستجو براساس عنوان، سطح یا محل برگزاری مسابقات") id="paginator-search-input" @bind-Value="searchText" @oninput="Search"></InputText>
 		</div>
 		<div class="top-menu-links justify-content-end">
-			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Champions/Tournament/Add">ثبت مسابقه ورزشی</NavLink>
+			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Championship/Tournament/Add">ثبت مسابقه ورزشی</NavLink>
 		</div>
 	</div>
 	<div class="row">
@@ -41,14 +41,14 @@
 					<div class="card-body">
 						<div class="table-wrapper">
 							<QuickGrid Pagination="pagination" Items="Tournaments!.AsQueryable()" Theme="" Class="quickgrid-table">
-								<PropertyColumn Title="عنوان مسابقات" Property="@(tournament => $"{tournament.Level.PersianTitle} {tournament.Sport}")" />
+								<PropertyColumn Title="عنوان مسابقات" Property="@(tournament => $"{tournament.Level.PersianTitle} {tournament.Federation.PersianName} - {tournament.Sport}")" />
 								<PropertyColumn Title="محل برگزاری" Property="@(tournament => tournament.Host)" />
 								<PropertyColumn Title="تاریخ مسابقات" Property="@(tournament => TournamentDate(tournament))" />
 								<PropertyColumn Title="تعداد اعزام شدگان" Property="@(tournament => tournament.Champions.Count())" />
 								<PropertyColumn Title="تعداد مدال آور" Property="@(tournament => tournament.Champions.Count(champion => champion.MedalsCount > 0))" />
 								<PropertyColumn Title="تعداد مدال" Property="@(tournament => tournament.Champions.Sum(champion => champion.MedalsCount))" />
 								<TemplateColumn>
-									<a class="edit-link" href="/Dashboard/SportsGroup/Champions/Tournament/Edit/@context.Id">
+									<a class="edit-link" href="/Dashboard/SportsGroup/Championship/Tournament/Edit/@context.Id">
 										<img src="/icons/square-edit.svg" />
 									</a>
 								</TemplateColumn>

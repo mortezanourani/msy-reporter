@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/SportsGroup/Champions/Tournament/Edit/{Id:guid}"
+﻿@page "/Dashboard/SportsGroup/Championship/Tournament/Edit/{Id:guid}"
 
 @using Microsoft.AspNetCore.Components.QuickGrid
 
@@ -11,7 +11,7 @@
 <AuthorizeView Roles="Administrators" Context="authContext">
 	<div class="page-top-menu">
 		<div class="top-menu-links justify-content-end">
-			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Champions/Tournament/Add">ثبت مسابقه ورزشی</NavLink>
+			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Championship">بازگشت به فهرست مسابقات</NavLink>
 		</div>
 	</div>
 	<div class="row form-wrapper">
@@ -59,7 +59,7 @@
 			{
 				<div class="card">
 					<div class="card-body">
-						<EditForm method="post" Model="Tournament" OnValidSubmit="UpdateTournament" FormName="edit" Enhance>
+						<EditForm method="post" Model="Tournament!" OnValidSubmit="UpdateTournament" FormName="edit" Enhance>
 							<input type="hidden" name="Tournament.Id" value="@Tournament.Id" />
 							<div class="form-row">
 								<div class="form-group mb-3">
@@ -128,6 +128,40 @@
 			}
 		</div>
 	</div>
+	<hr />
+	@if(Tournament is null)
+	{
+		<Loading CardMode=true />
+	}
+	else
+	{
+		<div class="card list-card">
+			<div class="card-header border-bottom">
+				<h6 class="title">مدال آوران مسابقات<b class="text-primary px-1">@Tournament!.Level.PersianTitle @Tournament!.Federation.PersianName @Tournament!.Sport</b></h6>
+				<NavLink class="panel-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Edit">افزودن مدال آور این مسابقات</NavLink>
+			</div>
+			<div class="card-body">
+				<div class="table-wrapper">
+					@if (TournamentChampions is not null)
+					{
+						<QuickGrid Items="TournamentChampions.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
+							<PropertyColumn Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
+							<PropertyColumn Title="کد ملی" Property="@(champion => champion.Athlete.SeenCode)" />
+							<PropertyColumn Title="شهرستان" Property="@(champion => champion.Athlete.City.PersianName)" />
+							<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup!.PersianName)" />
+							<PropertyColumn Title="مدال" Property="@(champion => champion.Medal == null ? "-" : champion.Medal!.PersianTitle)" />
+							<PropertyColumn Title="تعداد مدال" Property="@(champion => champion.MedalsCount)" />
+							<TemplateColumn>
+								<a class="edit-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Remove/@context.Id">
+									<img src="/icons/user-remove.svg" />
+								</a>
+							</TemplateColumn>
+						</QuickGrid>
+					}
+				</div>
+			</div>
+		</div>
+	}
 </AuthorizeView>
 
 @code {
@@ -140,6 +174,8 @@
 
 	private List<Federation>? Federations;
 	private List<TournamentLevel>? TournamentLevels;
+
+	private List<Champion> TournamentChampions = new List<Champion>();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -164,6 +200,18 @@
 		{
 			NavigationManager.NavigateTo("notfound");
 		}
+
+		TournamentChampions = await context.Champions
+			.Include(champion => champion.Athlete)
+				.ThenInclude(athlete => athlete.City)
+			.Include(champion => champion.AgeGroup)
+			.Include(champion => champion.Medal)
+			.Where(champion => champion.TournamentId == Id!)
+			.OrderBy(champion => champion.Athlete.City.PersianName)
+			.ToListAsync();
+
+		await pagination.SetCurrentPageIndexAsync(0);
+		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
 	}
 
 	private async Task UpdateTournament()
@@ -182,4 +230,14 @@
 
 		NavigationManager.NavigateTo("/tournaments");
 	}
+
+	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+	private async Task GoToPageAsync(int pageIndex)
+	{
+		await pagination.SetCurrentPageIndexAsync(pageIndex);
+	}
+
+	private string? AriaCurrentValue(int pageIndex)
+		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;
 }

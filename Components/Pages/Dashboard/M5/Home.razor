@@ -23,12 +23,15 @@
 				<div class="card facilities-list-card">
 					<div class="card-header border-bottom">
 						<h6 class="title">فهرست باشگاه های خصوصی شهرستان @City?.PersianName</h6>
-						<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
-							@foreach (City city in Cities!)
-							{
-								<option value="@city.Id">@city.PersianName</option>
-							}
-						</InputSelect>
+						@if(Cities is not null)
+						{
+							<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
+								@foreach (City city in Cities!)
+								{
+									<option value="@city.Id">@city.PersianName</option>
+								}
+							</InputSelect>
+						}
 					</div>
 					@if (Facilities is null)
 					{
