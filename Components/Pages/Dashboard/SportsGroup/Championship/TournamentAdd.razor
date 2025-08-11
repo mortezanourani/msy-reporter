@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/SportsGroup/Championship/Tournament/Edit/{Id:guid}"
+﻿@page "/Dashboard/SportsGroup/Championship/Tournament/Add"
 
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using System.Globalization
@@ -50,7 +50,7 @@
 			</div>
 		</div>
 		<div class="col2-5 mb-auto">
-			@if (Tournament is null)
+			@if (Federations is null || TournamentLevels is null)
 			{
 				<Loading CardMode=true />
 			}
@@ -58,14 +58,13 @@
 			{
 				<div class="card">
 					<div class="card-body">
-						<EditForm method="post" Model="Tournament!" OnValidSubmit="UpdateTournament" FormName="edit" Enhance>
-							<input type="hidden" name="Tournament.Id" value="@Tournament.Id" />
+						<EditForm method="post" Model="Tournament" OnValidSubmit="AddTournament" FormName="creatwe" Enhance>
 							<div class="form-row">
 								<div class="form-group mb-3">
 									<label for="federationid" class="form-label">
 										<img src="/icons/dropdown.svg" />
 									</label>
-									<InputSelect id="federationid" @bind-Value="Tournament.FederationId" class="form-control">
+									<InputSelect id="federationid" @bind-Value="Tournament!.FederationId" class="form-control">
 										@foreach (Federation federation in Federations!)
 										{
 											<option value="@federation.Id">@federation.PersianName</option>
@@ -143,58 +142,24 @@
 							<ValidationSummary role="alert" />
 							@if (!string.IsNullOrEmpty(statusMessage))
 							{
-								<div class="alert alert-@statusMessageClass" role="alert">
+								<div class="alert alert-danger" role="alert">
 									@statusMessage
 								</div>
 							}
-							<button type="submit" class="btn btn-primary w-100">به روز رسانی</button>
+							<button type="submit" class="btn btn-primary w-100">ثبت</button>
 						</EditForm>
 					</div>
 				</div>
 			}
 		</div>
 	</div>
-	<hr />
-	@if (TournamentChampions is null)
-	{
-		<Loading CardMode=true />
-	}
-	else
-	{
-		<div class="card list-card">
-			<div class="card-header border-bottom">
-				<h6 class="title">مدال آوران مسابقات<b class="text-primary px-1">@Tournament!.Level.PersianTitle @Tournament!.Federation.PersianName @Tournament!.Sport</b></h6>
-				<NavLink class="panel-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Edit">افزودن مدال آور این مسابقات</NavLink>
-			</div>
-			<div class="card-body">
-				<div class="table-wrapper">
-					<QuickGrid Items="TournamentChampions.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-						<PropertyColumn Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
-						<PropertyColumn Title="کد ملی" Property="@(champion => champion.Athlete.SeenCode)" />
-						<PropertyColumn Title="شهرستان" Property="@(champion => champion.Athlete.City.PersianName)" />
-						<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup!.PersianName)" />
-						<PropertyColumn Title="مدال" Property="@(champion => champion.Medal == null ? "-" : champion.Medal!.PersianTitle)" />
-						<PropertyColumn Title="تعداد مدال" Property="@(champion => champion.MedalsCount)" />
-						<TemplateColumn>
-							<a class="edit-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Remove/@context.Id">
-								<img src="/icons/user-remove.svg" />
-							</a>
-						</TemplateColumn>
-					</QuickGrid>
-				</div>
-			</div>
-		</div>
-	}
 </AuthorizeView>
 
 @code {
-	[Parameter]
-	public Guid? Id { get; set; }
-
 	[SupplyParameterFromForm]
-	private Tournament? Tournament { get; set; }
+	private Tournament? Tournament { get; set; } = new();
 
-	private AppDbContext? context = default!;
+	private AppDbContext? context { get; set; } = null!;
 
 	private PersianCalendar persianCalendar = new PersianCalendar();
 	private int CurrentYear;
@@ -202,21 +167,12 @@
 	private List<Federation>? Federations;
 	private List<TournamentLevel>? TournamentLevels;
 
-	private List<Champion>? TournamentChampions;
 
 	private string? statusMessage;
-	private string? statusMessageClass;
 
 	protected override async Task OnInitializedAsync()
 	{
 		context = DbFactory.CreateDbContext();
-
-		Tournament ??= await context.Tournaments
-			.Include(tournament => tournament.Federation)
-			.Include(tournament => tournament.Champions)
-				.ThenInclude(champion => champion.Athlete)
-			.Include(tournament => tournament.Level)
-			.FirstOrDefaultAsync(tournament => tournament.Id == Id!);
 
 		Federations = await context.Federations
 			.OrderBy(federation => federation.PersianName)
@@ -226,53 +182,28 @@
 			.OrderBy(level => level.Id)
 			.ToListAsync();
 
-		TournamentChampions  ??= await context.Champions
-			.Include(champion => champion.Athlete)
-				.ThenInclude(athlete => athlete.City)
-			.Include(champion => champion.AgeGroup)
-			.Include(champion => champion.Medal)
-			.Where(champion => champion.TournamentId == Id!)
-			.OrderBy(champion => champion.Athlete.CityId)
-			.ToListAsync();
-
 		CurrentYear = persianCalendar.GetYear(DateTime.Now);
-
-		await pagination.SetCurrentPageIndexAsync(0);
-		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+		Tournament!.Year = CurrentYear;
+		Tournament!.FederationId = 1;
+		Tournament!.LevelId = 1;
 	}
 
-	private async Task UpdateTournament()
+	private async Task AddTournament()
 	{
 		context = DbFactory.CreateDbContext();
 
-		Tournament!.Champions = await context.Champions
-			.Where(champion => champion.TournamentId == Id)
-			.ToListAsync();
-
-		context.Attach(Tournament!).State = EntityState.Modified;
+		context.Tournaments.Add(Tournament!);
 
 		try
 		{
 			await context.SaveChangesAsync();
-			statusMessageClass = "success";
-			statusMessage = "اطلاعات با موفقیت به روز رسانی شد.";
 		}
 		catch (Exception exception)
 		{
-			statusMessageClass = "danger";
 			statusMessage = exception.InnerException!.Message;
+			return;
 		}
 
-		return;
+		NavigationManager.NavigateTo("/Dashboard/SportsGroup/Championship/Tournament/Edit/" + Tournament!.Id);
 	}
-
-	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
-
-	private async Task GoToPageAsync(int pageIndex)
-	{
-		await pagination.SetCurrentPageIndexAsync(pageIndex);
-	}
-
-	private string? AriaCurrentValue(int pageIndex)
-		=> pagination.CurrentPageIndex == pageIndex ? "page" : null;
 }
