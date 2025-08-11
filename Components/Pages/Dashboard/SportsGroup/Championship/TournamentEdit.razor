@@ -9,7 +9,7 @@
 
 <AuthorizeView Roles="Administrators" Context="authContext">
 	<div class="page-top-menu">
-		<div class="top-menu-links justify-content-end">
+		<div class="top-menu-links justify-content-end w-100">
 			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Championship">بازگشت به فهرست مسابقات</NavLink>
 		</div>
 	</div>
@@ -164,7 +164,7 @@
 		<div class="card list-card">
 			<div class="card-header border-bottom">
 				<h6 class="title">مدال آوران مسابقات<b class="text-primary px-1">@Tournament!.Level.PersianTitle @Tournament!.Federation.PersianName @Tournament!.Sport</b></h6>
-				<NavLink class="panel-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Edit">افزودن مدال آور این مسابقات</NavLink>
+				<NavLink class="panel-link" href="@($"/Dashboard/SportsGroup/Championship/Tournament/Champion/Add/{Id}")">افزودن مدال آور این مسابقات</NavLink>
 			</div>
 			<div class="card-body">
 				<div class="table-wrapper">
@@ -172,8 +172,8 @@
 						<PropertyColumn Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
 						<PropertyColumn Title="کد ملی" Property="@(champion => champion.Athlete.SeenCode)" />
 						<PropertyColumn Title="شهرستان" Property="@(champion => champion.Athlete.City.PersianName)" />
-						<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup!.PersianName)" />
-						<PropertyColumn Title="مدال" Property="@(champion => champion.Medal == null ? "-" : champion.Medal!.PersianTitle)" />
+						<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup == null ? "نامشخص" : champion.AgeGroup.PersianName!)" />
+						<PropertyColumn Title="مدال" Property="@(champion => champion.Medal == null ? "-" : champion.Medal.PersianTitle)" />
 						<PropertyColumn Title="تعداد مدال" Property="@(champion => champion.MedalsCount)" />
 						<TemplateColumn>
 							<a class="edit-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Remove/@context.Id">
