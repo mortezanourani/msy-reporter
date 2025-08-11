@@ -2,8 +2,6 @@
 
 @using Microsoft.AspNetCore.Components.QuickGrid
 
-@layout _Layout
-
 @rendermode InteractiveServer
 
 <PageTitle>ورزش قهرمانی</PageTitle>
@@ -121,6 +119,12 @@
 							</div>
 							<DataAnnotationsValidator />
 							<ValidationSummary role="alert" />
+							@if (!string.IsNullOrEmpty(statusMessage))
+							{
+								<div class="alert alert-@statusMessageClass" role="alert">
+									@statusMessage
+								</div>
+							}
 							<button type="submit" class="btn btn-primary w-100">به روز رسانی</button>
 						</EditForm>
 					</div>
@@ -129,7 +133,7 @@
 		</div>
 	</div>
 	<hr />
-	@if(Tournament is null)
+	@if (TournamentChampions is null)
 	{
 		<Loading CardMode=true />
 	}
@@ -142,22 +146,19 @@
 			</div>
 			<div class="card-body">
 				<div class="table-wrapper">
-					@if (TournamentChampions is not null)
-					{
-						<QuickGrid Items="TournamentChampions.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-							<PropertyColumn Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
-							<PropertyColumn Title="کد ملی" Property="@(champion => champion.Athlete.SeenCode)" />
-							<PropertyColumn Title="شهرستان" Property="@(champion => champion.Athlete.City.PersianName)" />
-							<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup!.PersianName)" />
-							<PropertyColumn Title="مدال" Property="@(champion => champion.Medal == null ? "-" : champion.Medal!.PersianTitle)" />
-							<PropertyColumn Title="تعداد مدال" Property="@(champion => champion.MedalsCount)" />
-							<TemplateColumn>
-								<a class="edit-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Remove/@context.Id">
-									<img src="/icons/user-remove.svg" />
-								</a>
-							</TemplateColumn>
-						</QuickGrid>
-					}
+					<QuickGrid Items="TournamentChampions.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
+						<PropertyColumn Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
+						<PropertyColumn Title="کد ملی" Property="@(champion => champion.Athlete.SeenCode)" />
+						<PropertyColumn Title="شهرستان" Property="@(champion => champion.Athlete.City.PersianName)" />
+						<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup!.PersianName)" />
+						<PropertyColumn Title="مدال" Property="@(champion => champion.Medal == null ? "-" : champion.Medal!.PersianTitle)" />
+						<PropertyColumn Title="تعداد مدال" Property="@(champion => champion.MedalsCount)" />
+						<TemplateColumn>
+							<a class="edit-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Remove/@context.Id">
+								<img src="/icons/user-remove.svg" />
+							</a>
+						</TemplateColumn>
+					</QuickGrid>
 				</div>
 			</div>
 		</div>
@@ -168,14 +169,18 @@
 	[Parameter]
 	public Guid? Id { get; set; }
 
-	private AppDbContext? context = default!;
-
+	[SupplyParameterFromForm]
 	private Tournament? Tournament { get; set; }
+
+	private AppDbContext? context = default!;
 
 	private List<Federation>? Federations;
 	private List<TournamentLevel>? TournamentLevels;
 
-	private List<Champion> TournamentChampions = new List<Champion>();
+	private List<Champion>? TournamentChampions;
+
+	private string? statusMessage;
+	private string? statusMessageClass;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -196,18 +201,13 @@
 			.OrderBy(level => level.Id)
 			.ToListAsync();
 
-		if (Tournament is null)
-		{
-			NavigationManager.NavigateTo("notfound");
-		}
-
-		TournamentChampions = await context.Champions
+		TournamentChampions  ??= await context.Champions
 			.Include(champion => champion.Athlete)
 				.ThenInclude(athlete => athlete.City)
 			.Include(champion => champion.AgeGroup)
 			.Include(champion => champion.Medal)
 			.Where(champion => champion.TournamentId == Id!)
-			.OrderBy(champion => champion.Athlete.City.PersianName)
+			.OrderBy(champion => champion.Athlete.CityId)
 			.ToListAsync();
 
 		await pagination.SetCurrentPageIndexAsync(0);
@@ -216,19 +216,27 @@
 
 	private async Task UpdateTournament()
 	{
-		using var context = DbFactory.CreateDbContext();
+		context = DbFactory.CreateDbContext();
+
+		Tournament!.Champions = await context.Champions
+			.Where(champion => champion.TournamentId == Id)
+			.ToListAsync();
+
 		context.Attach(Tournament!).State = EntityState.Modified;
 
 		try
 		{
 			await context.SaveChangesAsync();
+			statusMessageClass = "success";
+			statusMessage = "اطلاعات با موفقیت به روز رسانی شد.";
 		}
 		catch (Exception exception)
 		{
-			Console.WriteLine(exception.InnerException!.Message);
+			statusMessageClass = "danger";
+			statusMessage = exception.InnerException!.Message;
 		}
 
-		NavigationManager.NavigateTo("/tournaments");
+		return;
 	}
 
 	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
