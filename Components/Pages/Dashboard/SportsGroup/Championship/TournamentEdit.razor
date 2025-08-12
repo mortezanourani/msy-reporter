@@ -169,12 +169,13 @@
 			<div class="card-body">
 				<div class="table-wrapper">
 					<QuickGrid Items="TournamentChampions.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-						<PropertyColumn Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
+						<PropertyColumn IsDefaultSortColumn=true Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
 						<PropertyColumn Title="کد ملی" Property="@(champion => champion.Athlete.SeenCode)" />
 						<PropertyColumn Title="شهرستان" Property="@(champion => champion.Athlete.City.PersianName)" />
 						<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup == null ? "نامشخص" : champion.AgeGroup.PersianName!)" />
-						<PropertyColumn Title="مدال" Property="@(champion => champion.Medal == null ? "-" : champion.Medal.PersianTitle)" />
-						<PropertyColumn Title="تعداد مدال" Property="@(champion => champion.MedalsCount)" />
+						<TemplateColumn Title="مدال">
+							@($"{context.MedalsCount!} مدال {context.Medal!.PersianTitle}")
+						</TemplateColumn>
 						<TemplateColumn>
 							<a class="edit-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Remove/@context.Id">
 								<img src="/icons/user-remove.svg" />
@@ -232,10 +233,12 @@
 			.Include(champion => champion.AgeGroup)
 			.Include(champion => champion.Medal)
 			.Where(champion => champion.TournamentId == Id!)
-			.OrderBy(champion => champion.Athlete.CityId)
+			.OrderBy(champion => champion.Athlete.Name)
 			.ToListAsync();
 
 		CurrentYear = persianCalendar.GetYear(DateTime.Now);
+		Tournament!.Month ??= 1;
+		Tournament!.Day ??= 1;
 
 		await pagination.SetCurrentPageIndexAsync(0);
 		pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();

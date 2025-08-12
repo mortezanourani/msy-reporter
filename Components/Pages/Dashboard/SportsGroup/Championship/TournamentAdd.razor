@@ -167,7 +167,6 @@
 	private List<Federation>? Federations;
 	private List<TournamentLevel>? TournamentLevels;
 
-
 	private string? statusMessage;
 
 	protected override async Task OnInitializedAsync()
@@ -177,15 +176,17 @@
 		Federations = await context.Federations
 			.OrderBy(federation => federation.PersianName)
 			.ToListAsync();
+		Tournament!.FederationId = 1;
 
 		TournamentLevels = await context.TournamentLevels
 			.OrderBy(level => level.Id)
 			.ToListAsync();
+		Tournament!.LevelId = 1;
 
 		CurrentYear = persianCalendar.GetYear(DateTime.Now);
 		Tournament!.Year = CurrentYear;
-		Tournament!.FederationId = 1;
-		Tournament!.LevelId = 1;
+		Tournament!.Month = 1;
+		Tournament!.Day = 1;
 	}
 
 	private async Task AddTournament()
