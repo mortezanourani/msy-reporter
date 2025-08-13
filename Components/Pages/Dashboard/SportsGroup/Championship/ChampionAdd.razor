@@ -6,119 +6,117 @@
 
 <PageTitle>ورزش قهرمانی</PageTitle>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-    <div class="page-top-menu">
-        <h6 class="panel-title">افزودن مدال آور مسابقات <b class="text-primary px-1">@Tournament?.Level.PersianTitle @Tournament?.Federation.PersianName</b></h6>
-        <span class="top-menu-links justify-content-end">
-            <NavLink class="panel-link" href="@($"/Dashboard/SportsGroup/Championship/Tournament/Edit/{TournamentId}")">بازگشت به صفحه قبل</NavLink>
-        </span>
-    </div>
+<div class="page-top-menu">
+    <h6 class="panel-title">افزودن مدال آور مسابقات <b class="text-primary px-1">@Tournament?.Level.PersianTitle @Tournament?.Federation.PersianName</b></h6>
+    <span class="top-menu-links justify-content-end">
+        <NavLink class="panel-link" href="@($"/Dashboard/SportsGroup/Championship/Tournament/Edit/{TournamentId}")">بازگشت به صفحه قبل</NavLink>
+    </span>
+</div>
 
-    <div class="row form-wrapper">
-        <div class="col3-5 mb-0">
-            <div class="instructions">
-                <p>فهرست مقابل اسامی کسانی است که به عنوان شرکت کنندگان دوره حاضر انتخاب نشده اند و در پایان صفحه مشخصات کسانی است که گواهی این دوره را دریافت نموده اند.</p>
-                <p class="mb-3">جهت ویرایش فهرست افرادی که گواهی این دوره را دریافت نموده اند، می توانید از راهنمای زیر استفاده نمایید.</p>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/user-add.svg">
-                        <h6>اضافه نمودن فرد:</h6>
-                    </div>
-                    <p>در فهرست مقابل با کلیک بر روی این آیکون می توانید فرد را به عنوان یکی از افرادی که گواهی این دوره را دریافت نموده اند اضافه نمایید.</p>
-                    <p>اضافه کردن افراد نیاز به هیچگونه تایید مجدد نداشته و با کلیک بر روی آیکون مورد نظر نام فرد از فهرست بالا حذف و در فهرست پایان صفحه اضافه خواهد شد.</p>
+<div class="row form-wrapper">
+    <div class="col3-5 mb-0">
+        <div class="instructions">
+            <p>فهرست مقابل اسامی کسانی است که به عنوان شرکت کنندگان دوره حاضر انتخاب نشده اند و در پایان صفحه مشخصات کسانی است که گواهی این دوره را دریافت نموده اند.</p>
+            <p class="mb-3">جهت ویرایش فهرست افرادی که گواهی این دوره را دریافت نموده اند، می توانید از راهنمای زیر استفاده نمایید.</p>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/user-add.svg">
+                    <h6>اضافه نمودن فرد:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/user-remove.svg">
-                        <h6>حذف فرد:</h6>
-                    </div>
-                    <p>چنانچه فردی را به اشتباه در فهرست افراد دریافت کننده گواهی پایان این دوره اضافه نموده اید، می توانید با استفاده از کلید حذف فرد در فهرست پایان صفحه نسبت به حذف آن اقدام نمایید.</p>
+                <p>در فهرست مقابل با کلیک بر روی این آیکون می توانید فرد را به عنوان یکی از افرادی که گواهی این دوره را دریافت نموده اند اضافه نمایید.</p>
+                <p>اضافه کردن افراد نیاز به هیچگونه تایید مجدد نداشته و با کلیک بر روی آیکون مورد نظر نام فرد از فهرست بالا حذف و در فهرست پایان صفحه اضافه خواهد شد.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/user-remove.svg">
+                    <h6>حذف فرد:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/code.svg">
-                        <h6>کلیدهای تغییر صفحه:</h6>
-                    </div>
-                    <p class="mb-0">فهرست ها به صورت ده نفری صفحه بندی شده اند. بنابراین چنانچه فرد مورد نظرتان در صفحه قابل مشاهده نیست، می توانید برای جستجو از کلیدهای تغییر صفحه، کمک بگیرید.</p>
+                <p>چنانچه فردی را به اشتباه در فهرست افراد دریافت کننده گواهی پایان این دوره اضافه نموده اید، می توانید با استفاده از کلید حذف فرد در فهرست پایان صفحه نسبت به حذف آن اقدام نمایید.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/code.svg">
+                    <h6>کلیدهای تغییر صفحه:</h6>
                 </div>
+                <p class="mb-0">فهرست ها به صورت ده نفری صفحه بندی شده اند. بنابراین چنانچه فرد مورد نظرتان در صفحه قابل مشاهده نیست، می توانید برای جستجو از کلیدهای تغییر صفحه، کمک بگیرید.</p>
             </div>
         </div>
-        @if (Athletes is null)
-        {
-            <Loading CardMode=true />
-        }
-        else
-        {
-            <div class="col2-5 mb-auto">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <EditForm method="post" Model="Champion" OnValidSubmit="AddChampion" FormName="create" Enhance>
-                            <input type="hidden" name="Champion.TournamentId" value="@TournamentId" />
+    </div>
+    @if (Athletes is null)
+    {
+        <Loading CardMode=true />
+    }
+    else
+    {
+        <div class="col2-5 mb-auto">
+            <div class="card">
+                <div class="card-body p-3">
+                    <EditForm method="post" Model="Champion" OnValidSubmit="AddChampion" FormName="create" Enhance>
+                        <input type="hidden" name="Champion.TournamentId" value="@TournamentId" />
+                        <div class="form-group fa mb-3">
+                            <label for="athleteid" class="form-label">
+                                <img src="/icons/user.svg" />
+                            </label>
+                            <InputSelect id="athleteid" @bind-Value="Champion.AthleteId" class="form-control">
+                                @foreach (Athlete athlete in Athletes!)
+                                {
+                                    <option value="@athlete.Id">@athlete.Name</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-row">
                             <div class="form-group fa mb-3">
-                                <label for="athleteid" class="form-label">
-                                    <img src="/icons/user.svg" />
+                                <label for="field" class="form-label">
+                                    <img src="/icons/sport.svg" />
                                 </label>
-                                <InputSelect id="athleteid" @bind-Value="Champion.AthleteId" class="form-control">
-                                    @foreach (Athlete athlete in Athletes!)
+                                <InputText id="field" @bind-Value="Champion.Field" class="form-control" placeholder="رشته یا زیررشته ورزشی" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="agegroupid" class="form-label">
+                                    <img src="/icons/dropdown.svg" />
+                                </label>
+                                <InputSelect id="agegroupid" @bind-Value="Champion.AgeGroupId" class="form-control">
+                                    @foreach (AgeGroup group in AgeGroups!)
                                     {
-                                        <option value="@athlete.Id">@athlete.Name</option>
+                                        <option value="@group.Id">@group.PersianName</option>
                                     }
                                 </InputSelect>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group fa mb-3">
-                                    <label for="field" class="form-label">
-                                        <img src="/icons/sport.svg" />
-                                    </label>
-                                    <InputText id="field" @bind-Value="Champion.Field" class="form-control" placeholder="رشته یا زیررشته ورزشی" />
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="agegroupid" class="form-label">
-                                        <img src="/icons/dropdown.svg" />
-                                    </label>
-                                    <InputSelect id="agegroupid" @bind-Value="Champion.AgeGroupId" class="form-control">
-                                        @foreach (AgeGroup group in AgeGroups!)
-                                        {
-                                            <option value="@group.Id">@group.PersianName</option>
-                                        }
-                                    </InputSelect>
-                                </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group mb-3">
+                                <label for="medalid" class="form-label">
+                                    <img src="/icons/dropdown.svg" />
+                                </label>
+                                <InputSelect id="medalid" @bind-Value="Champion.MedalId" class="form-control">
+                                    @foreach (Medal medal in Medals!)
+                                    {
+                                        <option value="@medal.Id">@medal.PersianTitle</option>
+                                    }
+                                </InputSelect>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group mb-3">
-                                    <label for="medalid" class="form-label">
-                                        <img src="/icons/dropdown.svg" />
-                                    </label>
-                                    <InputSelect id="medalid" @bind-Value="Champion.MedalId" class="form-control">
-                                        @foreach (Medal medal in Medals!)
-                                        {
-                                            <option value="@medal.Id">@medal.PersianTitle</option>
-                                        }
-                                    </InputSelect>
-                                </div>
-                                <div class="form-group fa mb-3">
-                                    <label for="medalscount" class="form-label">
-                                        <img src="/icons/medals.svg" />
-                                    </label>
-                                    <InputNumber id="medalscount" @bind-Value="Champion.MedalsCount" class="form-control" placeholder="تعداد مدال" />
-                                </div>
+                            <div class="form-group fa mb-3">
+                                <label for="medalscount" class="form-label">
+                                    <img src="/icons/medals.svg" />
+                                </label>
+                                <InputNumber id="medalscount" @bind-Value="Champion.MedalsCount" class="form-control" placeholder="تعداد مدال" />
                             </div>
-                            <DataAnnotationsValidator />
-                            <ValidationSummary class="text-danger" role="alert" />
-                            @if (!string.IsNullOrEmpty(statusMessage))
-                            {
-                                <div class="alert alert-danger" role="alert">
-                                    @statusMessage
-                                </div>
-                            }
-                            <button type="submit" class="btn btn-primary w-100">افزودن</button>
-                        </EditForm>
-                    </div>
+                        </div>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" role="alert" />
+                        @if (!string.IsNullOrEmpty(statusMessage))
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @statusMessage
+                            </div>
+                        }
+                        <button type="submit" class="btn btn-primary w-100">افزودن</button>
+                    </EditForm>
                 </div>
             </div>
-        }
-    </div>
-</AuthorizeView>
+        </div>
+    }
+</div>
 
 @code {
     [Parameter]
@@ -172,28 +170,6 @@
         Champion!.AgeGroupId = AgeGroups.FirstOrDefault()!.Id;
     }
 
-    private async Task SearchName(ChangeEventArgs args)
-    {
-        searchText = args.Value!.ToString();
-
-        // employees = string.IsNullOrEmpty(searchText)
-        //     ? await context.Employees
-        //         .Where(employee => employee.Courses
-        //             .All(course => course.Id != Id))
-        //         .OrderBy(employee => employee.LastName)
-        //         .OrderBy(employee => employee.FirstName)
-        //         .ToListAsync()
-        //     : await context.Employees
-        //         .Where(employee => 
-        //             employee.LastName.Contains(searchText)
-        //             ||
-        //             employee.FirstName.Contains(searchText)
-        //         )
-        //         .Where(employee => employee.Courses
-        //             .All(course => course.Id != Id))
-        //         .ToListAsync();
-    }
-
     private async Task AddChampion()
     {
         context = DbFactory.CreateDbContext();
@@ -216,4 +192,3 @@
         NavigationManager.NavigateTo("/Dashboard/SportsGroup/Championship/Tournament/Edit/" + TournamentId);
     }
 }
-

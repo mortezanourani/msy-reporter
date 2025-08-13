@@ -6,124 +6,122 @@
     <h6 class="panel-title">ثبت هیات ورزشی جدید</h6>
 </div>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-    <div class="row form-wrapper">
-        <div class="col3-5 mb-0">
-            <div class="instructions">
-                <p class="mb-0">در فرم مقابل آمار ورزشکاران سازمان یافته بر اساس هر هیات در هر شهرستان مربوط به ماه مشخصی ثبت می شوند.</p>
-                <p class="mb-3">بدیهی است که آمار مربوطه معادل تعداد ورزشکاران آقا و خانم بیمه شده از ابتدای ماه تا انتهای همان خواهد بود.</p>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/calendar-blue.svg">
-                        <h6>ماه و سال:</h6>
-                    </div>
-                    <p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
-                    <p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+<div class="row form-wrapper">
+    <div class="col3-5 mb-0">
+        <div class="instructions">
+            <p class="mb-0">در فرم مقابل آمار ورزشکاران سازمان یافته بر اساس هر هیات در هر شهرستان مربوط به ماه مشخصی ثبت می شوند.</p>
+            <p class="mb-3">بدیهی است که آمار مربوطه معادل تعداد ورزشکاران آقا و خانم بیمه شده از ابتدای ماه تا انتهای همان خواهد بود.</p>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/calendar-blue.svg">
+                    <h6>ماه و سال:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/man-blue.svg">
-                        <h6>تعداد بیمه های ورزشی آقایان:</h6>
-                    </div>
-                    <p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+                <p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
+                <p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/man-blue.svg">
+                    <h6>تعداد بیمه های ورزشی آقایان:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/woman-blue.svg">
-                        <h6>تعداد بیمه های ورزشی بانوان:</h6>
-                    </div>
-                    <p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+                <p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/woman-blue.svg">
+                    <h6>تعداد بیمه های ورزشی بانوان:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <h6>تذکر:</h6>
-                    </div>
-                    <p>فرم به گونه ای طراحی شده است که پس از ثبت آمار یک هیات در تاریخ مشخصی نیاز به رفرش کردن صفحه نبوده و می توانید دیگر آمارها را نیز وارد نمایید.</p>
-                    <p>همچنین چنانچه تعداد ورزشکاران سازمان یافته هیات مربوطه برای ماه و سال انتخاب شده در فرم قبلا ثبت شده باشد، خطایی در خصوص عدم امکان ثبت اطلاعات جدید، نمایش داده خواهد شد.</p>
+                <p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <h6>تذکر:</h6>
                 </div>
+                <p>فرم به گونه ای طراحی شده است که پس از ثبت آمار یک هیات در تاریخ مشخصی نیاز به رفرش کردن صفحه نبوده و می توانید دیگر آمارها را نیز وارد نمایید.</p>
+                <p>همچنین چنانچه تعداد ورزشکاران سازمان یافته هیات مربوطه برای ماه و سال انتخاب شده در فرم قبلا ثبت شده باشد، خطایی در خصوص عدم امکان ثبت اطلاعات جدید، نمایش داده خواهد شد.</p>
             </div>
         </div>
-        <div class="col2-5 mb-auto">
-            @if (Cities is null || Federations is null)
-            {
-                <Loading CardMode=true />
-            }
-            else
-            {
-                <div class="card p-3">
-                    <EditForm method="post" Model="LocalFederation" OnValidSubmit="AddLocalFederation" FormName="create" Enhance>
-                        <DataAnnotationsValidator />
+    </div>
+    <div class="col2-5 mb-auto">
+        @if (Cities is null || Federations is null)
+        {
+            <Loading CardMode=true />
+        }
+        else
+        {
+            <div class="card p-3">
+                <EditForm method="post" Model="LocalFederation" OnValidSubmit="AddLocalFederation" FormName="create" Enhance>
+                    <DataAnnotationsValidator />
+                    <div class="form-group fa mb-3">
+                        <label for="federationid" class="form-label">
+                            <img src="/icons/dropdown.svg" />
+                        </label>
+                        <InputSelect id="federationid" @bind-Value="LocalFederation.FederationId" class="form-control">
+                            @foreach (Federation federation in Federations!)
+                            {
+                                <option value="@federation.Id">@federation.PersianName</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group fa mb-3">
-                            <label for="federationid" class="form-label">
+                            <label for="cityid" class="form-label">
                                 <img src="/icons/dropdown.svg" />
                             </label>
-                            <InputSelect id="federationid" @bind-Value="LocalFederation.FederationId" class="form-control">
-                                @foreach (Federation federation in Federations!)
+                            <InputSelect id="cityid" @bind-Value="LocalFederation.CityId" class="form-control">
+                                @foreach (City city in Cities)
                                 {
-                                    <option value="@federation.Id">@federation.PersianName</option>
+                                    <option value="@city.Id">@city.PersianName</option>
                                 }
                             </InputSelect>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group fa mb-3">
-                                <label for="cityid" class="form-label">
-                                    <img src="/icons/dropdown.svg" />
-                                </label>
-                                <InputSelect id="cityid" @bind-Value="LocalFederation.CityId" class="form-control">
-                                    @foreach(City city in Cities)
-                                    {
-                                        <option value="@city.Id">@city.PersianName</option>
-                                    }
-                                </InputSelect>
-                            </div>
-                            <div class="form-group fa mb-3">
-                                <label for="district" class="form-label">
-                                    <img src="/icons/location-map.svg" />
-                                </label>
-                                <InputText id="district" @bind-Value="LocalFederation.District" class="form-control" placeholder="بخش" />
-                            </div>
+                        <div class="form-group fa mb-3">
+                            <label for="district" class="form-label">
+                                <img src="/icons/location-map.svg" />
+                            </label>
+                            <InputText id="district" @bind-Value="LocalFederation.District" class="form-control" placeholder="بخش" />
+                        </div>
+                    </div>
+                    <div class="form-group en mb-3">
+                        <label for="nationalid" class="form-label">
+                            <img src="/icons/qrcode.svg" />
+                        </label>
+                        <InputText id="nationalid" @bind-Value="LocalFederation.NationalId" class="form-control" placeholder="شناسه ملی هیات" />
+                    </div>
+                    <hr />
+                    <div class="form-group fa mb-3">
+                        <label for="address" class="form-label">
+                            <img src="/icons/location.svg" />
+                        </label>
+                        <InputText id="address" @bind-Value="LocalFederation.Address" class="form-control" placeholder="آدرس دفتر هیات" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group en mb-3">
+                            <label for="zipcode" class="form-label">
+                                <img src="/icons/zipcode.svg" />
+                            </label>
+                            <InputText id="zipcode" @bind-Value="LocalFederation.ZipCode" class="form-control" placeholder="کد پستی دفتر هیات" />
                         </div>
                         <div class="form-group en mb-3">
-                            <label for="nationalid" class="form-label">
-                                <img src="/icons/qrcode.svg" />
+                            <label for="phone" class="form-label">
+                                <img src="/icons/phone.svg" />
                             </label>
-                            <InputText id="nationalid" @bind-Value="LocalFederation.NationalId" class="form-control" placeholder="شناسه ملی هیات" />
+                            <InputText id="phone" @bind-Value="LocalFederation.Phone" class="form-control" placeholder="تلفن دفتر هیات" />
                         </div>
-                        <hr />
-                        <div class="form-group fa mb-3">
-                            <label for="address" class="form-label">
-                                <img src="/icons/location.svg" />
-                            </label>
-                            <InputText id="address" @bind-Value="LocalFederation.Address" class="form-control" placeholder="آدرس دفتر هیات" />
+                    </div>
+                    <ValidationSummary class="text-danger" role="alert" />
+                    @if (!string.IsNullOrEmpty(statusMessage))
+                    {
+                        <div class="alert alert-@statusMessageClass" role="alert">
+                            @statusMessage
                         </div>
-                        <div class="form-row">
-                            <div class="form-group en mb-3">
-                                <label for="zipcode" class="form-label">
-                                    <img src="/icons/zipcode.svg" />
-                                </label>
-                                <InputText id="zipcode" @bind-Value="LocalFederation.ZipCode" class="form-control" placeholder="کد پستی دفتر هیات" />
-                            </div>
-                            <div class="form-group en mb-3">
-                                <label for="phone" class="form-label">
-                                    <img src="/icons/phone.svg" />
-                                </label>
-                                <InputText id="phone" @bind-Value="LocalFederation.Phone" class="form-control" placeholder="تلفن دفتر هیات" />
-                            </div>
-                        </div>
-                        <ValidationSummary class="text-danger" role="alert" />
-                        @if (!string.IsNullOrEmpty(statusMessage))
-                        {
-                            <div class="alert alert-@statusMessageClass" role="alert">
-                                @statusMessage
-                            </div>
-                        }
-                        <button type="submit" class="btn btn-primary w-100">ثبت</button>
-                    </EditForm>
-                </div>
-            }
-        </div>
+                    }
+                    <button type="submit" class="btn btn-primary w-100">ثبت</button>
+                </EditForm>
+            </div>
+        }
     </div>
-</AuthorizeView>
+</div>
 
 @code {
     [SupplyParameterFromForm]
@@ -162,7 +160,7 @@
         {
             await context.SaveChangesAsync();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             statusMessageClass = "danger";
             statusMessage = $"{exception.InnerException!.Message}";

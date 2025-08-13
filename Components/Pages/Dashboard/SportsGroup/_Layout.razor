@@ -2,30 +2,32 @@
 
 @layout Layout.DashboardLayout
 
-<nav class="secondary-navbar">
-    <div class="container">
-        <h5 class="sub-title">گروه توسعه ورزش</h5>
-        <ul class="nav">
-            <li class="nav-item">
-                <NavLink href="/Dashboard/SportsGroup/Insurance">ورزشکاران سازمان یافته</NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/Dashboard/SportsGroup/Federations">هیات های ورزشی</NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/Dashboard/SportsGroup/Championship">ورزش قهرمانی</NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/Dashboard/SportsGroup/Education">واحد آموزش ورزشی</NavLink>
-            </li>
-        </ul>
-    </div>
-</nav>
-<article class="content py-3">
-    <div class="container">
-        @Body
-    </div>
-</article>
+<AuthorizeView Roles="SuperAdministrator, Administrator" Context="authContext">
+    <nav class="secondary-navbar">
+        <div class="container">
+            <h5 class="sub-title">گروه توسعه ورزش</h5>
+            <ul class="nav">
+                <li class="nav-item">
+                    <NavLink href="/Dashboard/SportsGroup/Insurance">ورزشکاران سازمان یافته</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/Dashboard/SportsGroup/Federations">هیات های ورزشی</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/Dashboard/SportsGroup/Championship">ورزش قهرمانی</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/Dashboard/SportsGroup/Education">واحد آموزش ورزشی</NavLink>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <article class="content py-3">
+        <div class="container">
+            @Body
+        </div>
+    </article>
+</AuthorizeView>
 
 @code {
 

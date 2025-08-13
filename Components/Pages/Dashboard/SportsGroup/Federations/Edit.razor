@@ -6,184 +6,182 @@
 
 <PageTitle>هیات ورزشی</PageTitle>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-    <div class="page-top-menu">
-        <h6 class="panel-title">ویرایش هیات ورزشی</h6>
-        <div class="top-menu-links justify-content-end">
-            <NavLink class="panel-link" href=@($"/Dashboard/SportsGroup/Federations/President/Add/{Id}")>ثبت اطلاعات تصدی جدید</NavLink>
-        </div>
+<div class="page-top-menu">
+    <h6 class="panel-title">ویرایش هیات ورزشی</h6>
+    <div class="top-menu-links justify-content-end">
+        <NavLink class="panel-link" href=@($"/Dashboard/SportsGroup/Federations/President/Add/{Id}")>ثبت اطلاعات تصدی جدید</NavLink>
     </div>
-    <div class="row form-wrapper">
-        <div class="col3-5 mb-0">
-            <div class="instructions">
-                <p class="mb-0">در فرم مقابل آمار ورزشکاران سازمان یافته بر اساس هر هیات در هر شهرستان مربوط به ماه مشخصی ثبت می شوند.</p>
-                <p class="mb-3">بدیهی است که آمار مربوطه معادل تعداد ورزشکاران آقا و خانم بیمه شده از ابتدای ماه تا انتهای همان خواهد بود.</p>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/calendar-blue.svg">
-                        <h6>ماه و سال:</h6>
-                    </div>
-                    <p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
-                    <p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+</div>
+<div class="row form-wrapper">
+    <div class="col3-5 mb-0">
+        <div class="instructions">
+            <p class="mb-0">در فرم مقابل آمار ورزشکاران سازمان یافته بر اساس هر هیات در هر شهرستان مربوط به ماه مشخصی ثبت می شوند.</p>
+            <p class="mb-3">بدیهی است که آمار مربوطه معادل تعداد ورزشکاران آقا و خانم بیمه شده از ابتدای ماه تا انتهای همان خواهد بود.</p>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/calendar-blue.svg">
+                    <h6>ماه و سال:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/man-blue.svg">
-                        <h6>تعداد بیمه های ورزشی آقایان:</h6>
-                    </div>
-                    <p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+                <p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
+                <p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/man-blue.svg">
+                    <h6>تعداد بیمه های ورزشی آقایان:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/woman-blue.svg">
-                        <h6>تعداد بیمه های ورزشی بانوان:</h6>
-                    </div>
-                    <p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+                <p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/woman-blue.svg">
+                    <h6>تعداد بیمه های ورزشی بانوان:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <h6>تذکر:</h6>
-                    </div>
-                    <p>فرم به گونه ای طراحی شده است که پس از ثبت آمار یک هیات در تاریخ مشخصی نیاز به رفرش کردن صفحه نبوده و می توانید دیگر آمارها را نیز وارد نمایید.</p>
-                    <p>همچنین چنانچه تعداد ورزشکاران سازمان یافته هیات مربوطه برای ماه و سال انتخاب شده در فرم قبلا ثبت شده باشد، خطایی در خصوص عدم امکان ثبت اطلاعات جدید، نمایش داده خواهد شد.</p>
+                <p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <h6>تذکر:</h6>
                 </div>
+                <p>فرم به گونه ای طراحی شده است که پس از ثبت آمار یک هیات در تاریخ مشخصی نیاز به رفرش کردن صفحه نبوده و می توانید دیگر آمارها را نیز وارد نمایید.</p>
+                <p>همچنین چنانچه تعداد ورزشکاران سازمان یافته هیات مربوطه برای ماه و سال انتخاب شده در فرم قبلا ثبت شده باشد، خطایی در خصوص عدم امکان ثبت اطلاعات جدید، نمایش داده خواهد شد.</p>
             </div>
         </div>
-        <div class="col2-5 mb-auto">
-            @if (LocalFederation is null)
-            {
-                <Loading CardMode=true />
-            }
-            else
-            {
-                <div class="card p-3">
-                    <EditForm method="post" Model="LocalFederation" OnValidSubmit="UpdateLocalFederation" FormName="edit" Enhance>
-                        <DataAnnotationsValidator />
-                        <input type="hidden" name="LocalFederation.Id" value="@LocalFederation!.Id" />
-                        <input type="hidden" name="LocalFederation.FederationId" value="@LocalFederation!.FederationId" />
-                        <input type="hidden" name="LocalFederation.CityId" value="@LocalFederation!.CityId" />
-                        <input type="hidden" name="LocalFederation.District" value="@LocalFederation!.District" />
+    </div>
+    <div class="col2-5 mb-auto">
+        @if (LocalFederation is null)
+        {
+            <Loading CardMode=true />
+        }
+        else
+        {
+            <div class="card p-3">
+                <EditForm method="post" Model="LocalFederation" OnValidSubmit="UpdateLocalFederation" FormName="edit" Enhance>
+                    <DataAnnotationsValidator />
+                    <input type="hidden" name="LocalFederation.Id" value="@LocalFederation!.Id" />
+                    <input type="hidden" name="LocalFederation.FederationId" value="@LocalFederation!.FederationId" />
+                    <input type="hidden" name="LocalFederation.CityId" value="@LocalFederation!.CityId" />
+                    <input type="hidden" name="LocalFederation.District" value="@LocalFederation!.District" />
+                    <div class="form-group fa mb-3">
+                        <label for="federationid" class="form-label">
+                            <img src="/icons/dropdown.svg" />
+                        </label>
+                        <div class="form-control">
+                            @LocalFederation!.Federation?.PersianName
+                        </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group fa mb-3">
-                            <label for="federationid" class="form-label">
+                            <label for="cityid" class="form-label">
                                 <img src="/icons/dropdown.svg" />
                             </label>
                             <div class="form-control">
-                                @LocalFederation!.Federation?.PersianName
+                                @LocalFederation!.City?.PersianName
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group fa mb-3">
-                                <label for="cityid" class="form-label">
-                                    <img src="/icons/dropdown.svg" />
-                                </label>
-                                <div class="form-control">
-                                    @LocalFederation!.City?.PersianName
-                                </div>
+                        <div class="form-group fa mb-3">
+                            <label for="district" class="form-label">
+                                <img src="/icons/location-map.svg" />
+                            </label>
+                            <div class="form-control">
+                                @LocalFederation!.District
                             </div>
-                            <div class="form-group fa mb-3">
-                                <label for="district" class="form-label">
-                                    <img src="/icons/location-map.svg" />
-                                </label>
-                                <div class="form-control">
-                                    @LocalFederation!.District
-                                </div>
-                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group en mb-3">
+                        <label for="nationalid" class="form-label">
+                            <img src="/icons/qrcode.svg" />
+                        </label>
+                        <InputText id="nationalid" @bind-Value="LocalFederation.NationalId" class="form-control" placeholder="شناسه ملی هیات" />
+                    </div>
+                    <hr />
+                    <div class="form-group fa mb-3">
+                        <label for="address" class="form-label">
+                            <img src="/icons/location.svg" />
+                        </label>
+                        <InputText id="address" @bind-Value="LocalFederation.Address" class="form-control" placeholder="آدرس دفتر هیات" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group en mb-3">
+                            <label for="zipcode" class="form-label">
+                                <img src="/icons/zipcode.svg" />
+                            </label>
+                            <InputText id="zipcode" @bind-Value="LocalFederation.ZipCode" class="form-control" placeholder="کد پستی دفتر هیات" />
                         </div>
                         <div class="form-group en mb-3">
-                            <label for="nationalid" class="form-label">
-                                <img src="/icons/qrcode.svg" />
+                            <label for="phone" class="form-label">
+                                <img src="/icons/phone.svg" />
                             </label>
-                            <InputText id="nationalid" @bind-Value="LocalFederation.NationalId" class="form-control" placeholder="شناسه ملی هیات" />
+                            <InputText id="phone" @bind-Value="LocalFederation.Phone" class="form-control" placeholder="تلفن دفتر هیات" />
                         </div>
-                        <hr />
-                        <div class="form-group fa mb-3">
-                            <label for="address" class="form-label">
-                                <img src="/icons/location.svg" />
-                            </label>
-                            <InputText id="address" @bind-Value="LocalFederation.Address" class="form-control" placeholder="آدرس دفتر هیات" />
+                    </div>
+                    <ValidationSummary class="text-danger" role="alert" />
+                    @if (!string.IsNullOrEmpty(statusMessage))
+                    {
+                        <div class="alert alert-@statusMessageClass" role="alert">
+                            @statusMessage
                         </div>
-                        <div class="form-row">
-                            <div class="form-group en mb-3">
-                                <label for="zipcode" class="form-label">
-                                    <img src="/icons/zipcode.svg" />
-                                </label>
-                                <InputText id="zipcode" @bind-Value="LocalFederation.ZipCode" class="form-control" placeholder="کد پستی دفتر هیات" />
-                            </div>
-                            <div class="form-group en mb-3">
-                                <label for="phone" class="form-label">
-                                    <img src="/icons/phone.svg" />
-                                </label>
-                                <InputText id="phone" @bind-Value="LocalFederation.Phone" class="form-control" placeholder="تلفن دفتر هیات" />
-                            </div>
-                        </div>
-                        <ValidationSummary class="text-danger" role="alert" />
-                        @if (!string.IsNullOrEmpty(statusMessage))
-                        {
-                            <div class="alert alert-@statusMessageClass" role="alert">
-                                @statusMessage
-                            </div>
-                        }
-                        <button type="submit" class="btn btn-primary w-100">به روز رسانی</button>
-                    </EditForm>
-                </div>
+                    }
+                    <button type="submit" class="btn btn-primary w-100">به روز رسانی</button>
+                </EditForm>
+            </div>
+        }
+    </div>
+</div>
+<hr />
+<div class="card list-card">
+    <div class="card-header border-bottom">
+        <h6 class="title">سابقه تصدی هیات <b class="text-primary px-1">@LocalFederation?.Federation.PersianName</b> @LocalFederation?.City.PersianName @LocalFederation?.District</h6>
+        <div class="paginator">
+            <nav role="navigation">
+                @if (pagination.TotalItemCount.HasValue)
+                {
+                    var totalPages = pagination.TotalItemCount;
+                    var pageIndex = pagination.CurrentPageIndex;
+                    var currentPage = pageIndex + 1;
+                    var lastPage = pagination.LastPageIndex + 1;
+                    var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+                    var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+                    <button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+                            class="btn"
+                            aria-current="@AriaCurrentValue(pageIndex + 1)"
+                            aria-label="@(pageIndex + 1)"
+                            disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+                        <span class="material-symbols-rounded">chevron_left</span>
+                    </button>
+                    <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+                    <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+                            class="btn"
+                            aria-current="@AriaCurrentValue(pageIndex - 1)"
+                            aria-label="@(pageIndex - 1)"
+                            disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                        <span class="material-symbols-rounded">chevron_right</span>
+                    </button>
+                }
+            </nav>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-wrapper">
+            @if (Presidents is not null)
+            {
+                <QuickGrid Items="Presidents.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
+                    <PropertyColumn Title="نام و نام خانوداگی" Property="@(president => president.Name)" />
+                    <PropertyColumn Title="کد ملی" Property="@(president => president.SeenCode)" />
+                    <PropertyColumn Title="شماره همراه" Property="@(president => president.Phone)" />
+                    <PropertyColumn Title="وضعیت تصدی" Property="@(president => president.IsPresident ? "رئیس" : "سرپرست")" />
+                    <PropertyColumn Title="آغاز تصدی" Property="@(president => president.AppointmentDate)" />
+                    <PropertyColumn Title="اتمام تصدی" Property="@(president => president.TermEnd)" />
+                    <TemplateColumn>
+                        <a class="edit-link" href="/Dashboard/SportsGroup/Federations/President/Edit/@context.Id">
+                            <img src="/icons/user-edit.svg" />
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
             }
         </div>
     </div>
-    <hr />
-    <div class="card list-card">
-        <div class="card-header border-bottom">
-            <h6 class="title">سابقه تصدی هیات <b class="text-primary px-1">@LocalFederation?.Federation.PersianName</b> @LocalFederation?.City.PersianName @LocalFederation?.District</h6>
-            <div class="paginator">
-                <nav role="navigation">
-                    @if (pagination.TotalItemCount.HasValue)
-                    {
-                        var totalPages = pagination.TotalItemCount;
-                        var pageIndex = pagination.CurrentPageIndex;
-                        var currentPage = pageIndex + 1;
-                        var lastPage = pagination.LastPageIndex + 1;
-                        var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
-                        var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
-                        <button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
-                        class="btn"
-                        aria-current="@AriaCurrentValue(pageIndex + 1)"
-                        aria-label="@(pageIndex + 1)"
-                        disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-                            <span class="material-symbols-rounded">chevron_left</span>
-                        </button>
-                        <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-                        <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-                        class="btn"
-                        aria-current="@AriaCurrentValue(pageIndex - 1)"
-                        aria-label="@(pageIndex - 1)"
-                        disabled=@((pageIndex <= 0) ? "disabled" : false)>
-                            <span class="material-symbols-rounded">chevron_right</span>
-                        </button>
-                    }
-                </nav>
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="table-wrapper">
-                @if (Presidents is not null)
-                {
-                    <QuickGrid Items="Presidents.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-                        <PropertyColumn Title="نام و نام خانوداگی" Property="@(president => president.Name)" />
-                        <PropertyColumn Title="کد ملی" Property="@(president => president.SeenCode)" />
-                        <PropertyColumn Title="شماره همراه" Property="@(president => president.Phone)" />
-                        <PropertyColumn Title="وضعیت تصدی" Property="@(president => president.IsPresident ? "رئیس" : "سرپرست")" />
-                        <PropertyColumn Title="آغاز تصدی" Property="@(president => president.AppointmentDate)" />
-                        <PropertyColumn Title="اتمام تصدی" Property="@(president => president.TermEnd)" />
-                        <TemplateColumn>
-                            <a class="edit-link" href="/Dashboard/SportsGroup/Federations/President/Edit/@context.Id">
-                                <img src="/icons/user-edit.svg" />
-                            </a>
-                        </TemplateColumn>
-                    </QuickGrid>
-                }
-            </div>
-        </div>
-    </div>
-</AuthorizeView>
+</div>
 
 @code {
     [Parameter]
@@ -222,7 +220,7 @@
         context = DbFactory.CreateDbContext();
 
         LocalFederation!.LocalFederationPresidents = Presidents!.ToArray();
-        
+
         var city = await context.Cities
             .FirstOrDefaultAsync(city => city.Id == LocalFederation!.CityId);
         LocalFederation!.City = city!;

@@ -12,235 +12,231 @@
     <h6 class="panel-title">باشگاه @Facility?.Name شهرستان @Facility?.City!.PersianName</h6>
 </div>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-    <Authorized>
-        <div class="row form-wrapper">
-            <div class="col3-5 mb-0">
-                <div class="instructions">
-                    <p class="mb-3">فرم مقابل جهت ثبت اطلاعات باشگاه های ورزشی خصوصی بر اساس پروانه فعالیت صادر شده از سامانه طراحی شده است.</p>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/title-blue.svg">
-                            <h6>عنوان باشگاه:</h6>
+<div class="row form-wrapper">
+    <div class="col3-5 mb-0">
+        <div class="instructions">
+            <p class="mb-3">فرم مقابل جهت ثبت اطلاعات باشگاه های ورزشی خصوصی بر اساس پروانه فعالیت صادر شده از سامانه طراحی شده است.</p>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/title-blue.svg">
+                    <h6>عنوان باشگاه:</h6>
+                </div>
+                <p>عنوان باشگاه بر اساس پروانه فعالیت صادر شده از درگاه ملی مجوزها</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/verified-blue.svg">
+                    <h6>وضعیت باشگاه:</h6>
+                </div>
+                <p>وضعیت فعالیت باشگاه به صورت یک کلید دو حالته قابل تنظیم است.</p>
+                <p>چنانچه کلید در حالت قرمز باشد به معنی غیرفعال بودن باشگاه خواهد بود، و در صورتی که باشگاه فعال باشد لطفا کلید مربوطه را در وضعیت سبز قرار دهید.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/location-map-blue.svg">
+                    <h6>بخش / روستا:</h6>
+                </div>
+                <p>در صورتی که باشگاه مربوطه در بخش یا روستا است لطفا نام بخش یا روستا را وارد نمایید.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/location-blue.svg">
+                    <h6>آدرس پستی:</h6>
+                </div>
+                <p>آدرس پستی محل باشگاه ورزشی مربوطه که در گواهی تاییدیه کد پستی درج شده است.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/zipcode-blue.svg">
+                    <h6>کد پستی:</h6>
+                </div>
+                <p>کد پستی ده رقمی محل باشگاه یا دفتر باشگاه بر اساس تاییدیه کد پستی ارائه شده بدون خط فاصله و فقط با ده رقم وارد گردد.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/phone-blue.svg">
+                    <h6>شماره تلفن باشگاه:</h6>
+                </div>
+                <p>شماره تلفن مربوط به تلفن ثابت باشگاه بوده و ترجیحا به همراه کد استان ثبت گردد.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/area-blue.svg">
+                    <h6>مساحت:</h6>
+                </div>
+                <p>مساحت باشگاه در سه بخش مساحت کل (مجموع فضای سرپوشیده و روباز)، مساحت فضای سرپوشیده و مساحت فضای روباز در نظر گرفته شده است.</p>
+                <p>چنانچه باشگاه فاقد فضای سرپوشیده یا فاقد فضای روباز بوده و مساحت یکی از این دو فضا صفر باشید، فیلد مربوطه می تواند خالی باشد.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col2-5 mb-auto">
+        @if (Facility is null)
+        {
+            <Loading CardMode=true />
+        }
+        else
+        {
+            <div class="card p-3">
+                <EditForm method="post" Model="Facility" OnValidSubmit="UpdateFacility" FormName="edit" Enhance>
+                    <DataAnnotationsValidator />
+                    <ValidationSummary role="alert" />
+                    <input type="hidden" name="Facility.Id" value="@Facility.Id" />
+                    <div class="form-row">
+                        <div class="form-group fa mb-3">
+                            <label for="title" class="form-label">
+                                <img src="/icons/title.svg" />
+                            </label>
+                            <InputText id="title" @bind-Value="Facility.Name" class="form-control" placeholder="عنوان باشگاه" />
                         </div>
-                        <p>عنوان باشگاه بر اساس پروانه فعالیت صادر شده از درگاه ملی مجوزها</p>
+                        <div class="form-group active-sign mb-3">
+                            <label for="isactive" class="form-label">
+                                <img class="active" src="/icons/verified.svg" />
+                                <img class="deactive" src="/icons/verified-off.svg" />
+                            </label>
+                            <InputCheckbox id="isactive" @bind-Value="Facility.IsActive" class="form-check-input" />
+                        </div>
                     </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/verified-blue.svg">
-                            <h6>وضعیت باشگاه:</h6>
+                    <div class="form-row">
+                        <div class="form-group fa mb-3">
+                            <label for="cityid" class="form-label">
+                                <img src="/icons/dropdown.svg" />
+                            </label>
+                            <InputSelect id="cityid" class="select form-control" @bind-Value="Facility.CityId">
+                                @if (Cities is not null)
+                                {
+                                    foreach (City city in Cities)
+                                    {
+                                        <option value="@city.Id">@city.PersianName</option>
+                                    }
+                                }
+                            </InputSelect>
                         </div>
-                        <p>وضعیت فعالیت باشگاه به صورت یک کلید دو حالته قابل تنظیم است.</p>
-                        <p>چنانچه کلید در حالت قرمز باشد به معنی غیرفعال بودن باشگاه خواهد بود، و در صورتی که باشگاه فعال باشد لطفا کلید مربوطه را در وضعیت سبز قرار دهید.</p>
+                        <div class="form-group fa mb-3">
+                            <label for="district" class="form-label">
+                                <img src="/icons/location-map.svg" />
+                            </label>
+                            <InputText id="district" @bind-Value="Facility.District" class="form-control" placeholder="بخش / روستا" />
+                        </div>
                     </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/location-map-blue.svg">
-                            <h6>بخش / روستا:</h6>
-                        </div>
-                        <p>در صورتی که باشگاه مربوطه در بخش یا روستا است لطفا نام بخش یا روستا را وارد نمایید.</p>
+                    <div class="form-group fa mb-3">
+                        <label for="address" class="form-label">
+                            <img src="/icons/location.svg" />
+                        </label>
+                        <InputText id="address" @bind-Value="Facility.Address" class="form-control" placeholder="آدرس پستی" />
                     </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/location-blue.svg">
-                            <h6>آدرس پستی:</h6>
+                    <div class="form-row">
+                        <div class="form-group en mb-3">
+                            <label for="zipcode" class="form-label">
+                                <img src="/icons/zipcode.svg" />
+                            </label>
+                            <InputText id="zipcode" @bind-Value="Facility.ZipCode" class="form-control" placeholder="کد پستی" />
                         </div>
-                        <p>آدرس پستی محل باشگاه ورزشی مربوطه که در گواهی تاییدیه کد پستی درج شده است.</p>
+                        <div class="form-group fa mb-3">
+                            <label for="isrural" class="form-label">
+                                <img src="/icons/dropdown.svg" />
+                            </label>
+                            <InputSelect id="isrural" class="form-control select" @bind-Value="Facility.IsRural">
+                                <option value="false">شهری</option>
+                                <option value="true">روستایی</option>
+                            </InputSelect>
+                        </div>
                     </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/zipcode-blue.svg">
-                            <h6>کد پستی:</h6>
-                        </div>
-                        <p>کد پستی ده رقمی محل باشگاه یا دفتر باشگاه بر اساس تاییدیه کد پستی ارائه شده بدون خط فاصله و فقط با ده رقم وارد گردد.</p>
+                    <div class="form-group en mb-3">
+                        <label for="phone" class="form-label">
+                            <img src="/icons/phone.svg" />
+                        </label>
+                        <InputText id="phone" @bind-Value="Facility.Phone" class="form-control" placeholder="شماره تلفن باشگاه" />
                     </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/phone-blue.svg">
-                            <h6>شماره تلفن باشگاه:</h6>
+                    <div class="form-row">
+                        <div class="form-group fa mb-3">
+                            <label for="typeid" class="form-label">
+                                <img src="/icons/dropdown.svg" />
+                            </label>
+                            <InputSelect id="typeid" class="select form-control" @bind-Value="Facility.TypeId">
+                                @foreach (FacilityType type in Types!)
+                                {
+                                    <option value="@type.Id">@type.PersianTitle</option>
+                                }
+                            </InputSelect>
                         </div>
-                        <p>شماره تلفن مربوط به تلفن ثابت باشگاه بوده و ترجیحا به همراه کد استان ثبت گردد.</p>
+                        <div class="form-group en mb-3">
+                            <label for="area" class="form-label">
+                                <img src="/icons/area.svg" />
+                            </label>
+                            <InputNumber id="area" @bind-Value="Facility.Area" class="form-control" placeholder="مساحت کل" />
+                        </div>
                     </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/area-blue.svg">
-                            <h6>مساحت:</h6>
+                    <div class="form-row">
+                        <div class="form-group en mb-3">
+                            <label for="sporthallarea" class="form-label">
+                                <img src="/icons/area.svg" />
+                            </label>
+                            <InputNumber id="sporthallarea" @bind-Value="Facility.SportHallArea" class="form-control" placeholder="مساحت سرپوشیده" />
                         </div>
-                        <p>مساحت باشگاه در سه بخش مساحت کل (مجموع فضای سرپوشیده و روباز)، مساحت فضای سرپوشیده و مساحت فضای روباز در نظر گرفته شده است.</p>
-                        <p>چنانچه باشگاه فاقد فضای سرپوشیده یا فاقد فضای روباز بوده و مساحت یکی از این دو فضا صفر باشید، فیلد مربوطه می تواند خالی باشد.</p>
+                        <div class="form-group en mb-3">
+                            <label for="sportlandarea" class="form-label">
+                                <img src="/icons/area.svg" />
+                            </label>
+                            <InputNumber id="sportlandarea" @bind-Value="Facility.SportLandArea" class="form-control" placeholder="مساحت روباز" />
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(statusMessage))
+                    {
+                        <div class="alert alert-@statusMessageClass" role="alert">
+                            @statusMessage
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-primary w-100">تایید</button>
+                </EditForm>
+            </div>
+        }
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col1-1">
+        @if (Licenses is null)
+        {
+            <Loading CardMode=true />
+        }
+        else
+        {
+            <div class="card licenses-list-card">
+                <div class="card-header">
+                    <h6 class="title">@($"فهرست مجوزهای باشگاه {Facility!.Name}")</h6>
+                    <div class="header-link">
+                        <a class="header-link" href="/Dashboard/M5/Licenses/Add/@Facility.Id">
+                            <img src="/icons/note-add.svg" />
+                            ثبت مجوز جدید
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="licenses-list">
+                        <QuickGrid Items="Licenses.AsQueryable()" Theme="" Class="licenses-table">
+                            <PropertyColumn Title="سریال مجوز" Property="@(license => license.Serial!)" />
+                            <PropertyColumn Title="نوع مالکیت مجوز" Property="@(license => license.IsBeneficial == null ? "نامشخص" : (license.IsBeneficial == true ? "حقیقی" : "حقوقی"))" />
+                            <PropertyColumn Title="نوع مالکیت ملک" Property="@(license => license.IsOwner == null ? "نامشخص" : (license.IsOwner == true ? "تملیکی" : "استیجاری"))" />
+                            <PropertyColumn Title="نوع مجوز" Property="@(license => license.IsRenewal == null ? "نامشخص" : (license.IsRenewal == true ? "تمدید" : "تاسیس"))" />
+                            <PropertyColumn Title="ارگان / شرکت" Property="@(license => license.Company!)" />
+                            <PropertyColumn Title="تاریخ تاسیس" Property="@(license => license.StartDate!)" />
+                            <PropertyColumn Title="تاریخ انقضا" Property="@(license => license.ExpireDate!)" />
+                            <PropertyColumn Title="نام موسس" Property="@(license => license.Name!)" />
+                            <PropertyColumn Title="کد ملی موسس" Property="@(license => license.SeenCode!)" />
+                            <PropertyColumn Title="شماره همراه موسس" Property="@(license => license.Phone!)" />
+                            <PropertyColumn Title="جنسیت باشگاه" Property="@(license => license.UsersGender!.PersianName)" />
+                            <TemplateColumn>
+                                <a class="edit-link" href="/Dashboard/M5/Licenses/Edit/@context.Id">
+                                    <img src="/icons/note-edit.svg" />
+                                </a>
+                            </TemplateColumn>
+                        </QuickGrid>
                     </div>
                 </div>
             </div>
-            <div class="col2-5 mb-auto">
-                @if (Facility is null)
-                {
-                    <Loading CardMode=true />
-                }
-                else
-                {
-                    <div class="card p-3">
-                        <EditForm method="post" Model="Facility" OnValidSubmit="UpdateFacility" FormName="edit" Enhance>
-                            <DataAnnotationsValidator />
-                            <ValidationSummary role="alert" />
-                            <input type="hidden" name="Facility.Id" value="@Facility.Id" />
-                            <div class="form-row">
-                                <div class="form-group fa mb-3">
-                                    <label for="title" class="form-label">
-                                        <img src="/icons/title.svg" />
-                                    </label>
-                                    <InputText id="title" @bind-Value="Facility.Name" class="form-control" placeholder="عنوان باشگاه" />
-                                </div>
-                                <div class="form-group active-sign mb-3">
-                                    <label for="isactive" class="form-label">
-                                        <img class="active" src="/icons/verified.svg" />
-                                        <img class="deactive" src="/icons/verified-off.svg" />
-                                    </label>
-                                    <InputCheckbox id="isactive" @bind-Value="Facility.IsActive" class="form-check-input" />
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group fa mb-3">
-                                    <label for="cityid" class="form-label">
-                                        <img src="/icons/dropdown.svg" />
-                                    </label>
-                                    <InputSelect id="cityid" class="select form-control" @bind-Value="Facility.CityId">
-                                        @if (Cities is not null)
-                                        {
-                                            foreach (City city in Cities)
-                                            {
-                                                <option value="@city.Id">@city.PersianName</option>
-                                            }
-                                        }
-                                    </InputSelect>
-                                </div>
-                                <div class="form-group fa mb-3">
-                                    <label for="district" class="form-label">
-                                        <img src="/icons/location-map.svg" />
-                                    </label>
-                                    <InputText id="district" @bind-Value="Facility.District" class="form-control" placeholder="بخش / روستا" />
-                                </div>
-                            </div>
-                            <div class="form-group fa mb-3">
-                                <label for="address" class="form-label">
-                                    <img src="/icons/location.svg" />
-                                </label>
-                                <InputText id="address" @bind-Value="Facility.Address" class="form-control" placeholder="آدرس پستی" />
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group en mb-3">
-                                    <label for="zipcode" class="form-label">
-                                        <img src="/icons/zipcode.svg" />
-                                    </label>
-                                    <InputText id="zipcode" @bind-Value="Facility.ZipCode" class="form-control" placeholder="کد پستی" />
-                                </div>
-                                <div class="form-group fa mb-3">
-                                    <label for="isrural" class="form-label">
-                                        <img src="/icons/dropdown.svg" />
-                                    </label>
-                                    <InputSelect id="isrural" class="form-control select" @bind-Value="Facility.IsRural">
-                                        <option value="false">شهری</option>
-                                        <option value="true">روستایی</option>
-                                    </InputSelect>
-                                </div>
-                            </div>
-                            <div class="form-group en mb-3">
-                                <label for="phone" class="form-label">
-                                    <img src="/icons/phone.svg" />
-                                </label>
-                                <InputText id="phone" @bind-Value="Facility.Phone" class="form-control" placeholder="شماره تلفن باشگاه" />
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group fa mb-3">
-                                    <label for="typeid" class="form-label">
-                                        <img src="/icons/dropdown.svg" />
-                                    </label>
-                                    <InputSelect id="typeid" class="select form-control" @bind-Value="Facility.TypeId">
-                                        @foreach (FacilityType type in Types!)
-                                        {
-                                            <option value="@type.Id">@type.PersianTitle</option>
-                                        }
-                                    </InputSelect>
-                                </div>
-                                <div class="form-group en mb-3">
-                                    <label for="area" class="form-label">
-                                        <img src="/icons/area.svg" />
-                                    </label>
-                                    <InputNumber id="area" @bind-Value="Facility.Area" class="form-control" placeholder="مساحت کل" />
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group en mb-3">
-                                    <label for="sporthallarea" class="form-label">
-                                        <img src="/icons/area.svg" />
-                                    </label>
-                                    <InputNumber id="sporthallarea" @bind-Value="Facility.SportHallArea" class="form-control" placeholder="مساحت سرپوشیده" />
-                                </div>
-                                <div class="form-group en mb-3">
-                                    <label for="sportlandarea" class="form-label">
-                                        <img src="/icons/area.svg" />
-                                    </label>
-                                    <InputNumber id="sportlandarea" @bind-Value="Facility.SportLandArea" class="form-control" placeholder="مساحت روباز" />
-                                </div>
-                            </div>
-                            @if (!string.IsNullOrEmpty(statusMessage))
-                            {
-                                <div class="alert alert-@statusMessageClass" role="alert">
-                                    @statusMessage
-                                </div>
-                            }
-                            <button type="submit" class="btn btn-primary w-100">تایید</button>
-                        </EditForm>
-                    </div>
-                }
-            </div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col1-1">
-                @if(Licenses is null)
-                {
-                    <Loading CardMode=true />
-                }
-                else
-                {
-                    <div class="card licenses-list-card">
-                        <div class="card-header">
-                            <h6 class="title">@($"فهرست مجوزهای باشگاه {Facility!.Name}")</h6>
-                            <div class="header-link">
-                                <a class="header-link" href="/Dashboard/M5/Licenses/Add/@Facility.Id">
-                                    <img src="/icons/note-add.svg" />
-                                    ثبت مجوز جدید
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="licenses-list">
-                                <QuickGrid Items="Licenses.AsQueryable()" Theme="" Class="licenses-table">
-                                    <PropertyColumn Title="سریال مجوز" Property="@(license => license.Serial!)" />
-                                    <PropertyColumn Title="نوع مالکیت مجوز" Property="@(license => license.IsBeneficial == null ? "نامشخص" : (license.IsBeneficial == true ? "حقیقی" : "حقوقی"))" />
-                                    <PropertyColumn Title="نوع مالکیت ملک" Property="@(license => license.IsOwner == null ? "نامشخص" : (license.IsOwner == true ? "تملیکی" : "استیجاری"))" />
-                                    <PropertyColumn Title="نوع مجوز" Property="@(license => license.IsRenewal == null ? "نامشخص" : (license.IsRenewal == true ? "تمدید" : "تاسیس"))" />
-                                    <PropertyColumn Title="ارگان / شرکت" Property="@(license => license.Company!)" />
-                                    <PropertyColumn Title="تاریخ تاسیس" Property="@(license => license.StartDate!)" />
-                                    <PropertyColumn Title="تاریخ انقضا" Property="@(license => license.ExpireDate!)" />
-                                    <PropertyColumn Title="نام موسس" Property="@(license => license.Name!)" />
-                                    <PropertyColumn Title="کد ملی موسس" Property="@(license => license.SeenCode!)" />
-                                    <PropertyColumn Title="شماره همراه موسس" Property="@(license => license.Phone!)" />
-                                    <PropertyColumn Title="جنسیت باشگاه" Property="@(license => license.UsersGender!.PersianName)" />
-                                    <TemplateColumn>
-                                        <a class="edit-link" href="/Dashboard/M5/Licenses/Edit/@context.Id">
-                                            <img src="/icons/note-edit.svg" />
-                                        </a>
-                                    </TemplateColumn>
-                                </QuickGrid>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </Authorized>
-</AuthorizeView>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter]

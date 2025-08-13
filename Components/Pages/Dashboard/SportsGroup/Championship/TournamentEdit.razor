@@ -7,182 +7,180 @@
 
 <PageTitle>ورزش قهرمانی</PageTitle>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-	<div class="page-top-menu">
-		<div class="top-menu-links justify-content-end w-100">
-			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Championship">بازگشت به فهرست مسابقات</NavLink>
-		</div>
+<div class="page-top-menu">
+	<div class="top-menu-links justify-content-end w-100">
+		<NavLink class="panel-link" href="/Dashboard/SportsGroup/Championship">بازگشت به فهرست مسابقات</NavLink>
 	</div>
-	<div class="row form-wrapper">
-		<div class="col3-5 mb-0">
-			<div class="instructions">
-				<p class="mb-0">در فرم مقابل آمار ورزشکاران سازمان یافته بر اساس هر هیات در هر شهرستان مربوط به ماه مشخصی ثبت می شوند.</p>
-				<p class="mb-3">بدیهی است که آمار مربوطه معادل تعداد ورزشکاران آقا و خانم بیمه شده از ابتدای ماه تا انتهای همان خواهد بود.</p>
-				<div class="instruction-item">
-					<div class="icon-title mb-2">
-						<img src="/icons/calendar-blue.svg">
-						<h6>ماه و سال:</h6>
-					</div>
-					<p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
-					<p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+</div>
+<div class="row form-wrapper">
+	<div class="col3-5 mb-0">
+		<div class="instructions">
+			<p class="mb-0">در فرم مقابل آمار ورزشکاران سازمان یافته بر اساس هر هیات در هر شهرستان مربوط به ماه مشخصی ثبت می شوند.</p>
+			<p class="mb-3">بدیهی است که آمار مربوطه معادل تعداد ورزشکاران آقا و خانم بیمه شده از ابتدای ماه تا انتهای همان خواهد بود.</p>
+			<div class="instruction-item">
+				<div class="icon-title mb-2">
+					<img src="/icons/calendar-blue.svg">
+					<h6>ماه و سال:</h6>
 				</div>
-				<div class="instruction-item">
-					<div class="icon-title mb-2">
-						<img src="/icons/man-blue.svg">
-						<h6>تعداد بیمه های ورزشی آقایان:</h6>
-					</div>
-					<p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+				<p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
+				<p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+			</div>
+			<div class="instruction-item">
+				<div class="icon-title mb-2">
+					<img src="/icons/man-blue.svg">
+					<h6>تعداد بیمه های ورزشی آقایان:</h6>
 				</div>
-				<div class="instruction-item">
-					<div class="icon-title mb-2">
-						<img src="/icons/woman-blue.svg">
-						<h6>تعداد بیمه های ورزشی بانوان:</h6>
-					</div>
-					<p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+				<p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+			</div>
+			<div class="instruction-item">
+				<div class="icon-title mb-2">
+					<img src="/icons/woman-blue.svg">
+					<h6>تعداد بیمه های ورزشی بانوان:</h6>
 				</div>
-				<div class="instruction-item">
-					<div class="icon-title mb-2">
-						<h6>تذکر:</h6>
-					</div>
-					<p>فرم به گونه ای طراحی شده است که پس از ثبت آمار یک هیات در تاریخ مشخصی نیاز به رفرش کردن صفحه نبوده و می توانید دیگر آمارها را نیز وارد نمایید.</p>
-					<p>همچنین چنانچه تعداد ورزشکاران سازمان یافته هیات مربوطه برای ماه و سال انتخاب شده در فرم قبلا ثبت شده باشد، خطایی در خصوص عدم امکان ثبت اطلاعات جدید، نمایش داده خواهد شد.</p>
+				<p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+			</div>
+			<div class="instruction-item">
+				<div class="icon-title mb-2">
+					<h6>تذکر:</h6>
 				</div>
+				<p>فرم به گونه ای طراحی شده است که پس از ثبت آمار یک هیات در تاریخ مشخصی نیاز به رفرش کردن صفحه نبوده و می توانید دیگر آمارها را نیز وارد نمایید.</p>
+				<p>همچنین چنانچه تعداد ورزشکاران سازمان یافته هیات مربوطه برای ماه و سال انتخاب شده در فرم قبلا ثبت شده باشد، خطایی در خصوص عدم امکان ثبت اطلاعات جدید، نمایش داده خواهد شد.</p>
 			</div>
 		</div>
-		<div class="col2-5 mb-auto">
-			@if (Tournament is null)
-			{
-				<Loading CardMode=true />
-			}
-			else
-			{
-				<div class="card">
-					<div class="card-body">
-						<EditForm method="post" Model="Tournament!" OnValidSubmit="UpdateTournament" FormName="edit" Enhance>
-							<input type="hidden" name="Tournament.Id" value="@Tournament.Id" />
-							<div class="form-row">
-								<div class="form-group mb-3">
-									<label for="levelid" class="form-label">
-										<img src="/icons/dropdown.svg" />
-									</label>
-									<InputSelect id="levelid" @bind-Value="Tournament.LevelId" class="form-control">
-										@foreach (TournamentLevel level in TournamentLevels!)
-										{
-											<option value="@level.Id">@level.PersianTitle</option>
-										}
-									</InputSelect>
-								</div>
-								<div class="form-group mb-3">
-									<label for="federationid" class="form-label">
-										<img src="/icons/dropdown.svg" />
-									</label>
-									<InputSelect id="federationid" @bind-Value="Tournament.FederationId" class="form-control">
-										@foreach (Federation federation in Federations!)
-										{
-											<option value="@federation.Id">@federation.PersianName</option>
-										}
-									</InputSelect>
-								</div>
-							</div>
-							<div class="form-group fa mb-3">
-								<label for="host" class="form-label">
-									<img src="/icons/location-province.svg" />
+	</div>
+	<div class="col2-5 mb-auto">
+		@if (Tournament is null)
+		{
+			<Loading CardMode=true />
+		}
+		else
+		{
+			<div class="card">
+				<div class="card-body">
+					<EditForm method="post" Model="Tournament!" OnValidSubmit="UpdateTournament" FormName="edit" Enhance>
+						<input type="hidden" name="Tournament.Id" value="@Tournament.Id" />
+						<div class="form-row">
+							<div class="form-group mb-3">
+								<label for="levelid" class="form-label">
+									<img src="/icons/dropdown.svg" />
 								</label>
-								<InputText id="host" @bind-Value="Tournament.Host" class="form-control" placeholder="محل برگزاری" />
+								<InputSelect id="levelid" @bind-Value="Tournament.LevelId" class="form-control">
+									@foreach (TournamentLevel level in TournamentLevels!)
+									{
+										<option value="@level.Id">@level.PersianTitle</option>
+									}
+								</InputSelect>
 							</div>
-							<div class="form-row">
-								<div class="form-group en mb-3">
-									<label for="day" class="form-label">
-										<img src="/icons/date-seperator.svg" />
-									</label>
-									<InputSelect id="day" @bind-Value="Tournament.Day" class="form-control" style="min-width: auto;">
-										@{
-											for (int i = 1; i <= 31; i++)
-											{
-												<option value="@i">@($"{i:00}")</option>
-											}
-										}
-									</InputSelect>
-								</div>
-								<div class=" form-group en mb-3">
-									<label for="month" class="form-label">
-										<img src="/icons/date-seperator.svg" />
-									</label>
-									<InputSelect id="month" @bind-Value="Tournament.Month" class="form-control" style="min-width: auto;">
-										@{
-											for (int i = 1; i <= 12; i++)
-											{
-												<option value="@i">@($"{i:00}")</option>
-											}
-										}
-									</InputSelect>
-								</div>
-								<div class="form-group en mb-3">
-									<label for="year" class="form-label">
-										<img src="/icons/calendar.svg" />
-									</label>
-									<InputSelect id="year" @bind-Value="Tournament.Year" class="form-control" style="min-width: auto;">
-										@{
-											for (int i = CurrentYear; i >= CurrentYear - 1; i--)
-											{
-												<option value="@i">@i</option>
-											}
-										}
-									</InputSelect>
-								</div>
+							<div class="form-group mb-3">
+								<label for="federationid" class="form-label">
+									<img src="/icons/dropdown.svg" />
+								</label>
+								<InputSelect id="federationid" @bind-Value="Tournament.FederationId" class="form-control">
+									@foreach (Federation federation in Federations!)
+									{
+										<option value="@federation.Id">@federation.PersianName</option>
+									}
+								</InputSelect>
 							</div>
-							<DataAnnotationsValidator />
-							<ValidationSummary role="alert" />
-							@if (!string.IsNullOrEmpty(statusMessage))
-							{
-								<div class="alert alert-@statusMessageClass" role="alert">
-									@statusMessage
-								</div>
-							}
-							<button type="submit" class="btn btn-primary w-100">به روز رسانی</button>
-						</EditForm>
-					</div>
+						</div>
+						<div class="form-group fa mb-3">
+							<label for="host" class="form-label">
+								<img src="/icons/location-province.svg" />
+							</label>
+							<InputText id="host" @bind-Value="Tournament.Host" class="form-control" placeholder="محل برگزاری" />
+						</div>
+						<div class="form-row">
+							<div class="form-group en mb-3">
+								<label for="day" class="form-label">
+									<img src="/icons/date-seperator.svg" />
+								</label>
+								<InputSelect id="day" @bind-Value="Tournament.Day" class="form-control" style="min-width: auto;">
+									@{
+										for (int i = 1; i <= 31; i++)
+										{
+											<option value="@i">@($"{i:00}")</option>
+										}
+									}
+								</InputSelect>
+							</div>
+							<div class=" form-group en mb-3">
+								<label for="month" class="form-label">
+									<img src="/icons/date-seperator.svg" />
+								</label>
+								<InputSelect id="month" @bind-Value="Tournament.Month" class="form-control" style="min-width: auto;">
+									@{
+										for (int i = 1; i <= 12; i++)
+										{
+											<option value="@i">@($"{i:00}")</option>
+										}
+									}
+								</InputSelect>
+							</div>
+							<div class="form-group en mb-3">
+								<label for="year" class="form-label">
+									<img src="/icons/calendar.svg" />
+								</label>
+								<InputSelect id="year" @bind-Value="Tournament.Year" class="form-control" style="min-width: auto;">
+									@{
+										for (int i = CurrentYear; i >= CurrentYear - 1; i--)
+										{
+											<option value="@i">@i</option>
+										}
+									}
+								</InputSelect>
+							</div>
+						</div>
+						<DataAnnotationsValidator />
+						<ValidationSummary role="alert" />
+						@if (!string.IsNullOrEmpty(statusMessage))
+						{
+							<div class="alert alert-@statusMessageClass" role="alert">
+								@statusMessage
+							</div>
+						}
+						<button type="submit" class="btn btn-primary w-100">به روز رسانی</button>
+					</EditForm>
 				</div>
-			}
+			</div>
+		}
+	</div>
+</div>
+<hr />
+@if (TournamentChampions is null)
+{
+	<Loading CardMode=true />
+}
+else
+{
+	<div class="card list-card">
+		<div class="card-header border-bottom">
+			<h6 class="title">مدال آوران مسابقات<b class="text-primary px-1">@Tournament!.Level.PersianTitle @Tournament!.Federation.PersianName</b></h6>
+			<NavLink class="panel-link" href="@($"/Dashboard/SportsGroup/Championship/Tournament/Champion/Add/{Id}")">افزودن مدال آور این مسابقات</NavLink>
+		</div>
+		<div class="card-body">
+			<div class="table-wrapper">
+				<QuickGrid Items="TournamentChampions.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
+					<PropertyColumn IsDefaultSortColumn=true Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
+					<PropertyColumn Title="کد ملی" Property="@(champion => champion.Athlete.SeenCode)" />
+					<PropertyColumn Title="شهرستان" Property="@(champion => champion.Athlete.City.PersianName)" />
+					<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup == null ? "نامشخص" : champion.AgeGroup.PersianName!)" />
+					<PropertyColumn Title="رشته" Property="@(champion => champion.Field)" />
+					<TemplateColumn Title="مدال">
+						@if (context.MedalsCount is not null)
+						{
+							@($"{context.MedalsCount!} مدال {context.Medal!.PersianTitle}")
+						}
+					</TemplateColumn>
+					<TemplateColumn>
+						<button class="btn p-0">
+							<img src="/icons/user-remove.svg" @onclick="() => RemoveChampion(context)" />
+						</button>
+					</TemplateColumn>
+				</QuickGrid>
+			</div>
 		</div>
 	</div>
-	<hr />
-	@if (TournamentChampions is null)
-	{
-		<Loading CardMode=true />
-	}
-	else
-	{
-		<div class="card list-card">
-			<div class="card-header border-bottom">
-				<h6 class="title">مدال آوران مسابقات<b class="text-primary px-1">@Tournament!.Level.PersianTitle @Tournament!.Federation.PersianName</b></h6>
-				<NavLink class="panel-link" href="@($"/Dashboard/SportsGroup/Championship/Tournament/Champion/Add/{Id}")">افزودن مدال آور این مسابقات</NavLink>
-			</div>
-			<div class="card-body">
-				<div class="table-wrapper">
-					<QuickGrid Items="TournamentChampions.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-						<PropertyColumn IsDefaultSortColumn=true Title="نام و نام خانوداگی" Property="@(champion => champion.Athlete.Name)" />
-						<PropertyColumn Title="کد ملی" Property="@(champion => champion.Athlete.SeenCode)" />
-						<PropertyColumn Title="شهرستان" Property="@(champion => champion.Athlete.City.PersianName)" />
-						<PropertyColumn Title="رده سنی" Property="@(champion => champion.AgeGroup == null ? "نامشخص" : champion.AgeGroup.PersianName!)" />
-						<PropertyColumn Title="رشته" Property="@(champion => champion.Field)" />
-						<TemplateColumn Title="مدال">
-							@if (context.MedalsCount is not null)
-							{
-								@($"{context.MedalsCount!} مدال {context.Medal!.PersianTitle}")
-							}
-						</TemplateColumn>
-						<TemplateColumn>
-							<button class="btn p-0">
-								<img src="/icons/user-remove.svg" @onclick="() => RemoveChampion(context)" />
-							</button>
-						</TemplateColumn>
-					</QuickGrid>
-				</div>
-			</div>
-		</div>
-	}
-</AuthorizeView>
+}
 
 @code {
 	[Parameter]
@@ -223,7 +221,7 @@
 			.OrderBy(level => level.Id)
 			.ToListAsync();
 
-		TournamentChampions  ??= await context.Champions
+		TournamentChampions ??= await context.Champions
 			.Include(champion => champion.Athlete)
 				.ThenInclude(athlete => athlete.City)
 			.Include(champion => champion.AgeGroup)

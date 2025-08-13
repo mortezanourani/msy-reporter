@@ -8,74 +8,70 @@
 
 <PageTitle>اماکن ورزشی سایر ارگان ها</PageTitle>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-	<Authorized>
-		<div class="row">
-			<div class="col1-1">
-				<div class="card facilities-list-card">
-					<div class="card-header border-bottom">
-						<h6 class="title">فهرست اماکن ورزشی سایر ارگان های دولتی شهرستان @City?.PersianName</h6>
-						<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
-							@foreach (City city in Cities!)
-							{
-								<option value="@city.Id">@city.PersianName</option>
-							}
-						</InputSelect>
-					</div>
-					@if (Facilities is null)
+<div class="row">
+	<div class="col1-1">
+		<div class="card facilities-list-card">
+			<div class="card-header border-bottom">
+				<h6 class="title">فهرست اماکن ورزشی سایر ارگان های دولتی شهرستان @City?.PersianName</h6>
+				<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
+					@foreach (City city in Cities!)
 					{
-						<Loading CardMode=true />
+						<option value="@city.Id">@city.PersianName</option>
 					}
-					else
-					{
-						<div class="card-body">
-							<div class="facilities-list">
-								@if (Facilities is not null)
-								{
-									<QuickGrid Items="Facilities.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
-										<PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
-										<PropertyColumn Title="مالک دولتی" Property="@(facility => facility.Owner)" />
-										<PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : string.Empty)" />
-										<PropertyColumn Title="موقعیت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
-										<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />
-										<TemplateColumn>
-											<a class="edit-link" href="/Dashboard/Facilities/Edit/@context.Id">
-												<img src="/icons/square-edit.svg" />
-											</a>
-										</TemplateColumn>
-									</QuickGrid>
-								}
-							</div>
-						</div>
-						<div class="card-footer pt-0">
-							<div class="paginator border-top pt-3">
-								<nav role="navigation">
-									@if (pagination.TotalItemCount.HasValue)
-									{
-										for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
-										{
-											var capturedIndex = pageIndex;
-											<button @onclick="@(() => GoToPageAsync(capturedIndex))"
-													class="btn @PageButtonClass(capturedIndex)"
-													aria-current="@AriaCurrentValue(capturedIndex)"
-													aria-label="@(pageIndex + 1)">
-												@(pageIndex + 1)
-											</button>
-										}
-									}
-								</nav>
-								<div class="total">
-									@string.Format("{0} مکان", pagination.TotalItemCount)
-								</div>
-							</div>
-						</div>
-
-					}
-				</div>
+				</InputSelect>
 			</div>
+			@if (Facilities is null)
+			{
+				<Loading CardMode=true />
+			}
+			else
+			{
+				<div class="card-body">
+					<div class="facilities-list">
+						@if (Facilities is not null)
+						{
+							<QuickGrid Items="Facilities.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
+								<PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
+								<PropertyColumn Title="مالک دولتی" Property="@(facility => facility.Owner)" />
+								<PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : string.Empty)" />
+								<PropertyColumn Title="موقعیت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
+								<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />
+								<TemplateColumn>
+									<a class="edit-link" href="/Dashboard/Facilities/Edit/@context.Id">
+										<img src="/icons/square-edit.svg" />
+									</a>
+								</TemplateColumn>
+							</QuickGrid>
+						}
+					</div>
+				</div>
+				<div class="card-footer pt-0">
+					<div class="paginator border-top pt-3">
+						<nav role="navigation">
+							@if (pagination.TotalItemCount.HasValue)
+							{
+								for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
+								{
+									var capturedIndex = pageIndex;
+									<button @onclick="@(() => GoToPageAsync(capturedIndex))"
+											class="btn @PageButtonClass(capturedIndex)"
+											aria-current="@AriaCurrentValue(capturedIndex)"
+											aria-label="@(pageIndex + 1)">
+										@(pageIndex + 1)
+									</button>
+								}
+							}
+						</nav>
+						<div class="total">
+							@string.Format("{0} مکان", pagination.TotalItemCount)
+						</div>
+					</div>
+				</div>
+
+			}
 		</div>
-	</Authorized>
-</AuthorizeView>
+	</div>
+</div>
 
 @code {
 	private AppDbContext context = default!;

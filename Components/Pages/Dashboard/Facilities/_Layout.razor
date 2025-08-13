@@ -2,24 +2,28 @@
 
 @layout Layout.DashboardLayout
 
-<nav class="secondary-navbar">
-    <div class="container">
-        <h5 class="sub-title">اماکن ورزشی سایر ارگان های دولتی</h5>
-        <ul class="nav">
-            <li class="nav-item">
-                <NavLink href="/Dashboard/Govermentals" Match="NavLinkMatch.All">اماکن دولتی سایر ارگان ها</NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/Dashboard/Govermentals/Add">مکان جدید</NavLink>
-            </li>
-        </ul>
-    </div>
-</nav>
-<article class="content py-3">
-    <div class="container">
-        @Body
-    </div>
-</article>
+<AuthorizeView Roles="SuperAdministrator, Administrator" Context="authContext">
+    <Authorized>
+        <nav class="secondary-navbar">
+            <div class="container">
+                <h5 class="sub-title">اماکن ورزشی سایر ارگان های دولتی</h5>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <NavLink href="/Dashboard/Govermentals" Match="NavLinkMatch.All">اماکن دولتی سایر ارگان ها</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink href="/Dashboard/Govermentals/Add">مکان جدید</NavLink>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <article class="content py-3">
+            <div class="container">
+                @Body
+            </div>
+        </article>
+    </Authorized>
+</AuthorizeView>
 
 @code {
 

@@ -6,149 +6,147 @@
 
 <PageTitle>شناسنامه آموزشی</PageTitle>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-    @if (Course is null)
-    {
-        <Loading />
-    }
-    else
-    {
-        <div class="row form-wrapper">
-            <div class="col3-5 mb-0">
-                <div class="instructions">
-                    <p class="mb-3">دوره ها و کلاس های آموزشی ضمن خدمت با اطلاعات ذیل در سامانه آماری اداره کل ورزش و جوانان استان گیلان ثبت می گردد.</p>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/title-blue.svg">
-                            <h6>عنوان دوره:</h6>
-                        </div>
-                        <p>در فرم مربوطه بخش اول اطلاعات عنوان دوره آموزشی مورد نظر است.</p>
-                        <p>در این بخش عنوان دوره، نوع دوره بین عمومی یا تخصصی (شغلی) و نحوه برگزاری دوره از نظر مجازی یا حضوری قابل ویرایش می باشد.</p>
+@if (Course is null)
+{
+    <Loading />
+}
+else
+{
+    <div class="row form-wrapper">
+        <div class="col3-5 mb-0">
+            <div class="instructions">
+                <p class="mb-3">دوره ها و کلاس های آموزشی ضمن خدمت با اطلاعات ذیل در سامانه آماری اداره کل ورزش و جوانان استان گیلان ثبت می گردد.</p>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/title-blue.svg">
+                        <h6>عنوان دوره:</h6>
                     </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/duration-blue.svg">
-                            <h6>مدت دوره (ساعت):</h6>
-                        </div>
-                        <p>در بخش بعدی مدت دوره آموزشی را برحسب ساعت مشخص می کنید. بدیهی است که در حالت پیشفرض مقدار مدت دوره صفر در نظر گرفته شده است.</p>
+                    <p>در فرم مربوطه بخش اول اطلاعات عنوان دوره آموزشی مورد نظر است.</p>
+                    <p>در این بخش عنوان دوره، نوع دوره بین عمومی یا تخصصی (شغلی) و نحوه برگزاری دوره از نظر مجازی یا حضوری قابل ویرایش می باشد.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/duration-blue.svg">
+                        <h6>مدت دوره (ساعت):</h6>
                     </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/calendar-blue.svg">
-                            <h6>تاریخ برگزاری دوره:</h6>
-                        </div>
-                        <p>تاریخ برگزاری دوره در دو بخش ماه و سال در سامانه ذخیره می گردد. سال برگزاری دوره به صورت چهار رقمی و ماه برگزاری دوره به صورت دو رقمی وارد می شود.</p>
+                    <p>در بخش بعدی مدت دوره آموزشی را برحسب ساعت مشخص می کنید. بدیهی است که در حالت پیشفرض مقدار مدت دوره صفر در نظر گرفته شده است.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/calendar-blue.svg">
+                        <h6>تاریخ برگزاری دوره:</h6>
                     </div>
+                    <p>تاریخ برگزاری دوره در دو بخش ماه و سال در سامانه ذخیره می گردد. سال برگزاری دوره به صورت چهار رقمی و ماه برگزاری دوره به صورت دو رقمی وارد می شود.</p>
                 </div>
             </div>
-            <div class="col2-5 mb-auto">
-                <div class="card p-3">
-                    <EditForm method="post" Model="Course" OnValidSubmit="UpdateCourse" FormName="edit" Enhance>
-                        <DataAnnotationsValidator />
-                        <input type="hidden" name="Course.Id" value="@Course.Id" />
-                        <div class="form-group fa mb-3">
-                            <label for="title" class="form-label">
-                                <img src="/icons/title.svg" />
+        </div>
+        <div class="col2-5 mb-auto">
+            <div class="card p-3">
+                <EditForm method="post" Model="Course" OnValidSubmit="UpdateCourse" FormName="edit" Enhance>
+                    <DataAnnotationsValidator />
+                    <input type="hidden" name="Course.Id" value="@Course.Id" />
+                    <div class="form-group fa mb-3">
+                        <label for="title" class="form-label">
+                            <img src="/icons/title.svg" />
+                        </label>
+                        <InputText id="title" @bind-Value="Course.Title" class="form-control" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-checkbox">
+                            <label for="isgeneral" class="form-label">
+                                <span class="checked">عمومی</span>
+                                <span class="unchecked">تخصصی</span>
                             </label>
-                            <InputText id="title" @bind-Value="Course.Title" class="form-control" />
+                            <InputCheckbox id="isgeneral" @bind-Value="Course.IsGeneral" class="form-check-input" hidden />
                         </div>
-                        <div class="form-row">
-                            <div class="form-checkbox">
-                                <label for="isgeneral" class="form-label">
-                                    <span class="checked">عمومی</span>
-                                    <span class="unchecked">تخصصی</span>
-                                </label>
-                                <InputCheckbox id="isgeneral" @bind-Value="Course.IsGeneral" class="form-check-input" hidden />
-                            </div>
-                            <div class="form-checkbox">
-                                <label for="isonline" class="form-label">
-                                    <span class="unchecked">حضوری</span>
-                                    <span class="checked">مجازی</span>
-                                </label>
-                                <InputCheckbox id="isonline" @bind-Value="Course.IsOnline" class="form-check-input" />
-                            </div>
+                        <div class="form-checkbox">
+                            <label for="isonline" class="form-label">
+                                <span class="unchecked">حضوری</span>
+                                <span class="checked">مجازی</span>
+                            </label>
+                            <InputCheckbox id="isonline" @bind-Value="Course.IsOnline" class="form-check-input" />
                         </div>
-                        <hr />
-                        <div class="form-row">
-                            <div class="form-group en mb-3">
-                                <label for="coursetime" class="form-label">
-                                    <img src="/icons/duration.svg" />
-                                </label>
-                                <InputNumber id="coursetime" @bind-Value="Course.CourseTime" class="form-control" placeholder="ساعت دوره" />
-                            </div>
-                            <div class="form-group en date mb-3">
-                                <label for="year" class="form-label">
-                                    <img src="/icons/calendar.svg" />
-                                </label>
-                                <InputText id="year" @bind-Value="Course.Year" class="form-control" placeholder="سال" />
-                                <InputText id="month" @bind-Value="Course.Month" class="form-control" placeholder="ماه" />
-                            </div>
+                    </div>
+                    <hr />
+                    <div class="form-row">
+                        <div class="form-group en mb-3">
+                            <label for="coursetime" class="form-label">
+                                <img src="/icons/duration.svg" />
+                            </label>
+                            <InputNumber id="coursetime" @bind-Value="Course.CourseTime" class="form-control" placeholder="ساعت دوره" />
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">تایید</button>
-                        <ValidationSummary role="alert" />
-                    </EditForm>
-                </div>
+                        <div class="form-group en date mb-3">
+                            <label for="year" class="form-label">
+                                <img src="/icons/calendar.svg" />
+                            </label>
+                            <InputText id="year" @bind-Value="Course.Year" class="form-control" placeholder="سال" />
+                            <InputText id="month" @bind-Value="Course.Month" class="form-control" placeholder="ماه" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">تایید</button>
+                    <ValidationSummary role="alert" />
+                </EditForm>
             </div>
         </div>
-        <hr />
-        <div class="card course-employees-card">
-            <div class="card-header border-bottom">
-                <h6 class="title">فهرست افرادی که دوره<b class="text-primary px-1">@Course.Title</b>را گذرانده اند</h6>
-                <div class="paginator">
-                    <nav role="navigation">
-                        @if (pagination.TotalItemCount.HasValue)
-                        {
-                            var totalPages = pagination.TotalItemCount;
-                            var pageIndex = pagination.CurrentPageIndex;
-                            var currentPage = pageIndex + 1;
-                            var lastPage = pagination.LastPageIndex + 1;
-                            var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
-                            var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
-                            <button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
-                            class="btn"
-                            aria-current="@AriaCurrentValue(pageIndex + 1)"
-                            aria-label="@(pageIndex + 1)"
-                            disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-                                <span class="material-symbols-rounded">chevron_left</span>
-                            </button>
-                            <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-                            <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-                            class="btn"
-                            aria-current="@AriaCurrentValue(pageIndex - 1)"
-                            aria-label="@(pageIndex - 1)"
-                            disabled=@((pageIndex <= 0) ? "disabled" : false)>
-                                <span class="material-symbols-rounded">chevron_right</span>
-                            </button>
-                        }
-                    </nav>
-                </div>
-            </div>
-
-            <div class="card-body">
-                <div class="course-employees-list">
-                    @if (courseEmployees is not null)
+    </div>
+    <hr />
+    <div class="card course-employees-card">
+        <div class="card-header border-bottom">
+            <h6 class="title">فهرست افرادی که دوره<b class="text-primary px-1">@Course.Title</b>را گذرانده اند</h6>
+            <div class="paginator">
+                <nav role="navigation">
+                    @if (pagination.TotalItemCount.HasValue)
                     {
-                        <QuickGrid Items="courseEmployees" Pagination="pagination" Theme="" Class="course-employees-table">
-                            <PropertyColumn Title="نام و نام خانوداگی" Property="@(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))" />
-                            <PropertyColumn Title="کد ملی" Property="@(employee => employee.SeenCode)" />
-                            <PropertyColumn Title="نام پدر" Property="@(employee => employee.FatherName)" />
-                            <PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate)" />
-                            <TemplateColumn>
-                                <a class="edit-link" href="/Dashboard/Employee/Courses/@context.AccountId">
-                                    <img src="/icons/user-courses.svg" />
-                                </a>
-                            </TemplateColumn>
-                        </QuickGrid>
+                        var totalPages = pagination.TotalItemCount;
+                        var pageIndex = pagination.CurrentPageIndex;
+                        var currentPage = pageIndex + 1;
+                        var lastPage = pagination.LastPageIndex + 1;
+                        var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+                        var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+                        <button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+                                class="btn"
+                                aria-current="@AriaCurrentValue(pageIndex + 1)"
+                                aria-label="@(pageIndex + 1)"
+                                disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+                            <span class="material-symbols-rounded">chevron_left</span>
+                        </button>
+                        <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+                        <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+                                class="btn"
+                                aria-current="@AriaCurrentValue(pageIndex - 1)"
+                                aria-label="@(pageIndex - 1)"
+                                disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                            <span class="material-symbols-rounded">chevron_right</span>
+                        </button>
                     }
-                </div>
-                <a class="update-employees-link" href="/Dashboard/HumanResource/Education/Courses/Employees/Edit/@Course!.Id">
-                    <img src="/icons/course-users.svg" />
-                    ویرایش شرکت کنندگان در دوره
-                </a>
+                </nav>
             </div>
         </div>
-    }
-</AuthorizeView>
+
+        <div class="card-body">
+            <div class="course-employees-list">
+                @if (courseEmployees is not null)
+                {
+                    <QuickGrid Items="courseEmployees" Pagination="pagination" Theme="" Class="course-employees-table">
+                        <PropertyColumn Title="نام و نام خانوداگی" Property="@(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))" />
+                        <PropertyColumn Title="کد ملی" Property="@(employee => employee.SeenCode)" />
+                        <PropertyColumn Title="نام پدر" Property="@(employee => employee.FatherName)" />
+                        <PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate)" />
+                        <TemplateColumn>
+                            <a class="edit-link" href="/Dashboard/Employee/Courses/@context.AccountId">
+                                <img src="/icons/user-courses.svg" />
+                            </a>
+                        </TemplateColumn>
+                    </QuickGrid>
+                }
+            </div>
+            <a class="update-employees-link" href="/Dashboard/HumanResource/Education/Courses/Employees/Edit/@Course!.Id">
+                <img src="/icons/course-users.svg" />
+                ویرایش شرکت کنندگان در دوره
+            </a>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
@@ -218,4 +216,3 @@
     private string? AriaCurrentValue(int pageIndex)
         => pagination.CurrentPageIndex == pageIndex ? "page" : null;
 }
-

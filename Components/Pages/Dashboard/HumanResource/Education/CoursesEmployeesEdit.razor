@@ -6,181 +6,179 @@
 
 <PageTitle>شناسنامه آموزشی</PageTitle>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-    <div class="courses-top-menu">
-        <h6 class="panel-title">ویرایش شرکت کنندگان دوره آموزشی</h6>
-        <span class="top-menu-links">
-            <a class="panel-link" href="/Dashboard/HumanResource/Education/Courses/Edit/@Course?.Id">
-                <img src="/icons/course-edit.svg" />
-                ویرایش دوره
-            </a>
-        </span>
+<div class="courses-top-menu">
+    <h6 class="panel-title">ویرایش شرکت کنندگان دوره آموزشی</h6>
+    <span class="top-menu-links">
+        <a class="panel-link" href="/Dashboard/HumanResource/Education/Courses/Edit/@Course?.Id">
+            <img src="/icons/course-edit.svg" />
+            ویرایش دوره
+        </a>
+    </span>
+</div>
+
+@if (Course is not null)
+{
+    <div class="row">
+        <div class="col1-1 mb-0">
+            <div class="course-info">
+                <div class="course-title">
+                    <h6 class="title">@Course!.Title</h6>
+                    <span class="type-badges">
+                        <p class="type-badge">@(Course!.IsGeneral ? "عمومی" : "تخصصی")</p>
+                        <p class="type-badge">@(Course!.IsOnline ? "مجازی" : "حضوری")</p>
+                    </span>
+                </div>
+                <div class="course-date">
+                    <p class="date">
+                        <img src="/icons/calendar-blue.svg" />
+                        @string.Format("{0}/{1}", Course!.Year, Course!.Month)
+                    </p>
+                    <p class="duration">
+                        <img src="/icons/duration-blue.svg" />
+                        @string.Format("{0} ساعت", Course!.CourseTime)
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-
-    @if (Course is not null)
-    {
-        <div class="row">
-            <div class="col1-1 mb-0">
-                <div class="course-info">
-                    <div class="course-title">
-                        <h6 class="title">@Course!.Title</h6>
-                        <span class="type-badges">
-                            <p class="type-badge">@(Course!.IsGeneral ? "عمومی" : "تخصصی")</p>
-                            <p class="type-badge">@(Course!.IsOnline ? "مجازی" : "حضوری")</p>
-                        </span>
+    <hr />
+    <div class="row form-wrapper">
+        <div class="col3-5 mb-0">
+            <div class="instructions">
+                <p>فهرست مقابل اسامی کسانی است که به عنوان شرکت کنندگان دوره حاضر انتخاب نشده اند و در پایان صفحه مشخصات کسانی است که گواهی این دوره را دریافت نموده اند.</p>
+                <p class="mb-3">جهت ویرایش فهرست افرادی که گواهی این دوره را دریافت نموده اند، می توانید از راهنمای زیر استفاده نمایید.</p>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/user-add.svg">
+                        <h6>اضافه نمودن فرد:</h6>
                     </div>
-                    <div class="course-date">
-                        <p class="date">
-                            <img src="/icons/calendar-blue.svg" />
-                            @string.Format("{0}/{1}", Course!.Year, Course!.Month)
-                        </p>
-                        <p class="duration">
-                            <img src="/icons/duration-blue.svg" />
-                            @string.Format("{0} ساعت", Course!.CourseTime)
-                        </p>
+                    <p>در فهرست مقابل با کلیک بر روی این آیکون می توانید فرد را به عنوان یکی از افرادی که گواهی این دوره را دریافت نموده اند اضافه نمایید.</p>
+                    <p>اضافه کردن افراد نیاز به هیچگونه تایید مجدد نداشته و با کلیک بر روی آیکون مورد نظر نام فرد از فهرست بالا حذف و در فهرست پایان صفحه اضافه خواهد شد.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/user-remove.svg">
+                        <h6>حذف فرد:</h6>
                     </div>
+                    <p>چنانچه فردی را به اشتباه در فهرست افراد دریافت کننده گواهی پایان این دوره اضافه نموده اید، می توانید با استفاده از کلید حذف فرد در فهرست پایان صفحه نسبت به حذف آن اقدام نمایید.</p>
+                </div>
+                <div class="instruction-item">
+                    <div class="icon-title mb-2">
+                        <img src="/icons/code.svg">
+                        <h6>کلیدهای تغییر صفحه:</h6>
+                    </div>
+                    <p class="mb-0">فهرست ها به صورت ده نفری صفحه بندی شده اند. بنابراین چنانچه فرد مورد نظرتان در صفحه قابل مشاهده نیست، می توانید برای جستجو از کلیدهای تغییر صفحه، کمک بگیرید.</p>
                 </div>
             </div>
         </div>
-        <hr />
-        <div class="row form-wrapper">
-            <div class="col3-5 mb-0">
-                <div class="instructions">
-                    <p>فهرست مقابل اسامی کسانی است که به عنوان شرکت کنندگان دوره حاضر انتخاب نشده اند و در پایان صفحه مشخصات کسانی است که گواهی این دوره را دریافت نموده اند.</p>
-                    <p class="mb-3">جهت ویرایش فهرست افرادی که گواهی این دوره را دریافت نموده اند، می توانید از راهنمای زیر استفاده نمایید.</p>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/user-add.svg">
-                            <h6>اضافه نمودن فرد:</h6>
-                        </div>
-                        <p>در فهرست مقابل با کلیک بر روی این آیکون می توانید فرد را به عنوان یکی از افرادی که گواهی این دوره را دریافت نموده اند اضافه نمایید.</p>
-                        <p>اضافه کردن افراد نیاز به هیچگونه تایید مجدد نداشته و با کلیک بر روی آیکون مورد نظر نام فرد از فهرست بالا حذف و در فهرست پایان صفحه اضافه خواهد شد.</p>
-                    </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/user-remove.svg">
-                            <h6>حذف فرد:</h6>
-                        </div>
-                        <p>چنانچه فردی را به اشتباه در فهرست افراد دریافت کننده گواهی پایان این دوره اضافه نموده اید، می توانید با استفاده از کلید حذف فرد در فهرست پایان صفحه نسبت به حذف آن اقدام نمایید.</p>
-                    </div>
-                    <div class="instruction-item">
-                        <div class="icon-title mb-2">
-                            <img src="/icons/code.svg">
-                            <h6>کلیدهای تغییر صفحه:</h6>
-                        </div>
-                        <p class="mb-0">فهرست ها به صورت ده نفری صفحه بندی شده اند. بنابراین چنانچه فرد مورد نظرتان در صفحه قابل مشاهده نیست، می توانید برای جستجو از کلیدهای تغییر صفحه، کمک بگیرید.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col2-5 mb-auto">
-                <div class="card employees-card">
-                    <div class="card-header border-bottom ">
-                        <div class="paginator">
-                            <nav role="navigation">
-                                @if (employeesPagination.TotalItemCount.HasValue)
-                                {
-                                    var totalPages = employeesPagination.TotalItemCount;
-                                    var pageIndex = employeesPagination.CurrentPageIndex;
-                                    var currentPage = pageIndex + 1;
-                                    var lastPage = employeesPagination.LastPageIndex + 1;
-                                    var firstItemNumber = 1 + (employeesPagination.ItemsPerPage * employeesPagination.CurrentPageIndex);
-                                    var lastItemNumber = employeesPagination.ItemsPerPage * (employeesPagination.CurrentPageIndex + 1);
-                                    <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-                                    <span class="buttons-wrapper">
-                                        <button @onclick="@(() => EmployeesGoToPageAsync(pageIndex - 1))"
-                                        class="btn"
-                                        aria-label="@(pageIndex - 1)"
-                                        disabled=@((pageIndex <= 0) ? "disabled" : false)>
-                                            <span class="material-symbols-rounded">chevron_right</span>
-                                        </button>
-                                        <button @onclick="@(() => EmployeesGoToPageAsync(pageIndex + 1))"
-                                        class="btn"
-                                        aria-label="@(pageIndex + 1)"
-                                        disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-                                            <span class="material-symbols-rounded">chevron_left</span>
-                                        </button>
-                                    </span>
-                                }
-                            </nav>
-                            <div class="paginator-search form-group fa">
-                                <label class="form-label" for="paginator-search-input">
-                                    <img src="/icons/search-gray.svg" />
-                                </label>
-                                <InputText class="form-control" placeholder="جستجو بر اساس نام یا نام خانوادگی" id="paginator-search-input" @bind-Value="searchText" @oninput="SearchName"></InputText>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="employees-list">
-                            @if (courseEmployees is not null)
+        <div class="col2-5 mb-auto">
+            <div class="card employees-card">
+                <div class="card-header border-bottom ">
+                    <div class="paginator">
+                        <nav role="navigation">
+                            @if (employeesPagination.TotalItemCount.HasValue)
                             {
-                                <QuickGrid Items="employees!.AsQueryable()" Pagination="employeesPagination" Theme="" Class="employees-table">
-                                    <PropertyColumn Property="@(course => string.Format("{0} {1}", course.FirstName, course.LastName))"></PropertyColumn>
-                                    <TemplateColumn>
-                                        <button class="btn" @onclick="() => AddEmployee(context)">
-                                            <img src="/icons/user-add.svg" />
-                                        </button>
-                                    </TemplateColumn>
-                                </QuickGrid>
+                                var totalPages = employeesPagination.TotalItemCount;
+                                var pageIndex = employeesPagination.CurrentPageIndex;
+                                var currentPage = pageIndex + 1;
+                                var lastPage = employeesPagination.LastPageIndex + 1;
+                                var firstItemNumber = 1 + (employeesPagination.ItemsPerPage * employeesPagination.CurrentPageIndex);
+                                var lastItemNumber = employeesPagination.ItemsPerPage * (employeesPagination.CurrentPageIndex + 1);
+                                <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+                                <span class="buttons-wrapper">
+                                    <button @onclick="@(() => EmployeesGoToPageAsync(pageIndex - 1))"
+                                            class="btn"
+                                            aria-label="@(pageIndex - 1)"
+                                            disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                                        <span class="material-symbols-rounded">chevron_right</span>
+                                    </button>
+                                    <button @onclick="@(() => EmployeesGoToPageAsync(pageIndex + 1))"
+                                            class="btn"
+                                            aria-label="@(pageIndex + 1)"
+                                            disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+                                        <span class="material-symbols-rounded">chevron_left</span>
+                                    </button>
+                                </span>
                             }
+                        </nav>
+                        <div class="paginator-search form-group fa">
+                            <label class="form-label" for="paginator-search-input">
+                                <img src="/icons/search-gray.svg" />
+                            </label>
+                            <InputText class="form-control" placeholder="جستجو بر اساس نام یا نام خانوادگی" id="paginator-search-input" @bind-Value="searchText" @oninput="SearchName"></InputText>
                         </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="employees-list">
+                        @if (courseEmployees is not null)
+                        {
+                            <QuickGrid Items="employees!.AsQueryable()" Pagination="employeesPagination" Theme="" Class="employees-table">
+                                <PropertyColumn Property="@(course => string.Format("{0} {1}", course.FirstName, course.LastName))"></PropertyColumn>
+                                <TemplateColumn>
+                                    <button class="btn" @onclick="() => AddEmployee(context)">
+                                        <img src="/icons/user-add.svg" />
+                                    </button>
+                                </TemplateColumn>
+                            </QuickGrid>
+                        }
                     </div>
                 </div>
             </div>
         </div>
-        <hr />
-        <div class="card course-employees-card">
-            <div class="card-header border-bottom">
-                <h6 class="title">فهرست افرادی که دوره<b class="text-primary px-1">@Course.Title</b>را گذرانده اند</h6>
-                <div class="paginator">
-                    <nav role="navigation">
-                        @if (courseEmployeesPagination.TotalItemCount.HasValue)
-                        {
-                            var totalPages = courseEmployeesPagination.TotalItemCount;
-                            var pageIndex = courseEmployeesPagination.CurrentPageIndex;
-                            var currentPage = pageIndex + 1;
-                            var lastPage = courseEmployeesPagination.LastPageIndex + 1;
-                            var firstItemNumber = 1 + (courseEmployeesPagination.ItemsPerPage * courseEmployeesPagination.CurrentPageIndex);
-                            var lastItemNumber = courseEmployeesPagination.ItemsPerPage * (courseEmployeesPagination.CurrentPageIndex + 1);
-                            <button @onclick="@(() => CourseEmployeesGoToPageAsync(pageIndex + 1))"
-                            class="btn"
-                            aria-label="@(pageIndex + 1)"
-                            disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-                                <span class="material-symbols-rounded">chevron_left</span>
-                            </button>
-                            <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-                            <button @onclick="@(() => CourseEmployeesGoToPageAsync(pageIndex - 1))"
-                            class="btn"
-                            aria-label="@(pageIndex - 1)"
-                            disabled=@((pageIndex <= 0) ? "disabled" : false)>
-                                <span class="material-symbols-rounded">chevron_right</span>
-                            </button>
-                        }
-                    </nav>
-                </div>
-            </div>
-
-            <div class="card-body">
-                <div class="course-employees-list">
-                    @if (courseEmployees is not null)
+    </div>
+    <hr />
+    <div class="card course-employees-card">
+        <div class="card-header border-bottom">
+            <h6 class="title">فهرست افرادی که دوره<b class="text-primary px-1">@Course.Title</b>را گذرانده اند</h6>
+            <div class="paginator">
+                <nav role="navigation">
+                    @if (courseEmployeesPagination.TotalItemCount.HasValue)
                     {
-                        <QuickGrid Items="courseEmployees!.AsQueryable()" Pagination="courseEmployeesPagination" Theme="" Class="course-employees-table">
-                            <PropertyColumn Title="نام و نام خانوداگی" Property="@(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))" />
-                            <PropertyColumn Title="کد ملی" Property="@(employee => employee.SeenCode)" />
-                            <PropertyColumn Title="نام پدر" Property="@(employee => employee.FatherName)" />
-                            <PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate)" />
-                            <TemplateColumn>
-                                <button class="btn" @onclick="() => RemoveEmployee(context)">
-                                    <img src="/icons/user-remove.svg" />
-                                </button>
-                            </TemplateColumn>
-                        </QuickGrid>
+                        var totalPages = courseEmployeesPagination.TotalItemCount;
+                        var pageIndex = courseEmployeesPagination.CurrentPageIndex;
+                        var currentPage = pageIndex + 1;
+                        var lastPage = courseEmployeesPagination.LastPageIndex + 1;
+                        var firstItemNumber = 1 + (courseEmployeesPagination.ItemsPerPage * courseEmployeesPagination.CurrentPageIndex);
+                        var lastItemNumber = courseEmployeesPagination.ItemsPerPage * (courseEmployeesPagination.CurrentPageIndex + 1);
+                        <button @onclick="@(() => CourseEmployeesGoToPageAsync(pageIndex + 1))"
+                                class="btn"
+                                aria-label="@(pageIndex + 1)"
+                                disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+                            <span class="material-symbols-rounded">chevron_left</span>
+                        </button>
+                        <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+                        <button @onclick="@(() => CourseEmployeesGoToPageAsync(pageIndex - 1))"
+                                class="btn"
+                                aria-label="@(pageIndex - 1)"
+                                disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                            <span class="material-symbols-rounded">chevron_right</span>
+                        </button>
                     }
-                </div>
+                </nav>
             </div>
         </div>
-    }
-</AuthorizeView>
+
+        <div class="card-body">
+            <div class="course-employees-list">
+                @if (courseEmployees is not null)
+                {
+                    <QuickGrid Items="courseEmployees!.AsQueryable()" Pagination="courseEmployeesPagination" Theme="" Class="course-employees-table">
+                        <PropertyColumn Title="نام و نام خانوداگی" Property="@(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))" />
+                        <PropertyColumn Title="کد ملی" Property="@(employee => employee.SeenCode)" />
+                        <PropertyColumn Title="نام پدر" Property="@(employee => employee.FatherName)" />
+                        <PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate)" />
+                        <TemplateColumn>
+                            <button class="btn" @onclick="() => RemoveEmployee(context)">
+                                <img src="/icons/user-remove.svg" />
+                            </button>
+                        </TemplateColumn>
+                    </QuickGrid>
+                }
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
@@ -228,7 +226,7 @@
                 .OrderBy(employee => employee.FirstName)
                 .ToListAsync()
             : await context.Employees
-                .Where(employee => 
+                .Where(employee =>
                     employee.LastName.Contains(searchText)
                     ||
                     employee.FirstName.Contains(searchText)
@@ -326,4 +324,3 @@
         await employeesPagination.SetCurrentPageIndexAsync(pageIndex);
     }
 }
-

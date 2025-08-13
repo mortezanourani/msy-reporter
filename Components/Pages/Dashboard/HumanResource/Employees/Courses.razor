@@ -4,13 +4,11 @@
 
 @rendermode InteractiveServer
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-	<div class="row">
-		<div class="col1-1">
-			<UserCoursesCard EmployeeId="@EmployeeId" />
-		</div>
+<div class="row">
+	<div class="col1-1">
+		<UserCoursesCard EmployeeId="@EmployeeId" />
 	</div>
-</AuthorizeView>
+</div>
 
 @code {
 	[Parameter]

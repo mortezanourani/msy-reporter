@@ -9,89 +9,87 @@
 
 <PageTitle>ورزشکاران سازمان یافته</PageTitle>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-	<div class="page-top-menu">
-		<div class="top-menu-links justify-content-end">
-			<NavLink class="panel-link" href="/Dashboard/SportsGroup/Insurance/Add">ثبت آمار ورزشکاران سازمان یافته</NavLink>
-		</div>
+<div class="page-top-menu">
+	<div class="top-menu-links justify-content-end">
+		<NavLink class="panel-link" href="/Dashboard/SportsGroup/Insurance/Add">ثبت آمار ورزشکاران سازمان یافته</NavLink>
 	</div>
-	<div class="row">
-		<div class="col1-1">
-			<div class="card list-card">
-				<div class="card-header border-bottom">
-					<h6 class="title">آمار ورزشکاران سازمان یافته هیات @Federation?.PersianName شهرستان @City?.PersianName</h6>
-				</div>
-				@if (Insurances is null)
-				{
-					<Loading CardMode=true />
-				}
-				else
-				{
-					<div class="card-body">
-						<div class="table-wrapper">
-							@if (Insurances is not null)
-							{
-								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-									<PropertyColumn Title="هیات ورزشی" Property="@(insured => insured.Federation.PersianName)" />
-									<PropertyColumn Title="تاریخ" Property="@(insured => $"{insured.Year:0000}/{insured.Month:00}")" />
-									<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insured => insured.MenCount)" />
-									<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insured => insured.WomenCount)" />
-									<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insured => insured.MenCount + insured.WomenCount)" />
-									<TemplateColumn>
-										<a class="edit-link" href="/Dashboard/SportsGroup/Insurance/Edit/@context.Id">
-											<img src="/icons/square-edit.svg" />
-										</a>
-									</TemplateColumn>
-								</QuickGrid>
-							}
-						</div>
+</div>
+<div class="row">
+	<div class="col1-1">
+		<div class="card list-card">
+			<div class="card-header border-bottom">
+				<h6 class="title">آمار ورزشکاران سازمان یافته هیات @Federation?.PersianName شهرستان @City?.PersianName</h6>
+			</div>
+			@if (Insurances is null)
+			{
+				<Loading CardMode=true />
+			}
+			else
+			{
+				<div class="card-body">
+					<div class="table-wrapper">
+						@if (Insurances is not null)
+						{
+							<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
+								<PropertyColumn Title="هیات ورزشی" Property="@(insured => insured.Federation.PersianName)" />
+								<PropertyColumn Title="تاریخ" Property="@(insured => $"{insured.Year:0000}/{insured.Month:00}")" />
+								<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insured => insured.MenCount)" />
+								<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insured => insured.WomenCount)" />
+								<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insured => insured.MenCount + insured.WomenCount)" />
+								<TemplateColumn>
+									<a class="edit-link" href="/Dashboard/SportsGroup/Insurance/Edit/@context.Id">
+										<img src="/icons/square-edit.svg" />
+									</a>
+								</TemplateColumn>
+							</QuickGrid>
+						}
 					</div>
-					<div class="card-footer pt-0">
-						<div class="paginator border-top pt-3">
-							<nav role="navigation">
-								@if (pagination.TotalItemCount.HasValue)
-								{
-									var totalPages = pagination.TotalItemCount;
-									var pageIndex = pagination.CurrentPageIndex;
-									var currentPage = pageIndex + 1;
-									var lastPage = pagination.LastPageIndex + 1;
-									var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
-									var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
-									<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-									class="btn"
-									aria-current="@AriaCurrentValue(pageIndex - 1)"
-									aria-label="@(pageIndex - 1)"
-									disabled=@((pageIndex <= 0) ? "disabled" : false)>
-										<span class="material-symbols-rounded">chevron_right</span>
-									</button>
-									<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-									<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
-									class="btn"
-									aria-current="@AriaCurrentValue(pageIndex + 1)"
-									aria-label="@(pageIndex + 1)"
-									disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-										<span class="material-symbols-rounded">chevron_left</span>
-									</button>
-								}
-							</nav>
-							<div class="total border-0 p-0">
-								<div class="total">
-									@($"آقایان: {Insurances!.Sum(insurance => insurance.MenCount)}")
-								</div>
-								<div class="total">
-									@($"بانوان: {Insurances!.Sum(insurance => insurance.WomenCount)}")
-								</div>
-								<div class="total">
-									@($"مجموع: {Insurances!.Sum(insurance => insurance.WomenCount + insurance.MenCount)}")
-								</div>
+				</div>
+				<div class="card-footer pt-0">
+					<div class="paginator border-top pt-3">
+						<nav role="navigation">
+							@if (pagination.TotalItemCount.HasValue)
+							{
+								var totalPages = pagination.TotalItemCount;
+								var pageIndex = pagination.CurrentPageIndex;
+								var currentPage = pageIndex + 1;
+								var lastPage = pagination.LastPageIndex + 1;
+								var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+								var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+								<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+										class="btn"
+										aria-current="@AriaCurrentValue(pageIndex - 1)"
+										aria-label="@(pageIndex - 1)"
+										disabled=@((pageIndex <= 0) ? "disabled" : false)>
+									<span class="material-symbols-rounded">chevron_right</span>
+								</button>
+								<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+								<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+										class="btn"
+										aria-current="@AriaCurrentValue(pageIndex + 1)"
+										aria-label="@(pageIndex + 1)"
+										disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+									<span class="material-symbols-rounded">chevron_left</span>
+								</button>
+							}
+						</nav>
+						<div class="total border-0 p-0">
+							<div class="total">
+								@($"آقایان: {Insurances!.Sum(insurance => insurance.MenCount)}")
+							</div>
+							<div class="total">
+								@($"بانوان: {Insurances!.Sum(insurance => insurance.WomenCount)}")
+							</div>
+							<div class="total">
+								@($"مجموع: {Insurances!.Sum(insurance => insurance.WomenCount + insurance.MenCount)}")
 							</div>
 						</div>
 					</div>
-				}
-			</div>
+				</div>
+			}
 		</div>
 	</div>
-</AuthorizeView>
+</div>
 
 @code {
 	[Parameter]

@@ -11,123 +11,121 @@
     <h6 class="panel-title">ثبت آمار ورزشکاران سازمان یافته</h6>
 </div>
 
-<AuthorizeView Roles="Administrators" Context="authContext">
-    <div class="row form-wrapper">
-        <div class="col3-5 mb-0">
-            <div class="instructions">
-                <p class="mb-0">فرم مقابل جهت ویرایش آمار ورزشکاران سازمان یافته هیات @Insurance?.Federation?.PersianName شهرستان @Insurance?.City?.PersianName ایجاد شده است.</p>
-                <p class="mb-3">لذا امکان تغییر شهرستان و یا هیات ورزشی در این فرم وجود ندارد.</p>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/calendar-blue.svg">
-                        <h6>ماه و سال:</h6>
-                    </div>
-                    <p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
-                    <p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+<div class="row form-wrapper">
+    <div class="col3-5 mb-0">
+        <div class="instructions">
+            <p class="mb-0">فرم مقابل جهت ویرایش آمار ورزشکاران سازمان یافته هیات @Insurance?.Federation?.PersianName شهرستان @Insurance?.City?.PersianName ایجاد شده است.</p>
+            <p class="mb-3">لذا امکان تغییر شهرستان و یا هیات ورزشی در این فرم وجود ندارد.</p>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/calendar-blue.svg">
+                    <h6>ماه و سال:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/man-blue.svg">
-                        <h6>تعداد بیمه های ورزشی آقایان:</h6>
-                    </div>
-                    <p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+                <p>ماه و سال مربوط به آماری که قصد ثبت آن را دارید از دو منوی کشویی در فرم مقابل قابل تنظیم هستند.</p>
+                <p>لازم به ذکر است که با توجه به اینکه آمار باید به صورت ماهیانه ثبت گردد لذا دسترسی در بخش سال تنها برای سال جاری و سال گذشته امکان پذیر است.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/man-blue.svg">
+                    <h6>تعداد بیمه های ورزشی آقایان:</h6>
                 </div>
-                <div class="instruction-item">
-                    <div class="icon-title mb-2">
-                        <img src="/icons/woman-blue.svg">
-                        <h6>تعداد بیمه های ورزشی بانوان:</h6>
-                    </div>
-                    <p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+                <p>تعداد ورزشکاران سازمان یافته آقایان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
+            </div>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/woman-blue.svg">
+                    <h6>تعداد بیمه های ورزشی بانوان:</h6>
                 </div>
+                <p>تعداد ورزشکاران سازمان یافته بانوان که با آیکون بالا مشخص شده است به صورت عددی ثبت می گردد.</p>
             </div>
         </div>
-        <div class="col2-5 mb-auto">
-            @if (Insurance is null)
-            {
-                <Loading CardMode=true />
-            }
-            else
-            {
-                <div class="card p-3">
-                    <EditForm method="post" Model="Insurance" OnValidSubmit="UpdateInsurance" FormName="edit" Enhance>
-                        <DataAnnotationsValidator />
-                        <ValidationSummary class="text-danger" role="alert" />
-                        <input type="hidden" name="Insurance.Id" value="@Insurance!.Id" />
-                        <input type="hidden" name="Insurance.CityId" value="@Insurance!.CityId" />
-                        <input type="hidden" name="Insurance.FederationId" value="@Insurance!.FederationId" />
-                        <div class="form-row">
-                            <div class="form-group fa mb-3">
-                                <label for="cityid" class="form-label">
-                                    <img src="/icons/dropdown.svg" />
-                                </label>
-                                <div class="form-control">
-                                    @Insurance!.City?.PersianName
-                                </div>
-                            </div>
-                            <div class="form-group fa mb-3">
-                                <label for="federationid" class="form-label">
-                                    <img src="/icons/dropdown.svg" />
-                                </label>
-                                <div class="form-control">
-                                    @Insurance!.Federation?.PersianName
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group en mb-3">
-                                <label for="month" class="form-label">
-                                    <img src="/icons/calendar.svg" />
-                                </label>
-                                <InputSelect id="month" @bind-Value="Insurance.Month" class="form-control">
-                                    @for(int i = 1; i <= 12; i++)
-                                    {
-                                        <option value="@i">@($"{i:00}")</option>
-                                    }
-                                </InputSelect>
-                            </div>
-                            <div class="form-group en mb-3">
-                                <label for="year" class="form-label">
-                                    <img src="/icons/calendar.svg" />
-                                </label>
-                                <InputSelect id="year" @bind-Value="Insurance.Year" class="form-control">
-                                    @{
-                                        PersianCalendar persianCalendar = new PersianCalendar();
-                                        int currentYear = persianCalendar.GetYear(DateTime.Now);
-                                        for(int i = currentYear; i >= currentYear -1; i--)
-                                        {
-                                            <option value="@i">@i</option>
-                                        }
-                                    }
-                                </InputSelect>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group en mb-3">
-                                <label for="mencount" class="form-label">
-                                    <img src="/icons/man.svg" />
-                                </label>
-                                <InputNumber id="mencount" @bind-Value="Insurance.MenCount" class="form-control" />
-                            </div>
-                            <div class="form-group en mb-3">
-                                <label for="womencount" class="form-label">
-                                    <img src="/icons/woman.svg" />
-                                </label>
-                                <InputNumber id="womencount" @bind-Value="Insurance.WomenCount" class="form-control" />
-                            </div>
-                        </div>
-                        @if (!string.IsNullOrEmpty(statusMessage))
-                        {
-                            <div class="alert alert-@statusMessageClass" role="alert">
-                                @statusMessage
-                            </div>
-                        }
-                        <button type="submit" class="btn btn-primary w-100">ثبت</button>
-                    </EditForm>
-                </div>
-            }
-        </div>
     </div>
-</AuthorizeView>
+    <div class="col2-5 mb-auto">
+        @if (Insurance is null)
+        {
+            <Loading CardMode=true />
+        }
+        else
+        {
+            <div class="card p-3">
+                <EditForm method="post" Model="Insurance" OnValidSubmit="UpdateInsurance" FormName="edit" Enhance>
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="text-danger" role="alert" />
+                    <input type="hidden" name="Insurance.Id" value="@Insurance!.Id" />
+                    <input type="hidden" name="Insurance.CityId" value="@Insurance!.CityId" />
+                    <input type="hidden" name="Insurance.FederationId" value="@Insurance!.FederationId" />
+                    <div class="form-row">
+                        <div class="form-group fa mb-3">
+                            <label for="cityid" class="form-label">
+                                <img src="/icons/dropdown.svg" />
+                            </label>
+                            <div class="form-control">
+                                @Insurance!.City?.PersianName
+                            </div>
+                        </div>
+                        <div class="form-group fa mb-3">
+                            <label for="federationid" class="form-label">
+                                <img src="/icons/dropdown.svg" />
+                            </label>
+                            <div class="form-control">
+                                @Insurance!.Federation?.PersianName
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group en mb-3">
+                            <label for="month" class="form-label">
+                                <img src="/icons/calendar.svg" />
+                            </label>
+                            <InputSelect id="month" @bind-Value="Insurance.Month" class="form-control">
+                                @for (int i = 1; i <= 12; i++)
+                                {
+                                    <option value="@i">@($"{i:00}")</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group en mb-3">
+                            <label for="year" class="form-label">
+                                <img src="/icons/calendar.svg" />
+                            </label>
+                            <InputSelect id="year" @bind-Value="Insurance.Year" class="form-control">
+                                @{
+                                    PersianCalendar persianCalendar = new PersianCalendar();
+                                    int currentYear = persianCalendar.GetYear(DateTime.Now);
+                                    for (int i = currentYear; i >= currentYear - 1; i--)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group en mb-3">
+                            <label for="mencount" class="form-label">
+                                <img src="/icons/man.svg" />
+                            </label>
+                            <InputNumber id="mencount" @bind-Value="Insurance.MenCount" class="form-control" />
+                        </div>
+                        <div class="form-group en mb-3">
+                            <label for="womencount" class="form-label">
+                                <img src="/icons/woman.svg" />
+                            </label>
+                            <InputNumber id="womencount" @bind-Value="Insurance.WomenCount" class="form-control" />
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(statusMessage))
+                    {
+                        <div class="alert alert-@statusMessageClass" role="alert">
+                            @statusMessage
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-primary w-100">ثبت</button>
+                </EditForm>
+            </div>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter]
