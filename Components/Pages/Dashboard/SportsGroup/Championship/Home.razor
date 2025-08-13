@@ -41,7 +41,7 @@
 					<div class="card-body">
 						<div class="table-wrapper">
 							<QuickGrid Pagination="pagination" Items="Tournaments!.AsQueryable()" Theme="" Class="quickgrid-table">
-								<PropertyColumn Title="عنوان مسابقات" Property="@(tournament => $"{tournament.Level.PersianTitle} {tournament.Federation.PersianName} - {tournament.Sport}")" />
+								<PropertyColumn Title="عنوان مسابقات" Property="@(tournament => $"{tournament.Level.PersianTitle} {tournament.Federation.PersianName}")" />
 								<PropertyColumn Title="محل برگزاری" Property="@(tournament => tournament.Host)" />
 								<PropertyColumn Title="تاریخ مسابقات" Property="@(tournament => TournamentDate(tournament))" />
 								<PropertyColumn Title="تعداد اعزام شدگان" Property="@(tournament => tournament.Champions.Count())" />
@@ -147,9 +147,7 @@
 				||
 				tournament.Level.PersianTitle.Contains(searchText!)
 				||
-				tournament.Federation.PersianName.Contains(searchText!)
-				||
-				tournament.Sport!.Contains(searchText!)))
+				tournament.Federation.PersianName.Contains(searchText!)))
 			.OrderBy(tournament => tournament.Day!)
 			.OrderBy(tournament => tournament.Month!)
 			.ToListAsync();

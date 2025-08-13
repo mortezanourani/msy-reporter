@@ -61,6 +61,17 @@
 						<EditForm method="post" Model="Tournament" OnValidSubmit="AddTournament" FormName="creatwe" Enhance>
 							<div class="form-row">
 								<div class="form-group mb-3">
+									<label for="levelid" class="form-label">
+										<img src="/icons/dropdown.svg" />
+									</label>
+									<InputSelect id="levelid" @bind-Value="Tournament.LevelId" class="form-control">
+										@foreach (TournamentLevel level in TournamentLevels!)
+										{
+											<option value="@level.Id">@level.PersianTitle</option>
+										}
+									</InputSelect>
+								</div>
+								<div class="form-group mb-3">
 									<label for="federationid" class="form-label">
 										<img src="/icons/dropdown.svg" />
 									</label>
@@ -71,31 +82,12 @@
 										}
 									</InputSelect>
 								</div>
-								<div class="form-group fa mb-3">
-									<label for="sport" class="form-label">
-										<img src="/icons/sport.svg" />
-									</label>
-									<InputText id="sport" @bind-Value="Tournament.Sport" class="form-control" placeholder="رشته ورزشی" />
-								</div>
 							</div>
-							<div class="form-row">
-								<div class="form-group mb-3">
-									<label for="levelid" class="form-label">
-										<img src="/icons/dropdown.svg" />
-									</label>
-									<InputSelect id="levelid" @bind-Value="Tournament.LevelId" class="form-control">
-										@foreach(TournamentLevel level in TournamentLevels!)
-										{
-											<option value="@level.Id">@level.PersianTitle</option>
-										}
-									</InputSelect>
-								</div>
-								<div class="form-group fa mb-3">
-									<label for="host" class="form-label">
-										<img src="/icons/location-province.svg" />
-									</label>
-									<InputText id="host" @bind-Value="Tournament.Host" class="form-control" placeholder="محل برگزاری" />
-								</div>
+							<div class="form-group fa mb-3">
+								<label for="host" class="form-label">
+									<img src="/icons/location-province.svg" />
+								</label>
+								<InputText id="host" @bind-Value="Tournament.Host" class="form-control" placeholder="محل برگزاری" />
 							</div>
 							<div class="form-row">
 								<div class="form-group en mb-3">

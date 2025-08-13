@@ -8,7 +8,7 @@
 
 <AuthorizeView Roles="Administrators" Context="authContext">
     <div class="page-top-menu">
-        <h6 class="panel-title">افزودن مدال آور مسابقات <b class="text-primary px-1">@Tournament?.Level.PersianTitle @Tournament?.Federation.PersianName @Tournament?.Sport</b></h6>
+        <h6 class="panel-title">افزودن مدال آور مسابقات <b class="text-primary px-1">@Tournament?.Level.PersianTitle @Tournament?.Federation.PersianName</b></h6>
         <span class="top-menu-links justify-content-end">
             <NavLink class="panel-link" href="@($"/Dashboard/SportsGroup/Championship/Tournament/Edit/{TournamentId}")">بازگشت به صفحه قبل</NavLink>
         </span>
