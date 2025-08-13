@@ -173,9 +173,9 @@
 							}
 						</TemplateColumn>
 						<TemplateColumn>
-							<a class="edit-link" href="/Dashboard/SportsGroup/Championship/Tournament/Champion/Remove/@context.Id">
-								<img src="/icons/user-remove.svg" />
-							</a>
+							<button class="btn p-0">
+								<img src="/icons/user-remove.svg" @onclick="() => RemoveChampion(context)" />
+							</button>
 						</TemplateColumn>
 					</QuickGrid>
 				</div>
@@ -263,6 +263,30 @@
 		}
 
 		return;
+	}
+
+	private async Task RemoveChampion(Champion champion)
+	{
+		if (champion is null)
+		{
+			return;
+		}
+
+		context!.Champions.Remove(champion);
+
+		try
+		{
+			await context.SaveChangesAsync();
+
+			TournamentChampions = await context.Champions
+				.Where(champion => champion.TournamentId == Id)
+				.ToListAsync();
+		}
+		catch (Exception exception)
+		{
+			statusMessageClass = "danger";
+			statusMessage = exception.InnerException!.Message;
+		}
 	}
 
 	private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
