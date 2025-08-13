@@ -9,8 +9,6 @@ public partial class Tournament
 
     public int FederationId { get; set; }
 
-    public string? Sport { get; set; }
-
     public int LevelId { get; set; }
 
     public string Host { get; set; } = null!;
