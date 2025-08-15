@@ -37,6 +37,11 @@
     <li class="nav-item">
         <NavLink class="nav-link" href="/Dashboard/Courses">شناسنامه آموزشی</NavLink>
     </li>
+    <AuthorizeView Policy="FullAccess">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="/Dashboard/Administration">پنل مدیریت</NavLink>
+        </li>
+    </AuthorizeView>
     <li class="nav-item">
         <NavLink class="nav-link" href="/Dashboard/ChangePassword">
             <img src="/icons/account-settings.svg" />
