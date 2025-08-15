@@ -11,16 +11,22 @@
             <img src="/icons/dashboard.svg" />
         </NavLink>
     </li>
-    <AuthorizeView Roles="SuperAdministrator">
+    <AuthorizeView Policy="HR_Manager">
         <li class="nav-item">
             <NavLink class="nav-link" href="/Dashboard/HumanResource">امور اداری</NavLink>
         </li>
+    </AuthorizeView>
+    <AuthorizeView Policy="M88_Admin">
         <li class="nav-item">
             <NavLink class="nav-link" href="/Dashboard/M88">ماده 88</NavLink>
         </li>
+    </AuthorizeView>
+    <AuthorizeView Policy="M5_Admin">
         <li class="nav-item">
             <NavLink class="nav-link" href="/Dashboard/M5">ماده 5</NavLink>
         </li>
+    </AuthorizeView>
+    <AuthorizeView Policy="FullAccess">
         <li class="nav-item">
             <NavLink class="nav-link" href="/Dashboard/Govermentals">اماکن سایر ارگان ها</NavLink>
         </li>

@@ -6,14 +6,12 @@
 
 <PageTitle>شناسنامه آموزشی</PageTitle>
 
-<AuthorizeView>
-	<div class="container py-3">
-		@if(User is not null)
-		{
-			<UserCoursesCard EmployeeId="@User!.Id" />
-		}
-	</div>
-</AuthorizeView>
+<div class="container py-3">
+	@if(User is not null)
+	{
+		<UserCoursesCard EmployeeId="@User!.Id" />
+	}
+</div>
 
 @code {
 	[CascadingParameter]

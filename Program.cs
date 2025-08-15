@@ -23,6 +23,87 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("FullAccess", policy =>
+        policy.RequireRole("SuperAdministrator"));
+
+    options.AddPolicy("HR_Admin", policy =>
+        policy.RequireAssertion(context =>
+        {
+            if (context.User.IsInRole("SuperAdministrator"))
+                return true;
+
+            if (!context.User.IsInRole("Administrator"))
+                return false;
+
+            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
+            var IsInDepartment = (DepartmentClaim == "HumanResource");
+            return IsInDepartment;
+        })
+    );
+
+    options.AddPolicy("HR_Manager", policy =>
+        policy.RequireAssertion(context =>
+        {
+            if (context.User.IsInRole("SuperAdministrator"))
+                return true;
+
+            if (!context.User.IsInRole("Administrator") || !context.User.IsInRole("Manager"))
+                return false;
+
+            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
+            var IsInDepartment = (DepartmentClaim == "HumanResource");
+            return IsInDepartment;
+        })
+    );
+
+    options.AddPolicy("M5_Admin", policy =>
+        policy.RequireAssertion(context =>
+        {
+            if (context.User.IsInRole("SuperAdministrator"))
+                return true;
+
+            if (!context.User.IsInRole("Administrator"))
+                return false;
+
+            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
+            var IsInDepartment = (DepartmentClaim == "M5");
+            return IsInDepartment;
+        })
+    );
+
+    options.AddPolicy("M88_Admin", policy =>
+        policy.RequireAssertion(context =>
+        {
+            if (context.User.IsInRole("SuperAdministrator"))
+                return true;
+
+            if (!context.User.IsInRole("Administrator"))
+                return false;
+
+            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
+            var IsInDepartment = (DepartmentClaim == "M88");
+            return IsInDepartment;
+        })
+    );
+
+    options.AddPolicy("SportsGroup_Admin", policy =>
+        policy.RequireAssertion(context =>
+        {
+            if (context.User.IsInRole("SuperAdministrator"))
+                return true;
+
+            if (!context.User.IsInRole("Administrator"))
+                return false;
+
+            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
+            var IsInDepartment = (DepartmentClaim == "SportsGroup");
+            return IsInDepartment;
+        })
+    );
+});
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));

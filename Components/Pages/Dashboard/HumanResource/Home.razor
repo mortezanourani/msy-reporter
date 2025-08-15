@@ -66,12 +66,16 @@
 								<PropertyColumn Title="نوع قرارداد" Property="@(employee => employee.Type!.PersianTitle)" />
 								<PropertyColumn Title="کد پرسنلی" Property="@(employee => employee.PersonnelId)" />
 								<TemplateColumn>
-									<a class="edit-link" href="/Dashboard/HumanResource/Employees/Edit/@context.Id">
-										<img src="/icons/user-edit.svg" />
-									</a>
-									<a class="edit-link" href="/Dashboard/HumanResource/Employees/Courses/@context.Id">
-										<img src="/icons/user-courses.svg" />
-									</a>
+									<AuthorizeView Policy="HR_Admin" Context="AuthContext">
+										<a class="edit-link" href="/Dashboard/HumanResource/Employees/Edit/@context.Id">
+											<img src="/icons/user-edit.svg" />
+										</a>
+									</AuthorizeView>
+									<AuthorizeView Policy="HR_Manager" Context="AuthContext">
+										<a class="edit-link" href="/Dashboard/HumanResource/Employees/Courses/@context.Id">
+											<img src="/icons/user-courses.svg" />
+										</a>
+									</AuthorizeView>
 								</TemplateColumn>
 							</QuickGrid>
 						}

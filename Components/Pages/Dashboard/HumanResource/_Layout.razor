@@ -2,7 +2,7 @@
 
 @layout Layout.DashboardLayout
 
-<AuthorizeView Roles="SuperAdministrator, Administrator">
+<AuthorizeView Policy="HR_Manager" Context="AuthContext">
     <nav class="secondary-navbar">
         <div class="container">
             <h5 class="sub-title">امور اداری</h5>
@@ -10,9 +10,11 @@
                 <li class="nav-item">
                     <NavLink href="/Dashboard/HumanResource" Match="NavLinkMatch.All">فهرست پرسنل</NavLink>
                 </li>
-                <li class="nav-item">
-                    <NavLink href="/Dashboard/HumanResource/Employees/Add">ثبت پرسنل جدید</NavLink>
-                </li>
+                <AuthorizeView Policy="HR_Admin">
+                    <li class="nav-item">
+                        <NavLink href="/Dashboard/HumanResource/Employees/Add">ثبت پرسنل جدید</NavLink>
+                    </li>
+                </AuthorizeView>
                 <li class="nav-item">
                     <NavLink href="/Dashboard/HumanResource/Education/Courses" Match="NavLinkMatch.All">فهرست دوره های آموزشی</NavLink>
                 </li>

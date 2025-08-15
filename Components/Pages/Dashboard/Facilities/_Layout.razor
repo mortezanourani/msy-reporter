@@ -2,7 +2,7 @@
 
 @layout Layout.DashboardLayout
 
-<AuthorizeView Roles="SuperAdministrator, Administrator" Context="authContext">
+<AuthorizeView Policy="FullAccess">
     <Authorized>
         <nav class="secondary-navbar">
             <div class="container">
