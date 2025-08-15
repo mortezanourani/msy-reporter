@@ -28,6 +28,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Course> Courses { get; set; }
 
+    public virtual DbSet<Department> Departments { get; set; }
+
     public virtual DbSet<Employee> Employees { get; set; }
 
     public virtual DbSet<EmploymentType> EmploymentTypes { get; set; }
@@ -154,6 +156,17 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Course>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+        });
+
+        modelBuilder.Entity<Department>(entity =>
+        {
+            entity.HasIndex(e => e.NormalizedName, "IX_Departments").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.Name).HasMaxLength(16);
+            entity.Property(e => e.NormalizedName)
+                .HasMaxLength(16)
+                .HasComputedColumnSql("(upper([Name]))", false);
         });
 
         modelBuilder.Entity<Employee>(entity =>
