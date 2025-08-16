@@ -70,7 +70,7 @@
 										aria-current="@AriaCurrentValue(pageIndex - 1)"
 										aria-label="@(pageIndex - 1)"
 										disabled=@((pageIndex <= 0) ? "disabled" : false)>
-									<span class="material-symbols-rounded">chevron_right</span>
+									<img src="/icons/arrow-right.svg" />
 								</button>
 								<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
 								<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
@@ -78,7 +78,7 @@
 										aria-current="@AriaCurrentValue(pageIndex + 1)"
 										aria-label="@(pageIndex + 1)"
 										disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-									<span class="material-symbols-rounded">chevron_left</span>
+									<img src="/icons/arrow-left.svg" />
 								</button>
 							}
 						</nav>
