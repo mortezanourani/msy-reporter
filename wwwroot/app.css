@@ -290,8 +290,12 @@ form .form-row {
     gap: 12px;
 }
 
+form .form-row.reverse {
+    flex-direction: row-reverse;
+}
+
     form .form-row * {
-        flex-basis: 100%;
+        flex-grow: 1;
     }
 
 .form-group,

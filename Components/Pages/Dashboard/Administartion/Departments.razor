@@ -1,4 +1,4 @@
-﻿@page "/Dashboard/Administration/Roles"
+﻿@page "/Dashboard/Administration/Departments"
 
 @using Microsoft.AspNetCore.Components.QuickGrid
 
@@ -9,7 +9,7 @@
 <PageTitle>پنل مدیریت</PageTitle>
 
 <div class="page-top-menu">
-    <h6 class="panel-title">ثبت و حذف سمت ها</h6>
+    <h6 class="panel-title">ثبت و حذف واحدهای سازمانی</h6>
 </div>
 <div class="row form-wrapper">
     <div class="col3-5 mb-0">
@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="col2-5 mb-auto">
-        @if (IdentityRoles is null)
+        @if (OrgDepartments is null)
         {
             <Loading CardMode=true />
         }
@@ -36,16 +36,22 @@
             <div class="card list-card no-header">
                 <div class="card-header p-3 border-bottom">
                     <div class="w-100">
-                        <EditForm method="post" Model="Role" OnValidSubmit="AddRole" FormName="edit" Enhance>
-                            <div class="form-row reverse">
-                                <div class="form-group en">
-                                    <label for="rolename" class="form-label">
-                                        <img src="/icons/user.svg" />
+                        <EditForm method="post" Model="Department" OnValidSubmit="AddDepartment" FormName="edit" Enhance>
+                            <div class="form-group en mb-3">
+                                <label for="departmentname" class="form-label">
+                                    <img src="/icons/group.svg" />
+                                </label>
+                                <InputText id="departmentname" @bind-Value="Department!.Name" class="form-control" placeholder="Department Name" />
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group fa">
+                                    <label for="departmentpersianname" class="form-label">
+                                        <img src="/icons/group.svg" />
                                     </label>
-                                    <InputText id="rolename" @bind-Value="Role!.Name" class="form-control" placeholder="Role Name" />
+                                    <InputText id="departmentpersianname" @bind-Value="Department!.PersianName" class="form-control" placeholder="نام واحد سازمانی" />
                                 </div>
                                 <button type="submit" class="btn btn-primary flex-grow-0">
-                                    <img src="/icons/person-add.svg" />
+                                    <img src="/icons/group-add.svg" />
                                 </button>
                             </div>
                         </EditForm>
@@ -53,13 +59,14 @@
                 </div>
                 <div class="card-body">
                     <div class="table-wrapper">
-                        @if (IdentityRoles is not null)
+                        @if (OrgDepartments is not null)
                         {
-                            <QuickGrid Items="IdentityRoles.AsQueryable()" Theme="" Class="quickgrid-table en">
-                                <PropertyColumn Property="@(role => role.Name)" />
+                            <QuickGrid Items="OrgDepartments.AsQueryable()" Theme="" Class="quickgrid-table">
+                                <PropertyColumn Property="@(department => department.PersianName)" />
+                                <PropertyColumn Property="@(department => department.Name)" />
                                 <TemplateColumn>
-                                    <button class="btn p-0" @onclick="() => DeleteRole(context)">
-                                        <img src="/icons/person-remove.svg" />
+                                    <button class="btn p-0" @onclick="() => DeleteDepartment(context)">
+                                        <img src="/icons/group-remove.svg" />
                                     </button>
                                 </TemplateColumn>
                             </QuickGrid>
@@ -73,9 +80,11 @@
 
 @code {
     [SupplyParameterFromForm]
-    private IdentityRole? Role { get; set; } = new();
+    private Department? Department { get; set; } = new();
 
-    private List<IdentityRole>? IdentityRoles;
+    private AppDbContext? context { get; set; } = null!;
+
+    private List<Department>? OrgDepartments;
 
     protected override async Task OnInitializedAsync()
     {
@@ -84,26 +93,30 @@
 
     private async Task UpdateRoles()
     {
-        IdentityRoles = await RoleManager.Roles
-            .OrderBy(role => role.Name)
+        context = DbFactory.CreateDbContext();
+
+        OrgDepartments = await context!.Departments
+            .OrderBy(department => department.PersianName)
             .ToListAsync();
 
-        Role = new();
+        Department = new();
         StateHasChanged();
         return;
     }
 
-    private async Task AddRole()
+    private async Task AddDepartment()
     {
-        await RoleManager.CreateAsync(Role!);
+        context!.Add(Department!);
+        await context.SaveChangesAsync();
 
         await UpdateRoles();
         return;
     }
 
-    private async Task DeleteRole(IdentityRole Role)
+    private async Task DeleteDepartment(Department Department)
     {
-        await RoleManager.DeleteAsync(Role!);
+        context!.Departments.Remove(Department!);
+        await context.SaveChangesAsync();
 
         await UpdateRoles();
         return;
