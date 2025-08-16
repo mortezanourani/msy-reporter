@@ -66,6 +66,11 @@
 								<PropertyColumn Title="نوع قرارداد" Property="@(employee => employee.Type!.PersianTitle)" />
 								<PropertyColumn Title="کد پرسنلی" Property="@(employee => employee.PersonnelId)" />
 								<TemplateColumn>
+									<AuthorizeView Policy="FullAccess" Context="AuthContext">
+										<a class="edit-link" href="/Dashboard/Administration/ResetPassword/@context.Id">
+											<img src="/icons/password.svg" />
+										</a>
+									</AuthorizeView>
 									<AuthorizeView Policy="HR_Admin" Context="AuthContext">
 										<a class="edit-link" href="/Dashboard/HumanResource/Employees/Edit/@context.Id">
 											<img src="/icons/user-edit.svg" />
@@ -99,7 +104,7 @@
 
 		context = DbFactory.CreateDbContext();
 
-		Employees ??= await context.Employees
+		Employees = await context.Employees
 			.Include(employee => employee.Type)
 			.OrderBy(employee => employee.FirstName)
 			.OrderBy(employee => employee.LastName)
