@@ -31,6 +31,10 @@
                 border-spacing: 0;
             }
 
+            ::deep .list-card .card-body .table-wrapper .quickgrid-table.en {
+                direction: ltr;
+            }
+
                 ::deep .list-card .card-body .table-wrapper .quickgrid-table thead tr {
                     background-color: var(--primary-color);
                     color: var(--light-color);
@@ -93,6 +97,38 @@
                     ::deep .list-card .card-body .table-wrapper .quickgrid-table tbody tr:hover td:last-child .edit-link {
                         opacity: 1;
                     }
+
+    ::deep .list-card.no-header {
+        background-color: var(--card-bg);
+        box-shadow: var(--card-box-shadow);
+        overflow: hidden;
+    }
+
+        ::deep .list-card.no-header .card-header {
+            padding: var(--card-padding-y) var(--card-padding-x);
+        }
+
+        ::deep .list-card.no-header .card-body .table-wrapper .quickgrid-table thead tr {
+            display: none;
+        }
+
+        ::deep .list-card.no-header .card-body .table-wrapper .quickgrid-table tbody tr {
+            background: var(--light-color);
+        }
+
+            ::deep .list-card.no-header .card-body .table-wrapper .quickgrid-table tbody tr:nth-child(2n) {
+                background: #ffffff;
+            }
+
+            ::deep .list-card.no-header .card-body .table-wrapper .quickgrid-table tbody tr td {
+                padding: 6px 12px 6px 8px;
+            }
+            ::deep .list-card.no-header .card-body .table-wrapper .quickgrid-table.en tbody tr td {
+                padding: 6px 8px 6px 12px;
+                direction: ltr;
+                text-align: left;
+            }
+
 
     ::deep .list-card .paginator {
         margin: 0;

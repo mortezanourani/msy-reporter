@@ -9,7 +9,7 @@
 <PageTitle>پنل مدیریت</PageTitle>
 
 <div class="page-top-menu">
-    <h6 class="panel-title">ثبت و ویرایش سمت ها</h6>
+    <h6 class="panel-title">ثبت و حذف سمت ها</h6>
 </div>
 <div class="row form-wrapper">
     <div class="col3-5 mb-0">
@@ -33,114 +33,77 @@
         }
         else
         {
-            <div class="card p-3 mb-3">
-                <EditForm method="post" Model="Role" OnValidSubmit="AddRole" FormName="edit" Enhance>
-                    <DataAnnotationsValidator />
-                    <div class="form-group en mb-3">
-                        <label for="rolename" class="form-label">
-                            <img src="/icons/username.svg" />
-                        </label>
-                        <InputText id="rolename" @bind-Value="Role!.Name" class="form-control" placeholder="Role Name" />
+            <div class="card list-card no-header">
+                <div class="card-header p-3 border-bottom">
+                    <div class="w-100">
+                        <EditForm method="post" Model="Role" OnValidSubmit="AddRole" FormName="edit" class="d-flex flex-row-reverse" Enhance>
+                            <div class="form-group en w-100">
+                                <label for="rolename" class="form-label">
+                                    <img src="/icons/user.svg" />
+                                </label>
+                                <InputText id="rolename" @bind-Value="Role!.Name" class="form-control" placeholder="Role Name" />
+                            </div>
+                            <button type="submit" class="btn btn-primary ms-2">
+                                <img src="/icons/check.svg" />
+                            </button>
+                        </EditForm>
                     </div>
-                    <ValidationSummary class="text-danger" role="alert" />
-                    @if (!string.IsNullOrEmpty(statusMessage))
-                    {
-                        <div class="alert alert-@statusMessageClass" role="alert">
-                            @statusMessage
-                        </div>
-                    }
-                    <button type="submit" class="btn btn-primary w-100">ثبت</button>
-                </EditForm>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        @if (IdentityRoles is not null)
+                        {
+                            <QuickGrid Items="IdentityRoles.AsQueryable()" Theme="" Class="quickgrid-table en">
+                                <PropertyColumn Property="@(role => role.Name)" />
+                                <TemplateColumn>
+                                    <button class="btn p-0" @onclick="() => DeleteRole(context)">
+                                        <img src="/icons/user-remove.svg" />
+                                    </button>
+                                </TemplateColumn>
+                            </QuickGrid>
+                        }
+                    </div>
+                </div>
             </div>
         }
-        <div class="card list-card">
-            <div class="card-header border-bottom">
-                <h6 class="title">سابقه تصدی هیات</h6>
-                <div class="paginator">
-                    <nav role="navigation">
-                        @if (pagination.TotalItemCount.HasValue)
-                        {
-                            var totalPages = pagination.TotalItemCount;
-                            var pageIndex = pagination.CurrentPageIndex;
-                            var currentPage = pageIndex + 1;
-                            var lastPage = pagination.LastPageIndex + 1;
-                            var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
-                            var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
-                            <button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
-                                    class="btn"
-                                    aria-current="@AriaCurrentValue(pageIndex + 1)"
-                                    aria-label="@(pageIndex + 1)"
-                                    disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-                                <img src="/icons/arrow-left.svg" />
-                            </button>
-                            <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-                            <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-                                    class="btn"
-                                    aria-current="@AriaCurrentValue(pageIndex - 1)"
-                                    aria-label="@(pageIndex - 1)"
-                                    disabled=@((pageIndex <= 0) ? "disabled" : false)>
-                                <img src="/icons/arrow-right.svg" />
-                            </button>
-                        }
-                    </nav>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-wrapper">
-                    @if (IdentityRoles is not null)
-                    {
-                        <QuickGrid Items="IdentityRoles.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-                            <PropertyColumn Title="عنوان" Property="@(president => president.Name)" />
-                            <TemplateColumn>
-                                <button class="btn p-0">
-                                    <img src="/icons/user-remove.svg" />
-                                </button>
-                            </TemplateColumn>
-                        </QuickGrid>
-                    }
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
 @code {
-    [Parameter]
-    public Guid? Id { get; set; }
-
     [SupplyParameterFromForm]
     private IdentityRole? Role { get; set; } = new();
 
     private List<IdentityRole>? IdentityRoles;
 
-    private AppDbContext? context { get; set; } = null!;
-
-    private string? statusMessage;
-    private string? statusMessageClass = "success";
-
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        await UpdateRoles();
+    }
 
+    private async Task UpdateRoles()
+    {
         IdentityRoles = await RoleManager.Roles
             .OrderBy(role => role.Name)
             .ToListAsync();
 
-        pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
+        Role = new();
+        StateHasChanged();
+        return;
     }
 
     private async Task AddRole()
     {
+        await RoleManager.CreateAsync(Role!);
+
+        await UpdateRoles();
         return;
     }
 
-    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
-
-    private async Task GoToPageAsync(int pageIndex)
+    private async Task DeleteRole(IdentityRole Role)
     {
-        await pagination.SetCurrentPageIndexAsync(pageIndex);
-    }
+        await RoleManager.DeleteAsync(Role!);
 
-    private string? AriaCurrentValue(int pageIndex)
-        => pagination.CurrentPageIndex == pageIndex ? "page" : null;
+        await UpdateRoles();
+        return;
+    }
 }
