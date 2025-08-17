@@ -1,0 +1,261 @@
+﻿@page "/Dashboard/Administration/AssignPolicies/{EmployeeId:guid}"
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@layout _Layout
+
+@rendermode InteractiveServer
+
+<PageTitle>پنل مدیریت</PageTitle>
+
+<div class="page-top-menu">
+    <h6 class="panel-title">تعیین سیاست های دسترسی</h6>
+</div>
+
+<div class="row form-wrapper">
+    <div class="col3-5 mb-0">
+        <div class="instructions">
+            <p class="mb-3">جهت تغییر رمز عبور خود، می بایست رمز عبور کنونی خود را بدانید. اگر رمز عبور فعلی خود را به یاد نمی آورید لطفا به مدیریت سامانه اطلاع دهید تا نسبت به تعریف رمز عبور جدید (موقت) برای شما اقدام نمایند.</p>
+            <div class="instruction-item">
+                <div class="icon-title mb-2">
+                    <img src="/icons/fingerprint-blue.svg">
+                    <h6>رمز عبور جدید:</h6>
+                </div>
+                <p>در فرم مربوطه فیلد اول رمز عبور جدیدی است که می خواهید برای حساب کاربری خود تعیین نمایید.</p>
+                <p>جهت اطمینان از اینکه رمز عبور خود را درست وارد نموده اید می بایست رمز عبور جدید خود را در فیلد دوم مجددا وارد نمایید. بدیهی است که در صورت مغایرت این دو، رمز عبور تغییر نخواهد کرد.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col2-5 mb-auto">
+        @if (Employee is null)
+        {
+            <Loading CardMode=true />
+        }
+        else
+        {
+            <div class="card list-card no-header">
+                <div class="card-header p-3 border-bottom">
+                    <div class="w-100">
+                        <div class="form-group fa mb-3">
+                            <label for="accountid" class="form-label">
+                                <img src="/icons/user.svg" />
+                            </label>
+                            <div class="form-control">
+                                @Employee.FirstName @Employee.LastName
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <EditForm Model="Role" FormName="change-password" OnValidSubmit="AddRole" method="post">
+                                <div class="form-row">
+                                    <button type="submit" class="btn btn-primary flex-grow-0">
+                                        <img src="/icons/person-add.svg" />
+                                    </button>
+                                    <div class="form-group fa">
+                                        <label for="rolename" class="form-label">
+                                            <img src="/icons/dropdown.svg" />
+                                        </label>
+                                        <InputSelect id="rolename" @bind-Value="Role!.Name" class="form-control text-start w-100">
+                                            @foreach (IdentityRole role in Roles!)
+                                            {
+                                                <option value="@role.Name">@role.Name</option>
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                </div>
+                            </EditForm>
+                        </div>
+                        <div>
+                            <EditForm Model="Department" FormName="change-password" OnValidSubmit="AddDepartment" method="post">
+                                <div class="form-row">
+                                    <div class="form-group en">
+                                        <label for="departmentid" class="form-label">
+                                            <img src="/icons/dropdown.svg" />
+                                        </label>
+                                        <InputSelect id="departmentid" @bind-Value="Department!.Id" class="form-control text-end w-100">
+                                            @foreach (Department department in Departments!)
+                                            {
+                                                <option value="@department.Id">@department.PersianName</option>
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary flex-grow-0">
+                                        <img src="/icons/group-add.svg" />
+                                    </button>
+                                </div>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+                @if (UserRoles is not null || UserDepartments is not null)
+                {
+                    <div class="card-body">
+                        <div class="table-wrapper">
+                            @if (UserRoles is not null)
+                            {
+                                <QuickGrid Items="UserRoles.AsQueryable()" Theme="" Class="quickgrid-table en">
+                                    <PropertyColumn Title="Role" Property="@(role => role)" />
+                                    <TemplateColumn>
+                                        <button class="btn p-0" @onclick="() => RemoveRole(context)">
+                                            <img src="/icons/person-remove.svg" />
+                                        </button>
+                                    </TemplateColumn>
+                                </QuickGrid>
+                            }
+                        </div>
+                        @if (UserDepartments is not null)
+                        {
+                            <hr />
+                            <div class="table-wrapper">
+                                <QuickGrid Items="UserDepartments.AsQueryable()" Theme="" Class="quickgrid-table">
+                                    <PropertyColumn Title="Department" Property="@(department => department.PersianName)" />
+                                    <TemplateColumn>
+                                        <button class="btn p-0" @onclick="() => RemoveDepartment(context.Name)">
+                                            <img src="/icons/group-remove.svg" />
+                                        </button>
+                                    </TemplateColumn>
+                                </QuickGrid>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid? EmployeeId { get; set; }
+
+    [SupplyParameterFromForm]
+    private IdentityRole? Role { get; set; } = new();
+
+    [SupplyParameterFromForm]
+    private Department? Department { get; set; } = new();
+
+    private AppDbContext? context { get; set; } = default!;
+
+    private List<IdentityRole>? Roles;
+    private List<Department>? Departments;
+
+    private Employee? Employee;
+    private List<string>? UserRoles = new();
+    private List<Department>? UserDepartments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        Employee = await context.Employees
+            .Where(employee => employee.Id == EmployeeId!)
+            .FirstOrDefaultAsync();
+
+        if (Employee is null)
+        {
+            NavigationManager.NavigateTo("/NotFound");
+        }
+
+        Roles = await RoleManager.Roles
+            .OrderBy(role => role.Name)
+            .ToListAsync();
+
+        Departments = await context.Departments
+            .OrderBy(department => department.PersianName)
+            .ToListAsync();
+
+        await UpdateLists();
+        return;
+    }
+
+    private async Task UpdateLists()
+    {
+        ApplicationUser? user = await UserManager.FindByIdAsync(Employee!.AccountId!);
+        if (user is null) return;
+
+        var userRoles = await UserManager.GetRolesAsync(user!);
+        UserRoles = userRoles.ToList();
+
+        UserDepartments = new();
+        var userClaims = await UserManager.GetClaimsAsync(user!);
+        foreach (Claim claim in userClaims)
+        {
+            var userDepartment = await context!.Departments
+                .Where(dept => dept.Name == claim.Type)
+                .FirstOrDefaultAsync();
+            if(userDepartment is not null)
+                UserDepartments!.Add(userDepartment!);
+        }
+
+        StateHasChanged();
+        return;
+    }
+
+    private async Task AddRole()
+    {
+        ApplicationUser? user = await UserManager.FindByIdAsync(Employee!.AccountId!);
+        if (user is null) return;
+
+        await UserManager.AddToRoleAsync(user!, Role!.Name);
+
+        await UpdateLists();
+        return;
+    }
+
+    private async Task RemoveRole(string Role)
+    {
+        ApplicationUser? user = await UserManager.FindByIdAsync(Employee!.AccountId!);
+        if (user is null) return;
+
+        await UserManager.RemoveFromRoleAsync(user!, Role!);
+
+        await UpdateLists();
+        return;
+    }
+
+    private async Task AddDepartment()
+    {
+        ApplicationUser? user = await UserManager.FindByIdAsync(Employee!.AccountId!);
+        if (user is null) return;
+
+        var department = await context!.Departments
+            .Where(dept => dept.Id == Department!.Id)
+            .FirstOrDefaultAsync();
+
+        var claims = await UserManager.GetClaimsAsync(user!);
+
+        var claim = claims.FirstOrDefault(c => c.Type == department!.Name);
+        if (claim != null)
+            return;
+        
+        claim = new Claim(department!.Name, true.ToString());
+        await UserManager.AddClaimAsync(user!, claim);
+
+        await UpdateLists();
+        return;
+    }
+
+    private async Task RemoveDepartment(string Department)
+    {
+        ApplicationUser? user = await UserManager.FindByIdAsync(Employee!.AccountId!);
+        if (user is null) return;
+
+        var claims = await UserManager.GetClaimsAsync(user!);
+        var claim = claims.FirstOrDefault(c => c.Type == Department);
+        await UserManager.RemoveClaimAsync(user!, claim!);
+
+        await UpdateLists();
+        return;
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        public string? Role { get; set; }
+
+        [Required]
+        public Guid? DepartmentId { get; set; }
+    }
+}

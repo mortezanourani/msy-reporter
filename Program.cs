@@ -37,8 +37,8 @@ builder.Services.AddAuthorization(options =>
             if (!context.User.IsInRole("Administrator"))
                 return false;
 
-            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
-            var IsInDepartment = (DepartmentClaim == "HumanResource");
+            var DepartmentClaim = context.User.FindFirst("HumanResource")?.Value;
+            var IsInDepartment = DepartmentClaim == true.ToString();
             return IsInDepartment;
         })
     );
@@ -49,11 +49,11 @@ builder.Services.AddAuthorization(options =>
             if (context.User.IsInRole("SuperAdministrator"))
                 return true;
 
-            if (!context.User.IsInRole("Administrator") || !context.User.IsInRole("Manager"))
+            if (!(context.User.IsInRole("Administrator") || context.User.IsInRole("Manager")))
                 return false;
 
-            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
-            var IsInDepartment = (DepartmentClaim == "HumanResource");
+            var DepartmentClaim = context.User.FindFirst("HumanResource")?.Value;
+            var IsInDepartment = DepartmentClaim == true.ToString();
             return IsInDepartment;
         })
     );
@@ -67,8 +67,8 @@ builder.Services.AddAuthorization(options =>
             if (!context.User.IsInRole("Administrator"))
                 return false;
 
-            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
-            var IsInDepartment = (DepartmentClaim == "M5");
+            var DepartmentClaim = context.User.FindFirst("M5")?.Value;
+            var IsInDepartment = DepartmentClaim == true.ToString();
             return IsInDepartment;
         })
     );
@@ -82,8 +82,8 @@ builder.Services.AddAuthorization(options =>
             if (!context.User.IsInRole("Administrator"))
                 return false;
 
-            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
-            var IsInDepartment = (DepartmentClaim == "M88");
+            var DepartmentClaim = context.User.FindFirst("M88")?.Value;
+            var IsInDepartment = DepartmentClaim == true.ToString();
             return IsInDepartment;
         })
     );
@@ -97,8 +97,8 @@ builder.Services.AddAuthorization(options =>
             if (!context.User.IsInRole("Administrator"))
                 return false;
 
-            var DepartmentClaim = context.User.FindFirst("Department")?.Value;
-            var IsInDepartment = (DepartmentClaim == "SportsGroup");
+            var DepartmentClaim = context.User.FindFirst("SportsGroup")?.Value;
+            var IsInDepartment = DepartmentClaim == true.ToString();
             return IsInDepartment;
         })
     );
