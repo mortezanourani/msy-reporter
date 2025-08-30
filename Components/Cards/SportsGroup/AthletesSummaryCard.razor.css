@@ -1,0 +1,18 @@
+﻿
+.card .card-body .card-row .card-col img {
+    height: 48px;
+}
+
+.card .card-body .card-row .card-col h4 {
+    font-weight: 300;
+}
+
+*:has(hr.vertical-seperator) {
+    position: relative;
+}
+
+hr.vertical-seperator {
+    width: 0;
+    border: none;
+    border-right: 1px solid var(--dark-color);
+}

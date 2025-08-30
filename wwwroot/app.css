@@ -73,6 +73,16 @@ body {
         width: 30%;
     }
 
+    .row .row-title {
+        margin: 0;
+        margin: 12px 0;
+    }
+
+        .row .row-title .display-6 {
+            font-size: 18px;
+            margin: 0;
+        }
+
 .card {
     height: 100%;
     background-color: var(--card-bg);
@@ -208,6 +218,23 @@ body {
         .card .card-body b {
             font-weight: 600;
         }
+
+        .card .card-body .card-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: stretch;
+            align-items: stretch;
+            gap: 16px;
+        }
+
+            .card .card-body .card-row .card-col {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                gap: 8px;
+                flex: 0 1 100%;
+            }
 
         .card.color-card .card-body * {
             color: #fff;

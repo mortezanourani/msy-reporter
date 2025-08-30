@@ -1,0 +1,146 @@
+﻿@using System.Globalization
+
+<div class="row">
+	<div class="row-title">
+		<h6 class="display-6">خلاصه وضعیت ورزشکاران سازمان یافته استان</h6>
+	</div>
+	<div class="col3-5 mb-0">
+		@if (Insurances is null)
+		{
+			<Loading CardMode=true />
+		}
+		else
+		{
+			<div class="card">
+				<div class="card-body p-0">
+					<div class="card-row">
+						<div class="card-col">
+							<div class="card empty-card w-100">
+								<div class="card-header text-center">
+									<h6>ورزشکاران سازمان یافته استان</h6>
+								</div>
+								<div class="card-body">
+									<div>
+										<h1 class="total text-center">@($"{lastYearCount:#,0}")</h1>
+									</div>
+									<div class="card-row">
+										<div class="card-col">
+											<img src="/icons/man-blue.svg" />
+											<h4>@($"{lastYearMenCount:#,0}")</h4>
+										</div>
+										<div class="card-col">
+											<img src="/icons/woman-blue.svg" />
+											<h4>@($"{lastYearWomenCount:#,0}")</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<hr class="vertical-seperator" />
+						<div class="card-col">
+							<div class="card empty-card w-100">
+								<div class="card-header">
+									<h6>ورزشکاران بیمه شده از ابتدای سال جاری</h6>
+								</div>
+								<div class="card-body">
+									<div>
+										<h1 class="total text-center">@($"{thisYearCount:#,0}")</h1>
+									</div>
+									<div class="card-row">
+										<div class="card-col">
+											<img src="/icons/man-blue.svg" />
+											<h4>@($"{thisYearMenCount:#,0}")</h4>
+										</div>
+										<div class="card-col">
+											<img src="/icons/woman-blue.svg" />
+											<h4>@($"{thisYearWomenCount:#,0}")</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	<div class="col2-5 mb-0">
+		@if (Insurances is null)
+		{
+			<Loading CardMode=true />
+		}
+		else
+		{
+			<div class="card">
+				<div class="card-header">
+					<h6 class="title">ورزشکاران سازمان یافته استان در سال جاری</h6>
+				</div>
+				<div class="card-body">
+					<div class="text-center">
+						<h1 class="total"></h1>
+					</div>
+					<div class="card-row">
+						<div class="card-col">
+							<img src="/icons/man-blue.svg" />
+							<h4></h4>
+						</div>
+						<div class="card-col">
+							<h1 class="total"></h1>
+						</div>
+						<div class="card-col">
+							<img src="/icons/woman-blue.svg" />
+							<h4></h4>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	private AppDbContext context = default!;
+
+	PersianCalendar persianCalendar = new PersianCalendar();
+
+	private List<Insurance>? Insurances;
+
+	private int lastYearCount;
+	private int lastYearMenCount;
+	private int lastYearWomenCount;
+
+	private int thisYearCount;
+	private int thisYearMenCount;
+	private int thisYearWomenCount;
+
+	protected override async Task OnInitializedAsync()
+	{
+		context = DbFactory.CreateDbContext();
+
+		Insurances = await context.Insurances.ToListAsync();
+
+		int currentYear = persianCalendar.GetYear(DateTime.Now);
+		int currentMonth = persianCalendar.GetMonth(DateTime.Now);
+		int lastYear = ((currentYear - 1) * 100) + currentMonth;
+
+		lastYearMenCount = Insurances
+			.Where(m => ((m.Year * 100) + m.Month) > lastYear)
+			.Sum(m => m.MenCount);
+
+		lastYearWomenCount = Insurances
+			.Where(m => ((m.Year * 100) + m.Month) > lastYear)
+			.Sum(m => m.WomenCount);
+
+		lastYearCount = lastYearMenCount + lastYearWomenCount;
+
+		thisYearMenCount = Insurances
+			.Where(m => m.Year == currentYear)
+			.Sum(m => m.MenCount);
+
+		thisYearWomenCount = Insurances
+			.Where(m => m.Year == currentYear)
+			.Sum(m => m.WomenCount);
+
+		thisYearCount = thisYearMenCount + thisYearWomenCount;
+	}
+}
