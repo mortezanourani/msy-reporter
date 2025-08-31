@@ -79,7 +79,7 @@ body {
     }
 
         .row .row-title .display-6 {
-            font-size: 18px;
+            font-size: 16px;
             margin: 0;
         }
 
@@ -149,6 +149,12 @@ body {
             font: 500 14px IRANSans;
             color: #333;
         }
+
+            .card .card-header h6.display-6 {
+                font-weight: 300;
+                font-size: 16px;
+                color: #000;
+            }
 
         .card.color-card .card-header h6 {
             font: 500 13px IRANSans;
