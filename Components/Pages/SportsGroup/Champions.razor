@@ -4,29 +4,43 @@
 
 <PageTitle>ورزش قهرمانی</PageTitle>
 
-<div class="row">
-    <div class="col1-1">
-        <div class="card color-card">
-            <div class="card-header">
-                <h6 class="title">ورزش قهرمانی در سال @year</h6>
-                <InputSelect class="select" @bind-Value="year">
-                    @foreach (int year in years)
-                    {
-                        <option value="@year">@year</option>
-                    }
-                </InputSelect>
+@if (years is null)
+{
+    <Loading CardMode=true />
+}
+else
+{
+    <div class="row">
+        <div class="col1-1">
+            <div class="card color-card">
+                <div class="card-header">
+                    <h6 class="title">ورزش قهرمانی در سال @year</h6>
+                    <InputSelect class="select" @bind-Value="year">
+                        @foreach (int year in years)
+                        {
+                            <option value="@year">@year</option>
+                        }
+                    </InputSelect>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<ChampionsYearSummaryCard Year="@year" />
+    <ChampionsYearSummaryCard Year="@year" />
 
-<div class="row">
-    <div class="col1-1">
-        <ChampionsYearFederationsStatusCard Year="@year" Federations="@federations" />
-    </div>
-</div>
+    @if(federations is null)
+    {
+        <Loading CardMode=false />
+    }
+    else
+    {
+        <div class="row">
+            <div class="col1-1">
+                <ChampionsYearFederationsStatusCard Year="@year" Federations="@federations" />
+            </div>
+        </div>
+    }
+}
 
 @code {
     private AppDbContext context = default!;
@@ -34,7 +48,7 @@
     private int year;
 
     [CascadingParameter]
-    private List<int> years
+    private List<int>? years
     {
         get => context.Champions
             .Include(champion => champion.Tournament)
