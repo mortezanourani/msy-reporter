@@ -71,9 +71,9 @@
 		}
 		else
 		{
-			<div class="card">
+			<div class="card cornered1">
 				<div class="card-header">
-					<h6 class="title">ورزشکاران سازمان یافته استان در سال جاری</h6>
+					<h6 class="title">ورزشکاران سازمان یافته قهرمانی و همگانی</h6>
 				</div>
 				<div class="card-body">
 					<div class="text-center">
@@ -81,15 +81,12 @@
 					</div>
 					<div class="card-row">
 						<div class="card-col">
-							<img src="/icons/man-blue.svg" />
-							<h4></h4>
+							<h4 class="display-6">@($"{championsAthletesCount:#,0}")</h4>
+							<p class="mb-3">ورزش قهرمانی</p>
 						</div>
 						<div class="card-col">
-							<h1 class="total"></h1>
-						</div>
-						<div class="card-col">
-							<img src="/icons/woman-blue.svg" />
-							<h4></h4>
+							<h4 class="display-6">@($"{generalAthletesCount:#,0}")</h4>
+							<p class="mb-3">ورزش همگانی</p>
 						</div>
 					</div>
 				</div>
@@ -113,11 +110,16 @@
 	private int thisYearMenCount;
 	private int thisYearWomenCount;
 
+	private int championsAthletesCount;
+	private int generalAthletesCount;
+
 	protected override async Task OnInitializedAsync()
 	{
 		context = DbFactory.CreateDbContext();
 
-		Insurances = await context.Insurances.ToListAsync();
+		Insurances = await context.Insurances
+			.Include(m => m.Federation)
+			.ToListAsync();
 
 		int currentYear = persianCalendar.GetYear(DateTime.Now);
 		int currentMonth = persianCalendar.GetMonth(DateTime.Now);
@@ -142,5 +144,15 @@
 			.Sum(m => m.WomenCount);
 
 		thisYearCount = thisYearMenCount + thisYearWomenCount;
+
+		championsAthletesCount = Insurances
+			.Where(m => ((m.Year * 100) + m.Month) > lastYear)
+			.Where(m => m.Federation.IsChampionship)
+			.Sum(m => m.MenCount + m.WomenCount);
+
+		generalAthletesCount = Insurances
+			.Where(m => ((m.Year * 100) + m.Month) > lastYear)
+			.Where(m => m.Federation.IsGeneral)
+			.Sum(m => m.MenCount + m.WomenCount);
 	}
 }
