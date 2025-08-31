@@ -1,0 +1,169 @@
+﻿
+<div class="row">
+	<div class="row-title">
+		<h6 class="display-6">خلاصه وضعیت ورزش قهرمانی استان</h6>
+	</div>
+	<div class="col1-3">
+		@if (champions is null)
+		{
+			<Loading CardMode=true />
+		}
+		else
+		{
+			<div class="card cornered2">
+				<div class="card-body p-0">
+					<div class="card-row">
+						<div class="card-col">
+							<div class="card empty-card w-100">
+								<div class="card-header">
+									<h6 class="title">مدال آوران استان</h6>
+								</div>
+								<div class="card-body">
+									<div>
+										<h1 class="total text-center">@championsCount</h1>
+									</div>
+									<div class="card-row">
+										<div class="card-col">
+											<img src="/icons/man-blue.svg" />
+											<h4>@menChampionsCount</h4>
+										</div>
+										<div class="card-col">
+											<img src="/icons/woman-blue.svg" />
+											<h4>@womenChampionsCount</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	<div class="col2-3">
+		@if (champions is null)
+		{
+			<Loading CardMode=true />
+		}
+		else
+		{
+			<div class="card">
+				<div class="card-body p-0">
+					<div class="card-row">
+						<div class="card-col">
+							<div class="card empty-card w-100">
+								<div class="card-header">
+									<h6 class="title">مدال های استان به تفکیک جنسیت</h6>
+								</div>
+								<div class="card-body">
+									<div>
+										<h1 class="total text-center">@medalsCount</h1>
+									</div>
+									<div class="card-row">
+										<div class="card-col">
+											<img src="/icons/man-blue.svg" />
+											<h4>@menMedalsCount</h4>
+										</div>
+										<div class="card-col">
+											<img src="/icons/woman-blue.svg" />
+											<h4>@womenMedalsCount</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<hr class="vertical-seperator" />
+						<div class="card-col">
+							<div class="card empty-card w-100">
+								<div class="card-header pe-0">
+									<h6 class="title">مدال های استان به تفکیک مدال</h6>
+								</div>
+								<div class="card-body">
+									<div>
+										<h1 class="total text-center"></h1>
+									</div>
+									<div class="card-row">
+										<div class="card-col">
+											<img src="/icons/trophy-silver.svg" />
+											<h4>@silverMedalsCount</h4>
+										</div>
+										<div class="card-col">
+											<img src="/icons/trophy-gold.svg" />
+											<h4>@goldMedalsCount</h4>
+										</div>
+										<div class="card-col">
+											<img src="/icons/trophy-bronze.svg" />
+											<h4>@bronzeMedalsCount</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	private AppDbContext context = default!;
+
+	private IQueryable<Athlete>? champions;
+
+	private int championsCount;
+	private int menChampionsCount;
+	private int womenChampionsCount;
+
+	private int medalsCount;
+	private int menMedalsCount;
+	private int womenMedalsCount;
+	private int goldMedalsCount;
+	private int silverMedalsCount;
+	private int bronzeMedalsCount;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		champions = context.Athletes
+			.Include(athlete => athlete.Gender)
+			.Include(athlete => athlete.Champions)
+			.Where(athlete => athlete.Champions
+				.Any(champion => champion.Medal != null));
+
+		championsCount = champions.Count();
+
+		menChampionsCount = champions
+			.Count(champion => champion.Gender.Id == 1);
+
+		womenChampionsCount = champions
+			.Count(champion => champion.Gender.Id == 2);
+
+		medalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Sum(champion => champion.MedalsCount!.Value);
+
+		menMedalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Where(champion => champion.Athlete.GenderId == 1)
+			.Sum(champion => champion.MedalsCount!.Value);
+
+		womenMedalsCount = context.Champions
+			.Include(champion => champion.Athlete)
+			.Where(champion => champion.Athlete.GenderId == 2)
+			.Sum(champion => champion.MedalsCount!.Value);
+
+		goldMedalsCount = context.Champions
+			.Where(champion => champion.Medal!.Color == "Gold")
+			.Sum(champion => champion.MedalsCount!.Value);
+
+		silverMedalsCount = context.Champions
+			.Where(champion => champion.Medal!.Color == "Silver")
+			.Sum(champion => champion.MedalsCount!.Value);
+
+		bronzeMedalsCount = context.Champions
+			.Where(champion => champion.Medal!.Color == "Bronze")
+			.Sum(champion => champion.MedalsCount!.Value);
+	}
+}
