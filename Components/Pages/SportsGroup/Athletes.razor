@@ -1,0 +1,130 @@
+﻿@page "/SportsGroup/Athletes"
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@layout _Layout
+
+<PageTitle>ورزشکاران سازمان یافته</PageTitle>
+
+<div class="row">
+    <div class="col1-1">
+        <AthletesSummaryCard />
+    </div>
+</div>
+
+@if (Years is null)
+{
+    <Loading CardMode=true />
+}
+else
+{
+    <div class="row">
+        <div class="col1-1">
+            <div class="card color-card">
+                <div class="card-header">
+                    <h6 class="title">وضعیت ورزشکاران سازمان یافته در سال @Year</h6>
+                    <InputSelect class="select" @bind-Value="Year">
+                        <option value="1401">1401</option>
+                        @foreach (int year in Years!)
+                        {
+                            <option value="@year">@year</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col1-2">
+            @if (Cities is null)
+            {
+                <Loading CardMode=true />
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="title">ورزشکاران سازمان یافته سال @Year شهرستان</h6>
+                        <InputSelect class="select" @bind-Value="CityId">
+                            @foreach (City city in Cities!)
+                            {
+                                <option value="@city.Id">@city.PersianName</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col1-2">
+            @if(Federations is null)
+            {
+                <Loading CardMode=true />
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="title">ورزشکاران سازمان یافته سال @Year هیات</h6>
+                        <InputSelect class="select" @bind-Value="FederationId">
+                            @foreach (Federation federation in Federations!)
+                            {
+                                <option value="@federation.Id">@federation.PersianName</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int? Year { get; set; } = null!;
+
+    [Parameter]
+    public int? CityId { get; set; } = null!;
+
+    [Parameter]
+    public int? FederationId { get; set; } = null!;
+
+    private List<int>? Years;
+
+    private List<City>? Cities;
+
+    private List<Federation>? Federations;
+
+    private AppDbContext? context { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = await DbFactory.CreateDbContextAsync();
+
+        Years = await context.Insurances
+            .GroupBy(m => m.Year)
+            .Select(g => g.Key)
+            .ToListAsync();
+
+        Year = Years.FirstOrDefault();
+
+        Cities = await context.Cities
+            .Where(m => m.Id != 0)
+            .OrderBy(m => m.PersianName)
+            .ToListAsync();
+
+        CityId = Cities.FirstOrDefault()!.Id;
+
+        Federations = await context.Federations
+            .Where(m => m.Id != 0)
+            .OrderBy(m => m.PersianName)
+            .ToListAsync();
+
+        FederationId = Federations.FirstOrDefault()!.Id;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        
+    }
+}
