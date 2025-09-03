@@ -1,0 +1,63 @@
+﻿
+@if (Cities is null || Year is null)
+{
+	<Loading CardMode=true />
+}
+else
+{
+	<div class="card">
+		<div class="card-header border-bottom">
+			<h6 class="title">ورزشکاران سازمان یافته سال @Year شهرستان</h6>
+			<InputSelect class="select" @bind-Value="CityId">
+				@foreach (City city in Cities!)
+				{
+					<option value="@city.Id">@city.PersianName</option>
+				}
+			</InputSelect>
+		</div>
+		<div class="card-body">
+
+		</div>
+	</div>
+}
+
+@code {
+	[Parameter]
+	public int? Year { get; set; } = null!;
+
+	private AppDbContext context = default!;
+
+	private List<Insurance>? Insurances;
+
+	private List<City>? Cities = null!;
+	public int? CityId { get; set; } = null!;
+
+	protected override async Task OnInitializedAsync()
+	{
+		context = DbFactory.CreateDbContext();
+
+		Cities = await context.Cities
+			.Where(m => m.Id != 0)
+			.OrderBy(m => m.PersianName)
+			.ToListAsync();
+
+		CityId = Cities.FirstOrDefault()!.Id;
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		Insurances = await context.Insurances
+			.Include(m => m.Federation)
+			.ToListAsync();
+
+		var menAthletesCount = Insurances
+			.Where(m => m.Year == Year)
+			.Where(m => m.Federation.IsChampionship)
+			.Sum(m => m.MenCount + m.WomenCount);
+
+		var womenAthletesCount = Insurances
+			.Where(m => m.Year == Year)
+			.Where(m => m.Federation.IsGeneral)
+			.Sum(m => m.MenCount + m.WomenCount);
+	}
+}
