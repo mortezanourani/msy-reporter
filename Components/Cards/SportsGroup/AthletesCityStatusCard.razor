@@ -1,4 +1,7 @@
-﻿
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@rendermode InteractiveServer
+
 @if (Cities is null || Year is null)
 {
 	<Loading CardMode=true />
@@ -8,7 +11,7 @@ else
 	<div class="card">
 		<div class="card-header border-bottom">
 			<h6 class="title">ورزشکاران سازمان یافته سال @Year شهرستان</h6>
-			<InputSelect class="select" @bind-Value="CityId">
+			<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="OnParametersSetAsync">
 				@foreach (City city in Cities!)
 				{
 					<option value="@city.Id">@city.PersianName</option>
@@ -16,7 +19,30 @@ else
 			</InputSelect>
 		</div>
 		<div class="card-body">
-
+			<div class="city-count">
+				<div class="item-count">
+					<img src="/icons/man-blue.svg" />
+					@($"{menAthletesCount:#,0}")
+				</div>
+				<div class="item-count">
+					<img src="/icons/woman-blue.svg" />
+					@($"{womenAthletesCount:#,0}")
+				</div>
+				<div class="item-count">
+					<img src="/icons/genders-blue.svg" />
+					@($"{menAthletesCount + womenAthletesCount:#,0}")
+				</div>
+			</div>
+			<div class="table-wrapper">
+				@if (Insurances is not null)
+                {
+                    <QuickGrid Items="Insurances.AsQueryable()" Theme="" Class="quickgrid-table">
+                        <PropertyColumn Property="@(department => department.Federation.PersianName)" />
+                        <PropertyColumn Property="@(department => department.MenCount)" />
+                        <PropertyColumn Property="@(department => department.WomenCount)" />
+                    </QuickGrid>
+                }
+			</div>
 		</div>
 	</div>
 }
@@ -25,12 +51,17 @@ else
 	[Parameter]
 	public int? Year { get; set; } = null!;
 
+	[Parameter]
+	public int? CityId { get; set; } = null!;
+
 	private AppDbContext context = default!;
 
 	private List<Insurance>? Insurances;
 
 	private List<City>? Cities = null!;
-	public int? CityId { get; set; } = null!;
+
+	private int? menAthletesCount;
+	private int? womenAthletesCount;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -50,14 +81,16 @@ else
 			.Include(m => m.Federation)
 			.ToListAsync();
 
-		var menAthletesCount = Insurances
+		menAthletesCount = Insurances
 			.Where(m => m.Year == Year)
 			.Where(m => m.Federation.IsChampionship)
-			.Sum(m => m.MenCount + m.WomenCount);
+			.Where(m => m.CityId == CityId)
+			.Sum(m => m.MenCount);
 
-		var womenAthletesCount = Insurances
+		womenAthletesCount = Insurances
 			.Where(m => m.Year == Year)
 			.Where(m => m.Federation.IsGeneral)
-			.Sum(m => m.MenCount + m.WomenCount);
+			.Where(m => m.CityId == CityId)
+			.Sum(m => m.WomenCount);
 	}
 }
