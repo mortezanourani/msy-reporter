@@ -1,4 +1,7 @@
-﻿
+﻿.card .card-body {
+    justify-content: flex-start;
+}
+
 .card .card-body .card-row .card-col img {
     height: 48px;
 }

@@ -1,4 +1,7 @@
-﻿
+﻿.card .card-body {
+    justify-content: flex-start;
+}
+
 .card .card-body .card-row .card-col img {
     height: 48px;
 }
@@ -16,3 +19,25 @@ hr.vertical-seperator {
     border: none;
     border-right: 1px solid var(--dark-color);
 }
+
+.city-count {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: center;
+    gap: 0px;
+}
+
+.item-count {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 12px;
+    flex: 0 1 100%;
+}
+
+    .item-count:nth-child(2n+1) {
+        border-left: 1px solid lightgray;
+        border-right: 1px solid lightgray;
+    }

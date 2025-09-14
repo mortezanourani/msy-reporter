@@ -1,14 +1,17 @@
-﻿
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@rendermode InteractiveServer
+
 @if (Federations is null || Year is null)
 {
 	<Loading CardMode=true />
 }
 else
 {
-	<div class="card">
+	<div class="card list-card">
 		<div class="card-header border-bottom">
-			<h6 class="title">ورزشکاران سازمان یافته سال @Year هیات</h6>
-			<InputSelect class="select" @bind-Value="FederationId">
+			<h6 class="title">ورزشکاران سازمان یافته سال @Year شهرستان</h6>
+			<InputSelect class="select" @bind-Value="FederationId" @bind-Value:after="OnParametersSetAsync">
 				@foreach (Federation federation in Federations!)
 				{
 					<option value="@federation.Id">@federation.PersianName</option>
@@ -16,7 +19,31 @@ else
 			</InputSelect>
 		</div>
 		<div class="card-body">
-
+			<div class="city-count">
+				<div class="item-count">
+					<img src="/icons/man-blue.svg" />
+					@($"{menAthletesCount:#,0}")
+				</div>
+				<div class="item-count">
+					<img src="/icons/woman-blue.svg" />
+					@($"{womenAthletesCount:#,0}")
+				</div>
+				<div class="item-count">
+					<img src="/icons/genders-blue.svg" />
+					@($"{menAthletesCount + womenAthletesCount:#,0}")
+				</div>
+			</div>
+			<div class="table-wrapper mt-3">
+				@if (Insurances is not null)
+				{
+					<QuickGrid Items="Insurances.AsQueryable()" Theme="" Class="quickgrid-table">
+						<PropertyColumn Title="شهرستان" Property="@(insurance => insurance.Key.PersianName)" />
+						<PropertyColumn Title="آقایان" Property="@(insurance => $"{insurance.Sum(f => f.MenCount):#,0}")" />
+						<PropertyColumn Title="بانوان" Property="@(insurance => $"{insurance.Sum(f => f.WomenCount):#,0}")" />
+						<PropertyColumn Title="مجموع" Property="@(insurance => $"{insurance.Sum(f => f.MenCount + f.WomenCount):#,0}")" />
+					</QuickGrid>
+				}
+			</div>
 		</div>
 	</div>
 }
@@ -25,12 +52,17 @@ else
 	[Parameter]
 	public int? Year { get; set; } = null!;
 
+	[Parameter]
+	public int? FederationId { get; set; } = null!;
+
 	private AppDbContext context = default!;
 
-	private List<Insurance>? Insurances;
+	private List<IGrouping<City, Insurance>>? Insurances;
 
 	private List<Federation>? Federations = null!;
-	public int? FederationId { get; set; } = null!;
+
+	private int? menAthletesCount;
+	private int? womenAthletesCount;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -47,17 +79,21 @@ else
 	protected override async Task OnParametersSetAsync()
 	{
 		Insurances = await context.Insurances
-			.Include(m => m.Federation)
+			.Include(m => m.City)
+			.OrderBy(m => m.City.PersianName)
+			.Where(m => m.Year == Year)
+			.Where(m => m.FederationId == FederationId)
+			.GroupBy(m => m.City)
 			.ToListAsync();
 
-		var menAthletesCount = Insurances
-			.Where(m => m.Year == Year)
-			.Where(m => m.Federation.IsChampionship)
-			.Sum(m => m.MenCount + m.WomenCount);
+		menAthletesCount = Insurances
+			.Sum(m => m.Sum(
+				m => m.MenCount)
+			);
 
-		var womenAthletesCount = Insurances
-			.Where(m => m.Year == Year)
-			.Where(m => m.Federation.IsGeneral)
-			.Sum(m => m.MenCount + m.WomenCount);
+		womenAthletesCount = Insurances
+			.Sum(m => m.Sum(
+				m => m.WomenCount)
+			);
 	}
 }

@@ -8,7 +8,7 @@
 }
 else
 {
-	<div class="card">
+	<div class="card list-card">
 		<div class="card-header border-bottom">
 			<h6 class="title">ورزشکاران سازمان یافته سال @Year شهرستان</h6>
 			<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="OnParametersSetAsync">
@@ -33,15 +33,16 @@ else
 					@($"{menAthletesCount + womenAthletesCount:#,0}")
 				</div>
 			</div>
-			<div class="table-wrapper">
+			<div class="table-wrapper mt-3">
 				@if (Insurances is not null)
-                {
-                    <QuickGrid Items="Insurances.AsQueryable()" Theme="" Class="quickgrid-table">
-                        <PropertyColumn Property="@(department => department.Federation.PersianName)" />
-                        <PropertyColumn Property="@(department => department.MenCount)" />
-                        <PropertyColumn Property="@(department => department.WomenCount)" />
-                    </QuickGrid>
-                }
+				{
+					<QuickGrid Items="Insurances.AsQueryable()" Theme="" Class="quickgrid-table">
+						<PropertyColumn Title="هیات ورزشی" Property="@(insurance => insurance.Key.PersianName)" />
+						<PropertyColumn Title="آقایان" Property="@(insurance => $"{insurance.Sum(f => f.MenCount):#,0}")" />
+						<PropertyColumn Title="بانوان" Property="@(insurance => $"{insurance.Sum(f => f.WomenCount):#,0}")" />
+						<PropertyColumn Title="مجموع" Property="@(insurance => $"{insurance.Sum(f => f.MenCount + f.WomenCount):#,0}")" />
+					</QuickGrid>
+				}
 			</div>
 		</div>
 	</div>
@@ -56,7 +57,7 @@ else
 
 	private AppDbContext context = default!;
 
-	private List<Insurance>? Insurances;
+	private List<IGrouping<Federation, Insurance>>? Insurances;
 
 	private List<City>? Cities = null!;
 
@@ -79,18 +80,20 @@ else
 	{
 		Insurances = await context.Insurances
 			.Include(m => m.Federation)
+			.OrderBy(m => m.Federation.PersianName)
+			.Where(m => m.Year == Year)
+			.Where(m => m.CityId == CityId)
+			.GroupBy(m => m.Federation)
 			.ToListAsync();
 
 		menAthletesCount = Insurances
-			.Where(m => m.Year == Year)
-			.Where(m => m.Federation.IsChampionship)
-			.Where(m => m.CityId == CityId)
-			.Sum(m => m.MenCount);
+			.Sum(m => m.Sum(
+				m => m.MenCount)
+			);
 
 		womenAthletesCount = Insurances
-			.Where(m => m.Year == Year)
-			.Where(m => m.Federation.IsGeneral)
-			.Where(m => m.CityId == CityId)
-			.Sum(m => m.WomenCount);
+			.Sum(m => m.Sum(
+				m => m.WomenCount)
+			);
 	}
 }
