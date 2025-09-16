@@ -3,7 +3,7 @@
 <div class="card federation-champions-card">
 	<div class="card-header border-bottom">
 		<h6 class="display-6">خلاصه وضعیت قهرمانان هیات @federation!.PersianName در سال @Year</h6>
-		<InputSelect class="select" @bind-Value="federationId" @onclick="Update">
+		<InputSelect class="select" @bind-Value="federationId" @bind-Value:after="OnParametersSetAsync">
 			@foreach (Federation federation in Federations!)
 			{
 				<option value="@federation.Id">@federation.PersianName</option>
@@ -70,15 +70,14 @@
 
 @code {
 	[Parameter]
-	public int? Year { get; set; }
+	public int? Year { get; set; } = null!;
 
-	[Parameter]
-	public List<Federation>? Federations { get; set; }
 
 	private AppDbContext context = default!;
 
+	private List<Federation>? Federations { get; set; } = null!;
 	private int federationId;
-	private Federation? federation = new Federation();
+	private Federation? federation = null!;
 
 	private List<ChampionsAgeGroup>? ageGroupChampions;
 
@@ -102,30 +101,32 @@
 	private int silverMedalsCount;
 	private int bronzeMedalsCount;
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
 		context = DbFactory.CreateDbContext();
 
-		OnParametersSet();
+		Federations = await context.Federations
+			.Include(federation => federation.Tournaments)
+				.ThenInclude(tournament => tournament.Champions)
+			.Where(federation => federation.Tournaments
+				.Any(tournament =>
+					tournament.Year == Year
+					&&
+					tournament.Champions.Count(champion => champion.Medal != null) > 0))
+			.Where(federation => federation.IsChampionship)
+			.OrderBy(federation => federation.PersianName)
+			.ToListAsync();
+
+		federation = Federations.FirstOrDefault();
+
+		federationId = federation!.Id;
 	}
 
-	protected override void OnParametersSet()
+	protected override async Task OnParametersSetAsync()
 	{
-		federationId = Federations!
-			.FirstOrDefault()!
-			.Id;
+		federation = Federations!.FirstOrDefault();
 
-		Update();
-	}
-
-	private void Update()
-	{
-		federation = null;
-
-		federation = Federations!
-			.FirstOrDefault(federation => federation.Id == federationId);
-
-		var champions = context.Athletes
+		var champions = await context.Athletes
 			.Include(athlete => athlete.Gender)
 			.Include(athlete => athlete.Champions)
 				.ThenInclude(champion => champion.Tournament)
@@ -137,7 +138,8 @@
 					&&
 					champion.Tournament.Year == Year))
 			.Where(athlete => athlete.Champions
-				.Any(champion => champion.Medal != null));
+				.Any(champion => champion.Medal != null))
+			.ToListAsync();
 
 		championsCount = champions.Count();
 
@@ -182,7 +184,7 @@
 					champion.Tournament.FederationId == federation!.Id));
 
 		ageGroupChampions = new List<ChampionsAgeGroup>();
-		foreach(var ageGroup in ageGroups)
+		foreach (var ageGroup in ageGroups)
 		{
 			var groupChampions = context.Athletes
 				.Include(athlete => athlete.Champions)

@@ -4,7 +4,7 @@
 
 <PageTitle>ورزش قهرمانی</PageTitle>
 
-@if (years is null)
+@if (Years is null)
 {
     <Loading CardMode=true />
 }
@@ -14,9 +14,9 @@ else
         <div class="col1-1">
             <div class="card color-card">
                 <div class="card-header">
-                    <h6 class="title">ورزش قهرمانی در سال @year</h6>
-                    <InputSelect class="select" @bind-Value="year">
-                        @foreach (int year in years)
+                    <h6 class="title">ورزش قهرمانی در سال @Year</h6>
+                    <InputSelect class="select" @bind-Value="Year">
+                        @foreach (int year in Years)
                         {
                             <option value="@year">@year</option>
                         }
@@ -26,60 +26,34 @@ else
         </div>
     </div>
 
-    <ChampionsYearSummaryCard Year="@year" />
+    <ChampionsYearSummaryCard Year="@Year" />
 
-    @if(federations is null)
-    {
-        <Loading CardMode=false />
-    }
-    else
-    {
-        <div class="row">
-            <div class="col1-1">
-                <ChampionsYearFederationsStatusCard Year="@year" Federations="@federations" />
-            </div>
+    <div class="row">
+        <div class="col1-1">
+            <ChampionsYearFederationsStatusCard Year="@Year" />
         </div>
-    }
+    </div>
 }
 
 @code {
+    [Parameter]
+    public List<int>? Years { get; set; } = null!;
+
     private AppDbContext context = default!;
 
-    private int year;
-
-    [CascadingParameter]
-    private List<int>? years
-    {
-        get => context.Champions
-            .Include(champion => champion.Tournament)
-            .GroupBy(champion => champion.Tournament.Year)
-                .Select(group => group.Key)
-            .OrderByDescending(year => year)
-            .ToList();
-        set => new List<int>();
-    }
-
-    [CascadingParameter]
-    private List<Federation> federations
-    {
-        get => context.Federations
-            .Include(federation => federation.Tournaments)
-                .ThenInclude(tournament => tournament.Champions)
-            .Where(federation => federation.Tournaments
-                .Any(tournament =>
-                    tournament.Year == year
-                    &&
-                    tournament.Champions.Count(champion => champion.Medal != null) > 0))
-            .Where(federation => federation.IsChampionship)
-            .OrderBy(federation => federation.PersianName)
-            .ToList();
-        set => new List<Federation>();
-    }
+    private int Year;
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
 
-        year = years.FirstOrDefault();
+        Years = context.Champions
+            .Include(champion => champion.Tournament)
+            .GroupBy(champion => champion.Tournament.Year)
+                .Select(group => group.Key)
+            .OrderByDescending(year => year)
+            .ToList();
+
+        Year = Years.FirstOrDefault();
     }
 }
