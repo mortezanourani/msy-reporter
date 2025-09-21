@@ -2,7 +2,7 @@
 
 @rendermode InteractiveServer
 
-@if (FederationChampions is null)
+@if (AgeGroups is null || Medals is null)
 {
 	<Loading CardMode=true />
 }
@@ -11,19 +11,84 @@ else
 	<div class="card list-card mt-3">
 		<div class="card-header">
 			<h6 class="display-6">خلاصه وضعیت قهرمانان در سال @Year به تفکیک هیات های ورزشی</h6>
+			<div>
+				<InputSelect class="select" @bind-Value="AgeGroupId" @bind-Value:after="OnParametersSetAsync">
+					<option value="0">همه رده های سنی</option>
+					@foreach (AgeGroup group in AgeGroups!)
+					{
+						<option value="@group.Id">@group.PersianName</option>
+					}
+				</InputSelect>
+				<InputSelect class="select" @bind-Value="MedalId" @bind-Value:after="OnParametersSetAsync">
+					<option value="0">همه مدال ها</option>
+					@foreach (Medal medal in Medals!)
+					{
+						<option value="@medal.Id">@medal.PersianTitle</option>
+					}
+				</InputSelect>
+			</div>
 		</div>
 		<div class="card-body pb-0">
-			<div class="table-wrapper">
-				<QuickGrid Items="FederationChampions!.AsQueryable()" Theme="" Class="quickgrid-table">
-					<PropertyColumn Title="هیات ورزشی" Property="@(m => m.Select(g => g.Tournament.Federation.PersianName).FirstOrDefault())" />
-					<PropertyColumn Title="مدال آوران آقا" Property="@(m => m.Where(g => g.Athlete.GenderId == 1).GroupBy(g => g.AthleteId).Count())" />
-					<PropertyColumn Title="مدال آوران بانوان" Property="@(m => m.Where(g => g.Athlete.GenderId == 2).GroupBy(g => g.AthleteId).Count())" />
-					<PropertyColumn Title="مجموع مدال آوران" Property="@(m => m.GroupBy(g => g.AthleteId).Count())" />
-					<PropertyColumn Title="مدال های آقایان" Property="@(m => m.Where(g => g.Athlete.GenderId == 1).Sum(g => g.MedalsCount))" />
-					<PropertyColumn Title="مدال های بانوان" Property="@(m => m.Where(g => g.Athlete.GenderId == 2).Sum(g => g.MedalsCount))" />
-					<PropertyColumn Title="مجموع مدال ها" Property="@(m => m.Sum(g => g.MedalsCount))" />
-				</QuickGrid>
-			</div>
+			@if (FederationChampions is null)
+			{
+				<Loading CardMode=true />
+			}
+			else
+			{
+				<div class="summary">
+					<div class="summary-item">
+						<h6 class="title">تعداد مدال آوران</h6>
+						<div class="counts">
+							<div class="men">
+								<img src="/icons/man.svg" />
+								<h6>
+									@FederationChampions.Sum(g => g.Where(m => m.Athlete.GenderId == 1).GroupBy(g => g.AthleteId).Count())
+								</h6>
+							</div>
+							<h6 class="display-6 total">
+								@FederationChampions.Sum(g => g.GroupBy(g => g.AthleteId).Count())
+							</h6>
+							<div class="women">
+								<img src="/icons/woman.svg" />
+								<h6>
+									@FederationChampions.Sum(g => g.Where(m => m.Athlete.GenderId == 2).GroupBy(g => g.AthleteId).Count())
+								</h6>
+							</div>
+						</div>
+					</div>
+					<div class="summary-item">
+						<h6 class="title">تعداد مدال ها</h6>
+						<div class="counts">
+							<div class="men">
+								<img src="/icons/man.svg" />
+								<h6>
+									@FederationChampions.Sum(g => g.Where(m => m.Athlete.GenderId == 1).Sum(g => g.MedalsCount))
+								</h6>
+							</div>
+							<h6 class="display-6 total">
+								@FederationChampions.Sum(g => g.Sum(m => m.MedalsCount))
+							</h6>
+							<div class="women">
+								<img src="/icons/woman.svg" />
+								<h6>
+									@FederationChampions.Sum(g => g.Where(m => m.Athlete.GenderId == 2).Sum(g => g.MedalsCount))
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="table-wrapper">
+					<QuickGrid Items="FederationChampions!.AsQueryable()" Theme="" Class="quickgrid-table">
+						<PropertyColumn Title="هیات ورزشی" Property="@(m => m.Select(g => g.Tournament.Federation.PersianName).FirstOrDefault())" />
+						<PropertyColumn Title="مدال آوران آقا" Property="@(m => m.Where(g => g.Athlete.GenderId == 1).GroupBy(g => g.AthleteId).Count())" />
+						<PropertyColumn Title="مدال آوران بانوان" Property="@(m => m.Where(g => g.Athlete.GenderId == 2).GroupBy(g => g.AthleteId).Count())" />
+						<PropertyColumn Title="مجموع مدال آوران" Property="@(m => m.GroupBy(g => g.AthleteId).Count())" />
+						<PropertyColumn Title="مدال های آقایان" Property="@(m => m.Where(g => g.Athlete.GenderId == 1).Sum(g => g.MedalsCount))" />
+						<PropertyColumn Title="مدال های بانوان" Property="@(m => m.Where(g => g.Athlete.GenderId == 2).Sum(g => g.MedalsCount))" />
+						<PropertyColumn Title="مجموع مدال ها" Property="@(m => m.Sum(g => g.MedalsCount))" />
+					</QuickGrid>
+				</div>
+			}
 		</div>
 	</div>
 }
@@ -34,11 +99,20 @@ else
 
 	private AppDbContext context = default!;
 
+	private List<Medal>? Medals = null!;
+	private List<AgeGroup>? AgeGroups = null!;
+
+	private int AgeGroupId = 0;
+	private int MedalId = 0;
 	private List<IGrouping<int, Champion>>? FederationChampions = null!;
 
 	protected override async Task OnInitializedAsync()
 	{
 		context = DbFactory.CreateDbContext();
+
+		Medals = await context.Medals.ToListAsync();
+
+		AgeGroups = await context.AgeGroups.ToListAsync();
 
 		// Federations = await context.Federations
 		// 	.Include(federation => federation.Tournaments)
@@ -57,12 +131,26 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		FederationChampions = await context.Champions
+		var champions = context.Champions
 			.Include(m => m.Tournament)
 				.ThenInclude(m => m.Federation)
 			.Include(m => m.Athlete)
 			.Where(m => m.Tournament.Year == Year)
-			.Where(m => m.MedalsCount > 0)
+			.Where(m => m.MedalsCount > 0);
+
+		if (AgeGroupId != 0)
+		{
+			champions = champions
+				.Where(m => m.AgeGroupId == AgeGroupId);
+		}
+
+		if (MedalId != 0)
+		{
+			champions = champions
+				.Where(m => m.MedalId == MedalId);
+		}
+
+		FederationChampions = await champions
 			.GroupBy(m => m.Tournament.FederationId)
 			.ToListAsync();
 	}
