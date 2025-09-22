@@ -41,3 +41,8 @@ hr.vertical-seperator {
         border-left: 1px solid lightgray;
         border-right: 1px solid lightgray;
     }
+
+::deep.table-wrapper .quickgrid-table thead {
+    position: sticky;
+    top: 100px;
+}

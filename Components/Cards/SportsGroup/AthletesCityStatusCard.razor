@@ -40,7 +40,7 @@ else
 						<PropertyColumn Title="هیات ورزشی" Property="@(insurance => insurance.Key.PersianName)" />
 						<PropertyColumn Title="آقایان" Property="@(insurance => $"{insurance.Sum(f => f.MenCount):#,0}")" />
 						<PropertyColumn Title="بانوان" Property="@(insurance => $"{insurance.Sum(f => f.WomenCount):#,0}")" />
-						<PropertyColumn Title="مجموع" Property="@(insurance => $"{insurance.Sum(f => f.MenCount + f.WomenCount):#,0}")" />
+						<PropertyColumn Class="fw-bold justify-content-center" Title="مجموع" Property="@(insurance => $"{insurance.Sum(f => f.MenCount + f.WomenCount):#,0}")" />
 					</QuickGrid>
 				}
 			</div>
