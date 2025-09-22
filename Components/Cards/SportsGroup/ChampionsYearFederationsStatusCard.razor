@@ -12,7 +12,7 @@ else
 		<div class="card-header">
 			<h6 class="display-6">خلاصه وضعیت قهرمانان در سال @Year به تفکیک هیات های ورزشی</h6>
 			<div>
-				<InputSelect class="select" @bind-Value="AgeGroupId" @bind-Value:after="OnParametersSetAsync">
+				<InputSelect class="select ms-2" @bind-Value="AgeGroupId" @bind-Value:after="OnParametersSetAsync">
 					<option value="0">همه رده های سنی</option>
 					@foreach (AgeGroup group in AgeGroups!)
 					{
@@ -28,7 +28,7 @@ else
 				</InputSelect>
 			</div>
 		</div>
-		<div class="card-body pb-0">
+		<div class="card-body">
 			@if (FederationChampions is null)
 			{
 				<Loading CardMode=true />
@@ -82,10 +82,10 @@ else
 						<PropertyColumn Title="هیات ورزشی" Property="@(m => m.Select(g => g.Tournament.Federation.PersianName).FirstOrDefault())" />
 						<PropertyColumn Title="مدال آوران آقا" Property="@(m => m.Where(g => g.Athlete.GenderId == 1).GroupBy(g => g.AthleteId).Count())" />
 						<PropertyColumn Title="مدال آوران بانوان" Property="@(m => m.Where(g => g.Athlete.GenderId == 2).GroupBy(g => g.AthleteId).Count())" />
-						<PropertyColumn Title="مجموع مدال آوران" Property="@(m => m.GroupBy(g => g.AthleteId).Count())" />
+						<PropertyColumn Class="fw-bold" Title="مجموع مدال آوران" Property="@(m => m.GroupBy(g => g.AthleteId).Count())" />
 						<PropertyColumn Title="مدال های آقایان" Property="@(m => m.Where(g => g.Athlete.GenderId == 1).Sum(g => g.MedalsCount))" />
 						<PropertyColumn Title="مدال های بانوان" Property="@(m => m.Where(g => g.Athlete.GenderId == 2).Sum(g => g.MedalsCount))" />
-						<PropertyColumn Title="مجموع مدال ها" Property="@(m => m.Sum(g => g.MedalsCount))" />
+						<PropertyColumn Class="fw-bold justify-content-center" Title="مجموع مدال ها" Property="@(m => m.Sum(g => g.MedalsCount))" />
 					</QuickGrid>
 				</div>
 			}

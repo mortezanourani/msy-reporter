@@ -62,3 +62,8 @@
     .summary .summary-item .counts img {
         height: 48px;
     }
+
+::deep.table-wrapper .quickgrid-table thead {
+    position: sticky;
+    top: 100px;
+}
