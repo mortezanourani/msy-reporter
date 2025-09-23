@@ -246,6 +246,24 @@ body {
             color: #fff;
         }
 
+.card-double {
+    padding: 0;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: calc(var(--spacing-x) * 0.5);
+}
+
+    .card-double .seperator {
+        width: 0px;
+        margin: var(--spacing-y) 0;
+        border-left: 1px solid dimgray;
+    }
+
+    .card-double > .card {
+        flex: 0 1 100%;
+    }
+
 .paginator {
     display: flex;
     flex-direction: row;

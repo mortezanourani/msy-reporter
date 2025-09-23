@@ -1,164 +1,65 @@
-﻿@inject IJSRuntime JSRuntime
-
-<div class="row">
-    <div class="col1-1">
-        <div class="card city-facilities-card">
-            <div class="card-header border-bottom">
-                <h6>خلاصه وضعیت اماکن ورزشی شهرستان @City!.PersianName</h6>
-            </div>
-            @if (SelectedCity is null)
-            {
-                <Loading />
-            }
-            else
-            {
-                <div class="card-body">
-                    <div class="city-facilities-bar">
-                        <div class="facilities-counts">
-                            <div class="msy-facilities">
-                                <h6>اماکن ورزشی وزارت ورزش و جوانان</h6>
-                                <p>@msyFacilities</p>
-                                <p>%@msyFacilitiesPercent</p>
-                            </div>
-                            <div class="gov-facilities">
-                                <h6>اماکن ورزشی سایر ارگان ها</h6>
-                                <p>@govFacilities</p>
-                                <p>%@govFacilitiesPercent</p>
-                            </div>
-                            <div class="private-facilities">
-                                <h6>باشگاه های خصوصی</h6>
-                                <p>@privateFacilities</p>
-                                <p>%@privateFacilitiesPercent</p>
-                            </div>
-                        </div>
-                        <div class="percent-bar-wrapper">
-                            <canvas id="cityFacilitiesChart"></canvas>
-                        </div>
-                    </div>
+﻿@if (CityId is null || TotalCount is null)
+{
+    <Loading CardMode=true />
+}
+else
+{
+    <div class="card">
+        <div class="card-header pb-0">
+            <h6>اماکن ورزشی وزارت ورزش</h6>
+        </div>
+        <div class="card-body">
+            <h6 class="display-6 total">@TotalCount</h6>
+            <div class="details">
+                <div class="detail">
+                    <p>دارای سند</p>
+                    <p>@DocumentsCount</p>
                 </div>
-            }
+                <div class="detail">
+                    <p>فاقد سند</p>
+                    <p>@(TotalCount - DocumentsCount)</p>
+                </div>
+                <div class="detail">
+                    <p>سند تک برگ</p>
+                    <p>@NewDocumentsCount</p>
+                </div>
+                <div class="detail">
+                    <p>سند دفترچه ای</p>
+                    <p>@(DocumentsCount - NewDocumentsCount)</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-<script>
-    let cityFacilitiesChart;
-
-    function renderCityFacilitiesChart(data) {
-        const ctx = document.getElementById('cityFacilitiesChart').getContext('2d');
-
-        if (cityFacilitiesChart) {
-            cityFacilitiesChart.destroy();
-        }
-
-        cityFacilitiesChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['اماکن ورزشی وزارت ورزش و جوانان', 'اماکن ورزشی سایر ارگان ها', 'باشگاه های خصوصی'],
-                datasets: [{
-                    data: data,
-                    backgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b'],
-                    hoverBackgroundColor: ['#2e77ae', '#95bdf2', '#ff8e2b']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false,
-                        position: 'top'
-                    },
-                    tooltip: {
-                        bodyFont: {
-                            family: 'IRANSans',
-                            size: 11,
-                        },
-                        titleFont: {
-                            family: 'IRANSans',
-                            size: 12,
-                        }
-                    }
-                },
-                cutout: '65%'
-            }
-        });
-    }
-
-    function updateCityFacilitiesChart (data) {
-        if (cityFacilitiesChart) {
-            cityFacilitiesChart.data.datasets[0].data = data;
-            cityFacilitiesChart.update();
-        }
-    }
-</script>
+}
 
 @code {
-    [CascadingParameter]
-    public City? City { get; set; }
+    [Parameter]
+    public int? CityId { get; set; }
 
     private AppDbContext context = default!;
 
-    private City? SelectedCity { get; set; }
-
-    private int msyFacilities { get; set; } = 0;
-    private decimal msyFacilitiesPercent { get; set; } = 0;
-
-    private int govFacilities { get; set; } = 0;
-    private decimal govFacilitiesPercent { get; set; } = 0;
-
-    private int privateFacilities { get; set; } = 0;
-    private decimal privateFacilitiesPercent { get; set; } = 0;
-
-    private List<decimal> chartCounts = new List<decimal>();
+    private int? TotalCount = null!;
+    private int? DocumentsCount = null!;
+    private int? NewDocumentsCount = null!;
 
     protected override async Task OnParametersSetAsync()
     {
-        SelectedCity = null;
-
         context = DbFactory.CreateDbContext();
 
-        if (City is not null)
-        {
-            SelectedCity = await context.Cities
-                .Include(c => c.Facilities)
-                .Include(c => c.PrivateFacilities)
-                .Include(c => c.GovernmentFacilities)
-                .FirstOrDefaultAsync(c => c.Id == City!.Id);
+        var facilities = await context.Facilities
+            .Include(f => f.FacilityDocuments)
+            .Where(f => f.CityId == CityId!)
+            .ToListAsync();
 
-            msyFacilities = SelectedCity!.Facilities.Count();
+        TotalCount = facilities.Count();
 
-            govFacilities = SelectedCity!.GovernmentFacilities.Count();
+        DocumentsCount = facilities
+            .Where(f => f.FacilityDocuments.Any())
+            .Count();
 
-            privateFacilities = SelectedCity!.PrivateFacilities.Count();
-
-            var totalFacilities = msyFacilities + govFacilities + privateFacilities;
-
-            msyFacilitiesPercent = 0;
-            govFacilitiesPercent = 0;
-            privateFacilitiesPercent = 0;
-            if (totalFacilities > 0)
-            {
-                msyFacilitiesPercent = Math.Round(decimal.Divide(msyFacilities * 100, totalFacilities));
-                govFacilitiesPercent = Math.Round(decimal.Divide(govFacilities * 100, totalFacilities));
-                privateFacilitiesPercent = Math.Round(decimal.Divide(privateFacilities * 100, totalFacilities));
-            }
-        }
-
-        chartCounts.Clear();
-        chartCounts.Add(msyFacilities);
-        chartCounts.Add(govFacilities);
-        chartCounts.Add(privateFacilities);
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        try
-        {
-            await JSRuntime.InvokeVoidAsync("renderCityFacilitiesChart", chartCounts);
-        }
-        catch (Exception excep)
-        {
-
-        }
+        NewDocumentsCount = facilities
+            .Where(f => f.FacilityDocuments
+                .Any(d => d.IsNew))
+            .Count();
     }
 }

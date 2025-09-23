@@ -1,0 +1,77 @@
+﻿@using System.Globalization
+
+@if (CityId is null || TotalCount is null)
+{
+    <Loading />
+}
+else
+{
+    <div class="card empty-card">
+        <div class="card-header pb-0">
+            <h6>اماکن ورزشی دولتی سایر ارگان ها</h6>
+        </div>
+        <div class="card-body">
+            <h6 class="display-6 total">@TotalCount</h6>
+            <div class="details">
+                <div class="detail">
+                    <p>دارای مجوز ماده 5</p>
+                    <p>@LicensesCount</p>
+                </div>
+                <div class="detail">
+                    <p>دارای مجوز دارای اعتبار</p>
+                    <p>@(LicensesCount - ExpiredLicensesCount)</p>
+                </div>
+                <div class="detail">
+                    <p>دارای مجوز منقضی شده</p>
+                    <p>@ExpiredLicensesCount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int? CityId { get; set; }
+
+    private AppDbContext context = default!;
+
+    private int? TotalCount = null!;
+    private int? LicensesCount = null!;
+    private int? ExpiredLicensesCount = null!;
+
+    private int? todayDate = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PersianCalendar persianCalendar = new PersianCalendar();
+
+        var nowDate = DateTime.Now.Date;
+        todayDate = 
+            persianCalendar.GetYear(nowDate) * 10_000 +
+            persianCalendar.GetMonth(nowDate) * 100 +
+            persianCalendar.GetDayOfMonth(nowDate);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        var facilities = await context.GovernmentFacilities
+            .Include(f => f.GovernmentFacilityLicenses)
+            .Where(f => f.CityId == CityId!)
+            .ToListAsync();
+
+        TotalCount = facilities.Count();
+
+        LicensesCount = facilities
+            .Where(f => f.GovernmentFacilityLicenses
+                .Any())
+            .Count();
+
+        ExpiredLicensesCount = facilities
+            .Where(f => f.GovernmentFacilityLicenses
+                .All(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "")) < todayDate))
+            .Count();
+    }
+}

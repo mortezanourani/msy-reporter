@@ -10,9 +10,9 @@
 
 <div class="row mt-3">
     <div class="col1-1">
-        <div class="card">
+        <div class="card color-card">
             <div class="card-header">
-                <h6 class="title">اماکن ورزشی شهرستان @City!.PersianName</h6>
+                <h6 class="title">خلاصه وضعیت اماکن ورزشی شهرستان @City!.PersianName</h6>
                 <InputSelect class="select" @bind-Value="CityId" @bind-Value:after="SelectCity">
                     @foreach (City city in Cities!)
                     {
@@ -24,7 +24,20 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col1-3">
+        <FacilitiesCityStatusCard CityId="@City.Id" />
+    </div>
+    <div class="col2-3">
+        <div class="card card-double">
+            <FacilitiesCityGovernmentalsStatusCard CityId="@City.Id" />
+            <hr class="seperator" />
+            <FacilitiesCityPrivatesStatusCard CityId="@City.Id" />
+        </div>
+    </div>
+</div>
 
+@*
 <CascadingValue Value="City">
     <FacilitiesCityStatusCard />
 
@@ -43,6 +56,7 @@
         </div>
     </div>
 </CascadingValue>
+*@
 
 @code {
     private AppDbContext context = default!;
