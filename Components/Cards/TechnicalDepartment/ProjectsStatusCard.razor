@@ -1,0 +1,86 @@
+﻿
+<div class="row">
+    <div class="col1-3">
+        <div class="card cornered2">
+			<div class="card-header pb-0">
+				<h6 class="title">تعداد پروژه های جاری استان</h6>
+			</div>
+			<div class="card-body">
+				@if (Projects is null)
+				{
+					<Loading CardMode=true />
+				}
+				else
+				{
+					<div>
+						<h1>@TotalCount</h1>
+					</div>
+					<div>
+						<div class="d-flex justify-content-between">
+							<p>بالای 70 درصد:</p>
+							<b>@Up70Count</b>
+						</div>
+						<div class="d-flex justify-content-between">
+							<p>پروژه های پایان یافته در سال جاری:</p>
+							<b>@YearDoneCount</b>
+						</div>
+						<div class="d-flex justify-content-between">
+							<p>پروژه های آغاز شده در سال جاری:</p>
+							<b>@YearStartCount</b>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+    </div>
+    <div class="col2-3">
+        <div class="card double-card">
+            <div class="card empty-card">
+
+            </div>
+            <div class="card empty-card">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+	private AppDbContext context = default!;
+
+	private IQueryable<ConstructionProject>? Projects = null!;
+
+	private int? TotalCount = null!;
+	private int? Up70Count = null!;
+	private int? YearStartCount = null!;
+	private int? YearDoneCount = null!;
+
+	protected override void OnInitialized()
+	{
+		context = DbFactory.CreateDbContext();
+
+		Projects = context.ConstructionProjects
+			.Include(project => project.City)
+			.Include(project => project.ProjectProgresses);
+
+		TotalCount = Projects
+			.Where(p => p.ProjectProgresses
+				.Any(p => p.Percentage < 100))
+			.Count();
+
+		Up70Count = Projects
+			.Where(p => p.ProjectProgresses
+				.OrderByDescending(p => p.Year)
+				.FirstOrDefault()!.Percentage >= 70)
+			.Count();
+
+		YearStartCount = Projects
+			.Where(p => p.Year == 1403)
+			.Count();
+
+		YearDoneCount = Projects
+			.Where(p => p.ProjectProgresses
+				.Any(p => p.Year == 1403 && p.Percentage == 100))
+			.Count();
+	}
+}
