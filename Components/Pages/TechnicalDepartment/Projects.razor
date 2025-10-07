@@ -5,10 +5,16 @@
 <PageTitle>Construction Projects</PageTitle>
 
 <div class="row">
-    <div class="col1-1">
-        <div class="card color-card">
-            <div class="card-header">
-                <h6 class="title">خلاصه وضعیت پروژه های عمرانی استان</h6>
+    <div class="col1-3">
+        <ProjectsStatusCard />
+    </div>
+    <div class="col2-3">
+        <div class="card card-double">
+            <div class="card empty-card">
+
+            </div>
+            <hr class="seperator" />
+            <div class="card empty-card">
             </div>
         </div>
     </div>
@@ -16,7 +22,32 @@
 
 <div class="row">
     <div class="col1-1">
-        <ProjectsStatusCard />
+        <div class="card color-card">
+            <div class="card-header">
+                <h6 class="title">وضعیت پروژه های عمرانی شهرستان @City!.PersianName</h6>
+                <InputSelect class="select" @bind-Value="CityId" @bind-Value:after="SelectCity">
+                    @foreach (City city in Cities!)
+                    {
+                        <option value="@city.Id">@city.PersianName</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col1-2">
+        <ProjectsCityCard City=@City />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col1-2">
+        <ProjectsRuralCityCard City=@City />
+    </div>
+    <div class="col1-2">
+        <ProjectsTypesCityCard City=@City />
     </div>
 </div>
 
@@ -54,16 +85,17 @@
 @code {
     private AppDbContext context = default!;
 
-    private int cityId = 1;
+    private int CityId = 1;
 
-    private City? city;
-    private IQueryable<City>? cities;
+    private City? City;
+
+    private IQueryable<City>? Cities;
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
 
-        cities = context.Cities
+        Cities = context.Cities
             .Where(city => city.Id != 0);
 
         SelectCity();
@@ -71,6 +103,7 @@
 
     private void SelectCity()
     {
-        city = cities!.FirstOrDefault(m => m.Id == cityId);
+        City = context.Cities
+            .FirstOrDefault(c => c.Id == CityId);
     }
 }
