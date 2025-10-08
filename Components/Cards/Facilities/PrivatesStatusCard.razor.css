@@ -1,0 +1,20 @@
+﻿::deep .details .detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /*border-top: 1px solid #ccc;*/
+    padding: 2px 0;
+}
+
+    ::deep .details .detail:last-child {
+        padding-bottom: 0;
+    }
+
+    ::deep .details .detail p:last-child {
+        font-weight: bold;
+    }
+
+::deep h6.total {
+    font-weight: 400;
+}

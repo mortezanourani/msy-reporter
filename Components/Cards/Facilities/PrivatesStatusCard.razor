@@ -1,0 +1,69 @@
+﻿@using System.Globalization
+
+@if (TotalCount is null)
+{
+    <Loading />
+}
+else
+{
+    <div class="card empty-card">
+        <div class="card-header pb-0">
+            <h6>تعداد اماکن ورزشی بخش خصوصی کل استان</h6>
+        </div>
+        <div class="card-body">
+            <h6 class="display-6 total">@TotalCount</h6>
+            <div class="details">
+                <div class="detail">
+                    <p>مجوزهای دارای اعتبار</p>
+                    <p>@(LicensesCount - ExpiredLicensesCount)</p>
+                </div>
+                <div class="detail">
+                    <p>مجوزهای منقضی شده</p>
+                    <p>@ExpiredLicensesCount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private AppDbContext context = default!;
+
+    private int? TotalCount = null!;
+    private int? LicensesCount = null!;
+    private int? ExpiredLicensesCount = null!;
+
+    private int? todayDate = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PersianCalendar persianCalendar = new PersianCalendar();
+
+        var nowDate = DateTime.Now.Date;
+        todayDate = 
+            persianCalendar.GetYear(nowDate) * 10_000 +
+            persianCalendar.GetMonth(nowDate) * 100 +
+            persianCalendar.GetDayOfMonth(nowDate);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        var facilities = await context.PrivateFacilities
+            .Include(f => f.PrivateFacilityLicenses)
+            .ToListAsync();
+
+        TotalCount = facilities.Count();
+
+        LicensesCount = facilities
+            .Where(f => f.PrivateFacilityLicenses
+                .Any())
+            .Count();
+
+        ExpiredLicensesCount = facilities
+            .Where(f => f.PrivateFacilityLicenses
+                .All(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "")) < todayDate))
+            .Count();
+    }
+}

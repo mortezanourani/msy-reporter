@@ -1,0 +1,71 @@
+﻿@using System.Globalization
+
+@if (TotalPerCapita is null)
+{
+    <Loading />
+}
+else
+{
+    <div class="card empty-card">
+        <div class="card-header pb-0">
+            <h6>سرانه ورزشی بخش خصوصی کل استان</h6>
+        </div>
+        <div class="card-body">
+            <h6 class="display-6 total">@TotalPerCapita</h6>
+            <div class="details">
+                <div class="detail">
+                    <p>سرانه روباز</p>
+                    <p>@(SportLandPerCapita)</p>
+                </div>
+                <div class="detail">
+                    <p>سرانه سرپوشیده</p>
+                    <p>@SportHallPerCapita</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private AppDbContext context = default!;
+
+    private int? TotalPerCapita = null!;
+    private int? SportLandPerCapita = null!;
+    private int? SportHallPerCapita = null!;
+
+    private int? todayDate = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PersianCalendar persianCalendar = new PersianCalendar();
+
+        var nowDate = DateTime.Now.Date;
+        todayDate = 
+            persianCalendar.GetYear(nowDate) * 10_000 +
+            persianCalendar.GetMonth(nowDate) * 100 +
+            persianCalendar.GetDayOfMonth(nowDate);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        var facilities = await context.PrivateFacilities
+            .Include(f => f.PrivateFacilityLicenses)
+            .ToListAsync();
+
+        var sportLandArea = facilities
+            .Where(f => f.PrivateFacilityLicenses
+                .Any(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "")) >= todayDate))
+            .Sum(f => f.SportLandArea);
+        SportLandPerCapita = sportLandArea / 2563000;
+
+        var sportHallArea = facilities
+            .Where(f => f.PrivateFacilityLicenses
+                .Any(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "")) >= todayDate))
+            .Sum(f => f.SportHallArea);
+        SportHallPerCapita = sportHallArea / 2563000;
+
+        TotalPerCapita = SportHallPerCapita + SportLandPerCapita;
+    }
+}
