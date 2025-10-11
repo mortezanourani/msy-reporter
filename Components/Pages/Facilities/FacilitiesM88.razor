@@ -1,0 +1,81 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@page "/Facilities/M88"
+
+@layout _Layout
+
+<PageTitle>اماکن ورزشی خصوصی</PageTitle>
+
+<div class="row">
+    <div class="col2-3">
+        <div class="card cornered1 card-double">
+            <PrivatesStatusCard />
+            <hr class="seperator" />
+            <PrivatesPerCapitaStatusCard />
+        </div>
+    </div>
+    <div class="col1-3">
+        <PopulationCard />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col1-1">
+        <div class="card color-card">
+            <div class="card-header">
+                <h6 class="title">خلاصه وضعیت اماکن ورزشی شهرستان @City!.PersianName</h6>
+                <InputSelect class="select" @bind-Value="CityId" @bind-Value:after="SelectCity">
+                    @foreach (City city in Cities!)
+                    {
+                        <option value="@city.Id">@city.PersianName</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col1-3">
+        <PopulationCard CityId="@City.Id"/>
+    </div>
+    <div class="col2-3">
+        <div class="card cornered1 card-double">
+            <PrivatesCityStatusCard CityId="@City.Id" />
+            <hr class="seperator" />
+            <PrivatesCityPerCapitaStatusCard CityId="@City.Id" />
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col1-1">
+        <PrivatesCityListCard CityId="@City.Id" />
+    </div>
+</div>
+
+@code {
+    private AppDbContext context = default!;
+
+    private int CityId = 1;
+
+    private City? City;
+
+    private IQueryable<City>? Cities;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+
+        Cities = context.Cities
+            .Where(city => city.Id != 0);
+
+        SelectCity();
+    }
+
+    private void SelectCity()
+    {
+        City = context.Cities
+            .FirstOrDefault(c => c.Id == CityId);
+    }
+}
