@@ -2,8 +2,8 @@
 
 @rendermode InteractiveServer
 
-<div class="card private-facilities-card">
-    <div class="card-header pb-0">
+<div class="card list-card mt-3">
+    <div class="card-header">
         <h6 class="title">فهرست باشگاه های خصوصی شهرستان @City?.PersianName</h6>
         @if (privateFacilities is not null)
         {
@@ -39,20 +39,20 @@
     </div>
     @if (privateFacilities is null)
     {
-        <Loading />
+        <Loading CardMode=true />
     }
     else
     {
-        <div class="card-body pt-0">
-            <div class="facilities-list">
-                <QuickGrid Items="privateFacilities!.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
-                    <PropertyColumn Sortable="true" Title="عنوان باشگاه" Property="@(facility => facility.Name)" />
-                    <PropertyColumn Sortable="true" Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : "نامشخص")" />
-                    <PropertyColumn Sortable="true" Title="سال آغاز مجوز" Property="@(facility => facility.PrivateFacilityLicenses!.FirstOrDefault()!.StartDate)" />
-                    <PropertyColumn Sortable="true" Title="سال پایان مجوز" Property="@(facility => facility.PrivateFacilityLicenses!.FirstOrDefault()!.ExpireDate)" />
+        <div class="card-body">
+            <div class="table-wrapper">
+                <QuickGrid Items="privateFacilities!.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
+                    <PropertyColumn IsDefaultSortColumn=true Title="عنوان باشگاه" Property="@(facility => facility.Name)" />
+                    <PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : "نامشخص")" />
+                    <PropertyColumn Title="سال آغاز مجوز" Property="@(facility => facility.PrivateFacilityLicenses!.FirstOrDefault()!.StartDate)" />
+                    <PropertyColumn Title="سال پایان مجوز" Property="@(facility => facility.PrivateFacilityLicenses!.FirstOrDefault()!.ExpireDate)" />
                     <TemplateColumn>
                         <a class="info-link" href="/Facilities/@context.Id">
-                            <span class="material-symbols-rounded">info</span>
+                            <img src="/icons/info.svg" />
                         </a>
                     </TemplateColumn>
                 </QuickGrid>

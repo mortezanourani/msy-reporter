@@ -48,6 +48,8 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
+        TotalPerCapita = null;
+
         context = DbFactory.CreateDbContext();
 
         var facilities = await context.PrivateFacilities

@@ -53,6 +53,8 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
+        TotalCount = null;
+
         context = DbFactory.CreateDbContext();
 
         City = await context.Cities
