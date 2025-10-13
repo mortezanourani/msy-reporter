@@ -1,8 +1,39 @@
 ﻿@using Microsoft.AspNetCore.Components.QuickGrid
 
-<div class="card msy-facilities-card">
+<div class="card list-card">
     <div class="card-header">
         <h6 class="title">اماکن دولتی ورزش و جوانان @City?.PersianName</h6>
+        @if (msyFacilities is not null)
+        {
+            <div class="paginator">
+                <nav role="navigation">
+                    @if (pagination.TotalItemCount.HasValue)
+                    {
+                        var totalPages = pagination.TotalItemCount;
+                        var pageIndex = pagination.CurrentPageIndex;
+                        var currentPage = pageIndex + 1;
+                        var lastPage = pagination.LastPageIndex + 1;
+                        var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+                        var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+                        <button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+                                class="btn"
+                                aria-current="@AriaCurrentValue(pageIndex + 1)"
+                                aria-label="@(pageIndex + 1)"
+                                disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+                            <img src="/icons/arrow-left.svg" />
+                        </button>
+                        <div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+                        <button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+                                class="btn"
+                                aria-current="@AriaCurrentValue(pageIndex - 1)"
+                                aria-label="@(pageIndex - 1)"
+                                disabled=@((pageIndex <= 0) ? "disabled" : false)>
+                            <img src="/icons/arrow-right.svg" />
+                        </button>
+                    }
+                </nav>
+            </div>
+        }
     </div>
     @if (msyFacilities is null)
     {
@@ -10,50 +41,30 @@
     }
     else
     {
-        <div class="card-body pt-0">
-            <div class="facilities-list">
-                <QuickGrid Items="msyFacilities!.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
+        <div class="card-body">
+            <div class="table-wrapper">
+                <QuickGrid Items="msyFacilities!.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
                     <PropertyColumn Title="عنوان باشگاه" Property="@(facility => facility.Name)" />
                     <PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : "نامشخص")" />
                     <PropertyColumn Title="موقیعت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
                     <TemplateColumn>
                         <a class="info-link" href="/Facilities/@context.Id">
-                            <span class="material-symbols-rounded">info</span>
+                            <img src="/icons/info.svg" />
                         </a>
                     </TemplateColumn>
                 </QuickGrid>
-            </div>
-        </div>
-        <div class="card-footer pt-0">
-            <div class="paginator border-top pt-2">
-                <nav role="navigation">
-                    @if (pagination.TotalItemCount.HasValue)
-                    {
-                        for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
-                        {
-                            var capturedIndex = pageIndex;
-                            <button @onclick="@(() => GoToPageAsync(capturedIndex))"
-                                    class="btn @PageButtonClass(capturedIndex)"
-                                    aria-current="@AriaCurrentValue(capturedIndex)"
-                                    aria-label="@(pageIndex + 1)">
-                                @(pageIndex + 1)
-                            </button>
-                        }
-                    }
-                </nav>
-                <div class="total">
-                    @string.Format("{0} مکان دولتی", pagination.TotalItemCount)
-                </div>
             </div>
         </div>
     }
 </div>
 
 @code {
-    [CascadingParameter]
-    public City? City { get; set; }
+    [Parameter]
+    public int? CityId { get; set; }
 
     private AppDbContext context = default!;
+
+    private City? City = null!;
 
     private List<Facility>? msyFacilities;
 
@@ -62,6 +73,9 @@
         msyFacilities = null;
 
         context = DbFactory.CreateDbContext();
+
+        City = await context.Cities
+            .FirstOrDefaultAsync(m => m.Id == CityId!);
 
         if (City is not null)
         {
@@ -77,7 +91,7 @@
         pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
     }
 
-    private PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
 
     private async Task GoToPageAsync(int pageIndex)
     {
