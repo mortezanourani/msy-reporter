@@ -44,7 +44,7 @@
         <div class="card-body">
             <div class="table-wrapper">
                 <QuickGrid Items="msyFacilities!.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-                    <PropertyColumn Title="عنوان باشگاه" Property="@(facility => facility.Name)" />
+                    <PropertyColumn IsDefaultSortColumn="true" Title="عنوان باشگاه" Property="@(facility => facility.Name)" />
                     <PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : "نامشخص")" />
                     <PropertyColumn Title="موقیعت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
                     <TemplateColumn>
