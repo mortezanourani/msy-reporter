@@ -65,7 +65,7 @@ else
 
         ExpiredLicensesCount = facilities
             .Where(f => f.PrivateFacilityLicenses
-                .All(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "")) < todayDate))
+                .All(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "").Replace("/", "")) < todayDate))
             .Count();
     }
 }

@@ -67,13 +67,13 @@ else
 
         var sportLandArea = facilities
             .Where(f => f.PrivateFacilityLicenses
-                .Any(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "")) >= todayDate))
+                .Any(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "").Replace("/", "")) >= todayDate))
             .Sum(f => f.SportLandArea);
         SportLandPerCapita = sportLandArea / 2563000;
 
         var sportHallArea = facilities
             .Where(f => f.PrivateFacilityLicenses
-                .Any(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "")) >= todayDate))
+                .Any(l => !string.IsNullOrEmpty(l.ExpireDate) && Int32.Parse(l.ExpireDate!.Replace("-", "").Replace("/", "")) >= todayDate))
             .Sum(f => f.SportHallArea);
         SportHallPerCapita = sportHallArea / 2563000;
 
