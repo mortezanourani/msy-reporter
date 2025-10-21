@@ -151,14 +151,12 @@
     [SupplyParameterFromForm]
     private Employee Employee { get; set; } = new();
 
-    private AppDbContext context = default!;
-
     private List<Gender>? Genders;
     private List<EmploymentType>? Employments;
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Genders = await context.Genders.ToListAsync();
         Employments = await context.EmploymentTypes.ToListAsync();
@@ -166,6 +164,8 @@
 
     private async Task AddEmployee()
     {
+        using var context = DbFactory.CreateDbContext();
+
         var employee = await context.Employees
             .FirstOrDefaultAsync(employee => employee.SeenCode == Employee.SeenCode);
         if (employee is not null)

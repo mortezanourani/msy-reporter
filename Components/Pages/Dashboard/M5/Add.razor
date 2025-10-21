@@ -194,8 +194,6 @@
     private string? statusMessage;
     private string? statusMessageClass;
 
-    private AppDbContext? context { get; set; } = null!;
-
     private List<City>? Cities;
     private List<FacilityType>? Types;
 
@@ -204,7 +202,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Cities = await context.Cities
             .Where(city => city.Id != 0)
@@ -216,7 +214,7 @@
 
     private async Task AddFacility()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Facility.CityId = CityId;
         Facility.TypeId = TypeId;

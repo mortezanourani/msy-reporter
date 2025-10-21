@@ -14,8 +14,6 @@
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
-    private AppDbContext context = default!;
-
     private ApplicationUser? User = default!;
     private string? userName;
 
@@ -24,7 +22,7 @@
         User = await UserAccessor.GetRequiredUserAsync(HttpContext);
         userName = await UserManager.GetUserNameAsync(User);
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
         userName = await context.Employees
             .Where(employee => employee.AccountId == User!.Id)
             .Select(employee => $"{employee.FirstName} {employee.LastName}")

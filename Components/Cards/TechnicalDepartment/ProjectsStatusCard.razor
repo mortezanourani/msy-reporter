@@ -32,8 +32,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private IQueryable<ConstructionProject>? Projects = null!;
 
 	private int? TotalCount = null!;
@@ -43,7 +41,7 @@
 
 	protected override void OnInitialized()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Projects = context.ConstructionProjects
 			.Include(project => project.City)

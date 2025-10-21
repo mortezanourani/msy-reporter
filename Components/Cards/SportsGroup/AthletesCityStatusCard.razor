@@ -55,8 +55,6 @@ else
 	[Parameter]
 	public int? CityId { get; set; } = null!;
 
-	private AppDbContext context = default!;
-
 	private List<IGrouping<Federation, Insurance>>? Insurances;
 
 	private List<City>? Cities = null!;
@@ -66,7 +64,7 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Cities = await context.Cities
 			.Where(m => m.Id != 0)
@@ -78,6 +76,8 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
+		using var context = DbFactory.CreateDbContext();
+
 		Insurances = await context.Insurances
 			.Include(m => m.Federation)
 			.OrderBy(m => m.Federation.PersianName)

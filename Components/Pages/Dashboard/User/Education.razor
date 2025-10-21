@@ -17,7 +17,6 @@
 	[CascadingParameter]
 	private HttpContext HttpContext { get; set; } = default!;
 
-	private AppDbContext context = default!;
 	private Employee? User;
 
 	protected override async Task OnInitializedAsync()
@@ -28,7 +27,7 @@
 			return;
 		}
 
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 		User = await context.Employees
 			.FirstOrDefaultAsync(employee => employee.AccountId == user!.Id);
 	}

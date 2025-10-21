@@ -149,8 +149,6 @@
 	[SupplyParameterFromForm]
 	private Tournament? Tournament { get; set; } = new();
 
-	private AppDbContext? context { get; set; } = null!;
-
 	private PersianCalendar persianCalendar = new PersianCalendar();
 	private int CurrentYear;
 
@@ -161,7 +159,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Federations = await context.Federations
 			.OrderBy(federation => federation.PersianName)
@@ -181,7 +179,7 @@
 
 	private async Task AddTournament()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		context.Tournaments.Add(Tournament!);
 

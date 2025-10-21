@@ -89,15 +89,13 @@
     [SupplyParameterFromForm]
     private Course Course { get; set; } = new();
 
-    private AppDbContext? context;
-
     private async Task AddCourse()
     {
         Course.Employees = null!;
 
         try
         {
-            context = DbFactory.CreateDbContext();
+            using var context = DbFactory.CreateDbContext();
             context.Courses.Add(Course);
             await context.SaveChangesAsync();
             NavigationManager.NavigateTo("/Dashboard/HumanResource/Education/Courses");

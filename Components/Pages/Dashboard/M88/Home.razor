@@ -74,8 +74,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private int CityId = 1;
 
 	private City? City;
@@ -86,7 +84,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Cities = context.Cities
 			.Where(city => city.Id != 0);
@@ -98,7 +96,7 @@
 	{
 		Facilities = null;
 
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		City = Cities!.FirstOrDefault(c => c.Id == CityId);
 

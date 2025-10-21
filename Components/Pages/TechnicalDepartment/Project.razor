@@ -74,8 +74,6 @@
     [Parameter]
     public Guid? ProjectId { get; set; }
 
-    private AppDbContext context = default!;
-
     private ConstructionProject? project { get; set; }
 
     private IQueryable<ProjectBudget>? projectBudgets { get; set; }
@@ -89,7 +87,7 @@
 
     protected override void OnInitialized()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         project = context.ConstructionProjects
             .Include(project => project.City)

@@ -186,8 +186,6 @@
 
     private Course? Course { get; set; }
 
-    private AppDbContext context = default!;
-
     private List<Employee>? courseEmployees = new List<Employee>();
     private List<Employee>? employees = new List<Employee>();
 
@@ -195,7 +193,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
         Course ??= await context.Courses
             .Include(course => course.Employees)
             .FirstOrDefaultAsync(m => m.Id == Id);
@@ -217,6 +215,8 @@
 
     private async Task SearchName(ChangeEventArgs args)
     {
+        using var context = DbFactory.CreateDbContext();
+
         searchText = args.Value!.ToString();
         employees = string.IsNullOrEmpty(searchText)
             ? await context.Employees
@@ -238,6 +238,8 @@
 
     private async Task UpdateCourse()
     {
+        using var context = DbFactory.CreateDbContext();
+
         context.Attach(Course!).State = EntityState.Modified;
 
         try
@@ -286,6 +288,8 @@
 
     private async Task UpdateEmployees()
     {
+        using var context = DbFactory.CreateDbContext();
+
         Course ??= await context.Courses
             .Include(course => course.Employees)
             .FirstOrDefaultAsync(m => m.Id == Id);

@@ -82,8 +82,6 @@
     [SupplyParameterFromForm]
     private Department? Department { get; set; } = new();
 
-    private AppDbContext? context { get; set; } = null!;
-
     private List<Department>? OrgDepartments;
 
     protected override async Task OnInitializedAsync()
@@ -93,7 +91,7 @@
 
     private async Task UpdateRoles()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         OrgDepartments = await context!.Departments
             .OrderBy(department => department.PersianName)
@@ -106,6 +104,8 @@
 
     private async Task AddDepartment()
     {
+        using var context = DbFactory.CreateDbContext();
+        
         context!.Add(Department!);
         await context.SaveChangesAsync();
 
@@ -115,6 +115,8 @@
 
     private async Task DeleteDepartment(Department Department)
     {
+        using var context = DbFactory.CreateDbContext();
+        
         context!.Departments.Remove(Department!);
         await context.SaveChangesAsync();
 

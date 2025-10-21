@@ -98,8 +98,6 @@
 	[Parameter]
 	public int? FederationId { get; set; }
 
-	private AppDbContext context = default!;
-
 	private City? City;
 	private Federation? Federation;
 
@@ -107,7 +105,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		City = await context.Cities
 			.FirstOrDefaultAsync(city => city.Id == CityId);
@@ -121,7 +119,7 @@
 	private async Task UpdateList()
 	{
 		Insurances = null;
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Insurances = await context.Insurances
 			.Include(insurance => insurance.City)

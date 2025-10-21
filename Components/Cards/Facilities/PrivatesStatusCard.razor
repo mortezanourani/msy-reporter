@@ -27,8 +27,6 @@ else
 }
 
 @code {
-    private AppDbContext context = default!;
-
     private int? TotalCount = null!;
     private int? LicensesCount = null!;
     private int? ExpiredLicensesCount = null!;
@@ -50,7 +48,7 @@ else
     {
         TotalCount = null;
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         var facilities = await context.PrivateFacilities
             .Include(f => f.PrivateFacilityLicenses)

@@ -216,8 +216,6 @@
     private bool IsOwner;
     private bool IsRenewal;
 
-    private AppDbContext? context { get; set; } = default!;
-
     private List<UsersGender>? UsersGenders;
     private PrivateFacility? Facility;
 
@@ -228,7 +226,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
         UsersGenders = await context.UsersGenders
             .OrderBy(gender => gender.Id)
             .ToListAsync();
@@ -245,7 +243,7 @@
         License.IsOwner = IsOwner;
         License.IsRenewal = IsRenewal;
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
         try
         {
             context.PrivateFacilityLicenses.Add(License);

@@ -27,8 +27,6 @@ else
 }
 
 @code {
-    private AppDbContext context = default!;
-
     private int? TotalPerCapita = null!;
     private int? SportLandPerCapita = null!;
     private int? SportHallPerCapita = null!;
@@ -50,7 +48,7 @@ else
     {
         TotalPerCapita = null;
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         var facilities = await context.PrivateFacilities
             .Include(f => f.PrivateFacilityLicenses)

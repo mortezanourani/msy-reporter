@@ -127,8 +127,6 @@
     [SupplyParameterFromForm]
     private LocalFederation LocalFederation { get; set; } = new();
 
-    private AppDbContext? context { get; set; } = null!;
-
     private List<City>? Cities;
     private List<Federation>? Federations;
 
@@ -137,7 +135,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Cities = await context.Cities.ToListAsync();
         Federations = await context.Federations.ToListAsync();
@@ -153,7 +151,7 @@
             ? LocalFederation.NationalId
             : null;
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
         context.LocalFederations.Add(LocalFederation);
 
         try

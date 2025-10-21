@@ -52,8 +52,6 @@
 	[Parameter]
 	public Guid? EmployeeId { get; set; }
 
-	private AppDbContext context = default!;
-
 	private List<string> Years = new List<string>();
 	private string? Year;
 
@@ -71,7 +69,7 @@
 			NavigationManager.NavigateTo("/notfound");
 		}
 
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Employee = await context.Employees.
 			FirstOrDefaultAsync(employee => employee.Id == EmployeeId);
@@ -94,7 +92,7 @@
 	{
 		EmployeeCourses = null;
 
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		EmployeeCourses = await context.Courses
 			.Include(course => course.Employees)

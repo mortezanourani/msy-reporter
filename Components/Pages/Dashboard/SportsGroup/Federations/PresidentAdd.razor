@@ -134,13 +134,11 @@
     [SupplyParameterFromForm]
     private LocalFederationPresident LocalFederationPresident { get; set; } = new();
 
-    private AppDbContext? context { get; set; } = default!;
-
     private string? statusMessage;
 
     private async Task AddPresident()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         LocalFederationPresident.FederationId = Id;
         context.LocalFederationPresidents.Add(LocalFederationPresident);

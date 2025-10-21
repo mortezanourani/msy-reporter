@@ -127,8 +127,6 @@
 
     private Tournament? Tournament { get; set; }
 
-    private AppDbContext context = default!;
-
     private List<Medal>? Medals;
     private List<Athlete>? Athletes;
     private List<AgeGroup>? AgeGroups;
@@ -139,7 +137,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Tournament ??= await context.Tournaments
             .Include(tournament => tournament.Federation)
@@ -172,7 +170,7 @@
 
     private async Task AddChampion()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
         Champion!.Tournament = await context.Tournaments
             .Where(tournament => tournament.Id == TournamentId)
             .FirstOrDefaultAsync();

@@ -217,8 +217,6 @@
     private bool IsOwner;
     private bool IsRenewal;
 
-    private AppDbContext? context { get; set; } = default!;
-
     private List<UsersGender>? UsersGenders;
 
     private string? statusMessage;
@@ -228,7 +226,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
         UsersGenders = await context.UsersGenders
             .OrderBy(gender => gender.Id)
             .ToListAsync();
@@ -255,7 +253,7 @@
             NavigationManager.NavigateTo("notfound");
         }
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         License.IsBeneficial = IsBeneficial;
         License.IsOwner = IsOwner;

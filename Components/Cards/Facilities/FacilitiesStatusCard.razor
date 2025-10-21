@@ -92,8 +92,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private DbSet<Facility>? msyFacilities;
 	private int msyFacilitiesCount { get; set; } = 0;
 	private int documentedMsyFacilitiesCount { get; set; } = 0;
@@ -112,7 +110,7 @@
 
 	protected override void OnInitialized()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		msyFacilities = context.Facilities;
 		msyFacilitiesCount = msyFacilities

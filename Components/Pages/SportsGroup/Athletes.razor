@@ -51,11 +51,9 @@ else
 
     private List<int>? Years;
 
-    private AppDbContext? context { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
-        context = await DbFactory.CreateDbContextAsync();
+        using var context = await DbFactory.CreateDbContextAsync();
 
         Years = await context.Insurances
             .GroupBy(m => m.Year)

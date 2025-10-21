@@ -30,8 +30,6 @@ else
     [Parameter]
     public int? CityId { get; set; }
 
-    private AppDbContext context = default!;
-
     private int? TotalCount = null!;
     private int? LicensesCount = null!;
     private int? ExpiredLicensesCount = null!;
@@ -51,7 +49,7 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         var facilities = await context.PrivateFacilities
             .Include(f => f.PrivateFacilityLicenses)

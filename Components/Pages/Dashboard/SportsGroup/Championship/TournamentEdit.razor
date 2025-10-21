@@ -189,8 +189,6 @@ else
 	[SupplyParameterFromForm]
 	private Tournament? Tournament { get; set; }
 
-	private AppDbContext? context = default!;
-
 	private PersianCalendar persianCalendar = new PersianCalendar();
 	private int CurrentYear;
 
@@ -204,7 +202,7 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Tournament ??= await context.Tournaments
 			.Include(tournament => tournament.Federation)
@@ -240,7 +238,7 @@ else
 
 	private async Task UpdateTournament()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Tournament!.Champions = await context.Champions
 			.Where(champion => champion.TournamentId == Id)
@@ -269,6 +267,8 @@ else
 		{
 			return;
 		}
+
+		using var context = DbFactory.CreateDbContext();
 
 		context!.Champions.Remove(champion);
 

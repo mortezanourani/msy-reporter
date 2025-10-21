@@ -136,8 +136,6 @@
     [SupplyParameterFromForm]
     private Department? Department { get; set; } = new();
 
-    private AppDbContext? context { get; set; } = default!;
-
     private List<IdentityRole>? Roles;
     private List<Department>? Departments;
 
@@ -147,7 +145,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Employee = await context.Employees
             .Where(employee => employee.Id == EmployeeId!)
@@ -180,6 +178,9 @@
 
         UserDepartments = new();
         var userClaims = await UserManager.GetClaimsAsync(user!);
+
+        using var context = DbFactory.CreateDbContext();
+
         foreach (Claim claim in userClaims)
         {
             var userDepartment = await context!.Departments
@@ -219,6 +220,8 @@
     {
         ApplicationUser? user = await UserManager.FindByIdAsync(Employee!.AccountId!);
         if (user is null) return;
+
+        using var context = DbFactory.CreateDbContext();
 
         var department = await context!.Departments
             .Where(dept => dept.Id == Department!.Id)

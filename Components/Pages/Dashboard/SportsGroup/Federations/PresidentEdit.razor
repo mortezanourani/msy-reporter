@@ -147,13 +147,11 @@
     [SupplyParameterFromForm]
     private LocalFederationPresident? LocalFederationPresident { get; set; }
 
-    private AppDbContext? context { get; set; } = null!;
-
     private string? statusMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         LocalFederationPresident ??= await context.LocalFederationPresidents
             .Include(president => president.Federation)
@@ -165,7 +163,7 @@
 
     private async Task UpdatePresident()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
         context.Attach(LocalFederationPresident!).State = EntityState.Modified;
 
         try

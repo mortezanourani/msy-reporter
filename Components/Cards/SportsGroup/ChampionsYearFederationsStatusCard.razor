@@ -97,8 +97,6 @@ else
 	[Parameter]
 	public int? Year { get; set; } = null!;
 
-	private AppDbContext context = default!;
-
 	private List<Medal>? Medals = null!;
 	private List<AgeGroup>? AgeGroups = null!;
 
@@ -108,7 +106,7 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Medals = await context.Medals.ToListAsync();
 
@@ -131,6 +129,8 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
+		using var context = DbFactory.CreateDbContext();
+
 		var champions = context.Champions
 			.Include(m => m.Tournament)
 				.ThenInclude(m => m.Federation)

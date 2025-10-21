@@ -107,8 +107,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private IQueryable<Athlete>? champions;
 
 	private int championsCount;
@@ -124,7 +122,7 @@
 
 	protected override void OnInitialized()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		champions = context.Athletes
 			.Include(athlete => athlete.Gender)

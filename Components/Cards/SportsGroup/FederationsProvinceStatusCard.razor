@@ -1,6 +1,4 @@
-﻿@inject IJSRuntime JSRuntime
-
-<div class="card card2 cornered1">
+﻿<div class="card card2 cornered1">
 	<div class="card-header pb-0 mb-2">
 		<h6 class="title">تعداد هیات های فعال استانی</h6>
 	</div>
@@ -31,8 +29,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private IQueryable<LocalFederation>? federations;
 
 	private int activeFederationsCount;
@@ -42,7 +38,7 @@
 
 	protected override void OnInitialized()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		federations = context.LocalFederations
 			.Include(federation => federation.LocalFederationPresidents)

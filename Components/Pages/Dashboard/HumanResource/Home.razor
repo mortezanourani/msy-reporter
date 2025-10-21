@@ -95,8 +95,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private List<Employee>? Employees;
 
 	private string? searchText;
@@ -105,7 +103,7 @@
 	{
 		Employees = null;
 
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Employees = await context.Employees
 			.Include(employee => employee.Type)
@@ -119,6 +117,9 @@
 	private async Task Search(ChangeEventArgs args)
 	{
 		searchText = args.Value!.ToString();
+
+		using var context = DbFactory.CreateDbContext();
+
 		Employees = string.IsNullOrEmpty(searchText)
 			? await context.Employees
 				.Include(employee => employee.Type)

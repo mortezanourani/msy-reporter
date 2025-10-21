@@ -83,8 +83,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private int cityId;
 
 	private City? city;
@@ -99,7 +97,7 @@
 
 	protected override void OnInitialized()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		cities = context.Cities.ToList();
 
@@ -111,6 +109,8 @@
 		federations = null;
 
 		city = cities.FirstOrDefault(city => city.Id == cityId);
+		
+		using var context = DbFactory.CreateDbContext();
 
 		federations = context.LocalFederations
 			.Include(federation => federation.City)

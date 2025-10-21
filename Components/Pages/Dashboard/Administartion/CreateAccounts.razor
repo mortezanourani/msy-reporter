@@ -10,11 +10,9 @@
 
 
 @code {
-    private AppDbContext context = default!;
-
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         var employees = await context.Employees
             .Where(employee => employee.AccountId == null)

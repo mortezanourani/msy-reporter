@@ -77,8 +77,6 @@
     [Parameter]
     public City? City { get; set; }
 
-    private AppDbContext context = default!;
-
     private IQueryable<ConstructionProject> projects;
     private List<decimal> chartCounts = new List<decimal>();
 
@@ -90,7 +88,7 @@
 
     protected override void OnParametersSet()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
      
         projects = context.ConstructionProjects
             .Include(project => project.ProjectProgresses)

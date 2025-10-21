@@ -101,8 +101,6 @@
 </div>
 
 @code {
-	private AppDbContext? context = default!;
-
 	private List<int>? Years = new List<int>();
 	private int Year;
 
@@ -116,7 +114,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Years = await context.Tournaments
 			.GroupBy(tournament => tournament.Year)
@@ -132,6 +130,8 @@
 	private async Task Search(ChangeEventArgs args)
 	{
 		searchText = args.Value!.ToString();
+
+		using var context = DbFactory.CreateDbContext();
 
 		Tournaments = await context.Tournaments
 			.Include(tournament => tournament.Level)
@@ -174,7 +174,7 @@
 		Tournaments = null;
 		searchText = string.Empty;
 
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Tournaments = await context.Tournaments
 			.Include(tournament => tournament.Level)

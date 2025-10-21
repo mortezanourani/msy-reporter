@@ -192,14 +192,12 @@
 
     private List<LocalFederationPresident>? Presidents;
 
-    private AppDbContext? context { get; set; } = null!;
-
     private string? statusMessage;
     private string? statusMessageClass = "success";
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         LocalFederation ??= await context.LocalFederations
             .Include(federation => federation.City)
@@ -217,7 +215,7 @@
 
     private async Task UpdateLocalFederation()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         LocalFederation!.LocalFederationPresidents = Presidents!.ToArray();
 

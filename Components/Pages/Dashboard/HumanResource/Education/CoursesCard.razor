@@ -77,8 +77,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private List<string> years = new List<string>();
 	private string? year;
 
@@ -86,7 +84,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		years = await context.Courses
 			.GroupBy(course => course.Year)
@@ -101,6 +99,8 @@
 
 	private void SelectYear()
 	{
+		using var context = DbFactory.CreateDbContext();
+		
 		courses = context.Courses
 			.Where(course => course.Year.Contains(year!))
 			.OrderBy(course => course.Title);

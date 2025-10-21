@@ -96,8 +96,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	PersianCalendar persianCalendar = new PersianCalendar();
 
 	private List<Insurance>? Insurances;
@@ -115,7 +113,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Insurances = await context.Insurances
 			.Include(m => m.Federation)

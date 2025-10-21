@@ -36,15 +36,13 @@ else
     [Parameter]
     public int? CityId { get; set; }
 
-    private AppDbContext context = default!;
-
     private int? TotalCount = null!;
     private int? DocumentsCount = null!;
     private int? NewDocumentsCount = null!;
 
     protected override async Task OnParametersSetAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         var facilities = await context.Facilities
             .Include(f => f.FacilityDocuments)

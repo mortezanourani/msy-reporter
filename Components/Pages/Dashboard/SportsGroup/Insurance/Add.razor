@@ -139,8 +139,6 @@
     [SupplyParameterFromForm]
     private Insurance Insurance { get; set; } = new();
 
-    private AppDbContext? context { get; set; } = null!;
-
     private List<City>? Cities;
     private List<Federation>? Federations;
 
@@ -149,7 +147,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Cities = await context.Cities
             .Where(city => city.Id != 0)
@@ -161,7 +159,7 @@
 
     private async Task AddInsurance()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         context.Insurances.Add(Insurance);
 

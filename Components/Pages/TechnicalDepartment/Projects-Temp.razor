@@ -41,8 +41,6 @@
 </div>
 
 @code {
-    private AppDbContext context = default!;
-
     private int cityId = 1;
 
     private City? city;
@@ -50,7 +48,7 @@
 
     protected override void OnInitialized()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         cities = context.Cities
             .Where(city => city.Id != 0);

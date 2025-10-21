@@ -50,13 +50,11 @@
     [Parameter]
     public City? City { get; set; }
 
-    private AppDbContext context = default!;
-
     private IQueryable<ConstructionProject>? Projects;
 
     protected override void OnParametersSet()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
      
         Projects = context.ConstructionProjects
             .Include(project => project.City)

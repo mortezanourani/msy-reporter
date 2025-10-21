@@ -134,14 +134,12 @@
     [SupplyParameterFromForm]
     private Insurance? Insurance { get; set; }
 
-    private AppDbContext? context { get; set; } = null!;
-
     private string? statusMessage;
     private string? statusMessageClass;
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Insurance ??= await context.Insurances
             .Include(insurance => insurance.City)
@@ -156,7 +154,7 @@
 
     private async Task UpdateInsurance()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         context.Attach(Insurance!).State = EntityState.Modified;
 

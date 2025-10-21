@@ -36,8 +36,6 @@
     [Parameter]
     public int? CityId { get; set; }
 
-    private AppDbContext context = default!;
-
     private int? TotalPopulation = null!;
     private int? UrbanMenPopulation = null!;
     private int? UrbanWomenPopulation = null!;
@@ -46,7 +44,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         var facilities = await context.PrivateFacilities
             .Include(f => f.PrivateFacilityLicenses)
@@ -82,7 +80,7 @@
             return;
         }
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         var facilities = await context.PrivateFacilities
             .Include(f => f.PrivateFacilityLicenses)

@@ -39,13 +39,11 @@ else
     [Parameter]
     public List<int>? Years { get; set; } = null!;
 
-    private AppDbContext context = default!;
-
     private int Year;
 
     protected override void OnInitialized()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Years = context.Champions
             .Include(champion => champion.Tournament)

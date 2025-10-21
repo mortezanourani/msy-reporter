@@ -155,13 +155,12 @@ else
     [SupplyParameterFromForm]
     private Course? Course { get; set; }
 
-    private AppDbContext context = default!;
-
     private IQueryable<Employee>? courseEmployees;
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
+
         Course ??= await context.Courses
             .Include(course => course.Employees)
             .FirstOrDefaultAsync(m => m.Id == Id);
@@ -182,6 +181,8 @@ else
     private async Task UpdateCourse()
     {
         Course!.Employees = courseEmployees!.ToArray();
+
+        using var context = DbFactory.CreateDbContext();
 
         try
         {

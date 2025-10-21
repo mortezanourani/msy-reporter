@@ -31,8 +31,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private IQueryable<LocalFederation>? federations;
 
 	private int federationMeetingsCount;
@@ -42,7 +40,7 @@
 
 	protected override void OnInitialized()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		// var federationMeetings = context.FederationMeetings
 		// 	.Include(meeting => meeting.Type)

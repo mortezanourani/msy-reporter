@@ -162,14 +162,12 @@
     [SupplyParameterFromForm]
     private Employee? Employee { get; set; }
 
-    private AppDbContext context = default!;
-
     private List<Gender>? Genders;
     private List<EmploymentType>? Employments;
 
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Genders = await context.Genders.ToListAsync();
         Employments = await context.EmploymentTypes.ToListAsync();
@@ -185,6 +183,8 @@
 
     private async Task UpdateEmployee()
     {
+        using var context = DbFactory.CreateDbContext();
+        
         context.Attach(Employee!).State = EntityState.Modified;
 
         try

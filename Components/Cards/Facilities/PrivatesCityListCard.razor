@@ -65,8 +65,6 @@
     [Parameter]
     public int? CityId { get; set; }
 
-    private AppDbContext context = default!;
-
     private City? City = null!;
 
     private List<PrivateFacility>? privateFacilities;
@@ -75,7 +73,7 @@
     {
         privateFacilities = null;
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         City = await context.Cities
             .FirstOrDefaultAsync(c => c.Id == CityId);

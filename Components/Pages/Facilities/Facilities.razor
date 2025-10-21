@@ -59,8 +59,6 @@
 *@
 
 @code {
-    private AppDbContext context = default!;
-
     private int CityId = 1;
 
     private City? City;
@@ -69,7 +67,7 @@
 
     protected override void OnInitialized()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         Cities = context.Cities
             .Where(city => city.Id != 0);
@@ -79,6 +77,8 @@
 
     private void SelectCity()
     {
+        using var context = DbFactory.CreateDbContext();
+
         City = context.Cities
             .FirstOrDefault(c => c.Id == CityId);
     }

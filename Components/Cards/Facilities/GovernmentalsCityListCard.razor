@@ -56,15 +56,13 @@
     [CascadingParameter]
     public City? City { get; set; }
 
-    private AppDbContext context = default!;
-
     private List<GovernmentFacility>? govFacilities;
 
     protected override async Task OnParametersSetAsync()
     {
         govFacilities = null;
 
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         if (City is not null)
         {

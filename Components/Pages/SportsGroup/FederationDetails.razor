@@ -40,15 +40,13 @@
     [Parameter]
     public Guid? Id { get; set; }
 
-    private AppDbContext context = default!;
-
     private LocalFederation? federation { get; set; }
 
     private IQueryable<LocalFederationPresident>? federationPresidents { get; set; }
 
     protected override void OnInitialized()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
         federation = context.LocalFederations
             .Include(federation => federation.Federation)

@@ -111,8 +111,6 @@
 </div>
 
 @code {
-	private AppDbContext context = default!;
-
 	private int cityId;
 
 	private City? City;
@@ -129,7 +127,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		Cities = await context.Cities.ToListAsync();
 
@@ -139,6 +137,8 @@
 	private async Task Search(ChangeEventArgs args)
 	{
 		searchText = args.Value!.ToString();
+
+		using var context = DbFactory.CreateDbContext();
 
 		Federations = string.IsNullOrEmpty(searchText)
 			? await context.LocalFederations
@@ -162,7 +162,7 @@
 	{
 		Federations = null;
 
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		City = Cities!.FirstOrDefault(city => city.Id == cityId);
 

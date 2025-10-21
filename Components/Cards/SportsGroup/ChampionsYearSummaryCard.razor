@@ -110,8 +110,6 @@
 	[Parameter]
 	public int Year { get; set; }
 
-	private AppDbContext context = default!;
-
 	private List<Athlete>? champions;
 
 	private int championsCount;
@@ -127,7 +125,7 @@
 
 	protected override async Task OnParametersSetAsync()
 	{
-		context = DbFactory.CreateDbContext();
+		using var context = DbFactory.CreateDbContext();
 
 		champions = await context.Athletes
 			.Include(athlete => athlete.Gender)
