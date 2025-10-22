@@ -19,67 +19,77 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col1-1">
-        <div class="card color-card">
-            <div class="card-header">
-                <h6 class="title">خلاصه وضعیت اماکن ورزشی شهرستان @City!.PersianName</h6>
-                <InputSelect class="select" @bind-Value="CityId" @bind-Value:after="SelectCity">
-                    @foreach (City city in Cities!)
-                    {
-                        <option value="@city.Id">@city.PersianName</option>
-                    }
-                </InputSelect>
+@if (Cities is null)
+{
+    <Loading CardMode=true />
+}
+else
+{
+    <div class="row">
+        <div class="col1-1">
+            <div class="card color-card">
+                <div class="card-header">
+                    <h6 class="title">خلاصه وضعیت اماکن ورزشی شهرستان @City?.PersianName</h6>
+                    <InputSelect class="select" @bind-Value="CityId" @bind-Value:after="OnParametersSetAsync">
+                        @foreach (City city in Cities!)
+                        {
+                            <option value="@city.Id">@city.PersianName</option>
+                        }
+                    </InputSelect>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col1-3">
-        <PopulationCard CityId="@City.Id"/>
-    </div>
-    <div class="col2-3">
-        <div class="card cornered1 card-double">
-            <PrivatesCityStatusCard CityId="@City.Id" />
-            <hr class="seperator" />
-            <PrivatesCityPerCapitaStatusCard CityId="@City.Id" />
+    <div class="row">
+        <div class="col1-3">
+            <PopulationCard CityId="@CityId"/>
         </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col1-1">
-        <div class="card">
-            <div class="card-body text-center">
-                <NavLink class="small fw-medium" href="/Facilities/M88/List">فهرست اماکن ورزشی وزارت ورزش و جوانان</NavLink>
+        <div class="col2-3">
+            <div class="card cornered1 card-double">
+                <PrivatesCityStatusCard CityId="@CityId" />
+                <hr class="seperator" />
+                <PrivatesCityPerCapitaStatusCard CityId="@CityId" />
             </div>
         </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col1-1">
+            <div class="card">
+                <div class="card-body text-center">
+                    <NavLink class="small fw-medium" href="/Facilities/M88/List">فهرست اماکن ورزشی وزارت ورزش و جوانان</NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
-    private int CityId = 1;
+    [Parameter]
+    public int CityId { get; set; }
 
     private City? City;
 
-    private IQueryable<City>? Cities;
+    private List<City>? Cities;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
 
-        Cities = context.Cities
-            .Where(city => city.Id != 0);
+        Cities = await context.Cities
+            .Where(city => city.Id != 0)
+            .ToListAsync();
 
-        SelectCity();
+        CityId = Cities
+            .FirstOrDefault()!.Id;
     }
 
-    private void SelectCity()
+    protected override async Task OnParametersSetAsync()
     {
         using var context = DbFactory.CreateDbContext();
 
-        City = context.Cities
-            .FirstOrDefault(c => c.Id == CityId);
+        City = await context.Cities
+            .FirstOrDefaultAsync(c => c.Id == CityId);
     }
 }
