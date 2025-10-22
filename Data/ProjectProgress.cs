@@ -7,7 +7,7 @@ namespace Reporter.Data;
 public partial class ProjectProgress
 {
     [Key]
-    public Guid ProjectId { get; set; }
+    public Guid Id { get; set; }
 
     public int Year { get; set; }
 

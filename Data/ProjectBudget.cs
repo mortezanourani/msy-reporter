@@ -7,7 +7,7 @@ namespace Reporter.Data;
 public partial class ProjectBudget
 {
     [Key]
-    public Guid ProjectId { get; set; }
+    public Guid Id { get; set; }
 
     public string? Code { get; set; }
 
