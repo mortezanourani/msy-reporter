@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components.QuickGrid
-
-@page "/Facilities"
+﻿@page "/Facilities"
 
 @layout _Layout
 
@@ -8,78 +6,70 @@
 
 <FacilitiesStatusCard />
 
-<div class="row">
-    <div class="col1-1">
-        <div class="card color-card">
-            <div class="card-header">
-                <h6 class="title">خلاصه وضعیت اماکن ورزشی شهرستان @City!.PersianName</h6>
-                <InputSelect class="select" @bind-Value="CityId" @bind-Value:after="SelectCity">
-                    @foreach (City city in Cities!)
-                    {
-                        <option value="@city.Id">@city.PersianName</option>
-                    }
-                </InputSelect>
+@if (Cities is null)
+{
+    <Loading CardMode=true />
+}
+else
+{
+    <div class="row">
+        <div class="col1-1">
+            <div class="card color-card">
+                <div class="card-header">
+                    <h6 class="title">خلاصه وضعیت اماکن ورزشی شهرستان @City?.PersianName</h6>
+                    <InputSelect class="select" @bind-Value="CityId" @bind-Value:after="OnParametersSetAsync">
+                        @foreach (City city in Cities!)
+                        {
+                            <option value="@city.Id">@city.PersianName</option>
+                        }
+                    </InputSelect>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col1-3">
-        <FacilitiesCityMsyStatusCard CityId="@City.Id" />
-    </div>
-    <div class="col2-3">
-        <div class="card card-double">
-            <FacilitiesCityGovernmentalsStatusCard CityId="@City.Id" />
-            <hr class="seperator" />
-            <FacilitiesCityPrivatesStatusCard CityId="@City.Id" />
-        </div>
-    </div>
-</div>
-
-@*
-<CascadingValue Value="City">
-    <FacilitiesCityStatusCard />
 
     <div class="row">
-        <div class="col1-2">
-            <FacilitiesMsyCityCard />
+        <div class="col1-3">
+            <FacilitiesCityMsyStatusCard CityId="@CityId" />
         </div>
-        <div class="col1-2">
-            <FacilitiesGovCityCard />
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col1-1">
-            <FacilitiesPrivateCityCard />
+        <div class="col2-3">
+            <div class="card card-double">
+                <FacilitiesCityGovernmentalsStatusCard CityId="@CityId" />
+                <hr class="seperator" />
+                <FacilitiesCityPrivatesStatusCard CityId="@CityId" />
+            </div>
         </div>
     </div>
-</CascadingValue>
-*@
+}
 
 @code {
-    private int CityId = 1;
+    [Parameter]
+    public int CityId { get; set; }
 
     private City? City;
 
-    private IQueryable<City>? Cities;
+    private List<City>? Cities;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
 
-        Cities = context.Cities
-            .Where(city => city.Id != 0);
+        Cities = await context.Cities
+            .Where(city => city.Id != 0)
+            .ToListAsync();
 
-        SelectCity();
+        if (Cities != null)
+        {
+            CityId = Cities.FirstOrDefault()!.Id;
+        }
     }
 
-    private void SelectCity()
+
+    protected override async Task OnParametersSetAsync()
     {
         using var context = DbFactory.CreateDbContext();
 
-        City = context.Cities
-            .FirstOrDefault(c => c.Id == CityId);
+        City = await context.Cities
+            .FirstOrDefaultAsync(c => c.Id == CityId);
     }
 }
