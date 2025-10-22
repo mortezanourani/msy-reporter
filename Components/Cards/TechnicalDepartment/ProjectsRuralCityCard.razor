@@ -77,7 +77,7 @@
     [Parameter]
     public City? City { get; set; }
 
-    private IQueryable<ConstructionProject> projects;
+    private List<ConstructionProject>? Projects;
     private List<decimal> chartCounts = new List<decimal>();
 
     private int ruralProjectsCount;
@@ -86,30 +86,34 @@
     private int urbanProjectsCount;
     private decimal urbanProjectsPercentage;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         using var context = DbFactory.CreateDbContext();
      
-        projects = context.ConstructionProjects
+        Projects = await context.ConstructionProjects
+            .Include(project => project.City)
+            .Include(project => project.Facility)
             .Include(project => project.ProjectProgresses)
             .Where(project => project.ProjectProgresses
-                .Max(progress => progress.Percentage) < 100);
+                .Max(progress => progress.Percentage) < 100)
+            .ToListAsync();
 
         if (City!.Id != 0)
         {
-            projects = projects.Where(project =>
-                project.City.Id == City!.Id);
+            Projects = Projects.Where(project =>
+                project.City.Id == City!.Id)
+                .ToList();
         }
 
-        var projectsCount = projects.Count();
+        var projectsCount = Projects.Count();
 
-        // urbanProjectsCount = projects
-        //     .Where(project => project.IsRural == false)
-        //     .Count();
+        urbanProjectsCount = Projects
+            .Where(project => project.Facility?.IsRural == false)
+            .Count();
 
-        // ruralProjectsCount = projects
-        //     .Where(project => project.IsRural == true)
-        //     .Count();
+        ruralProjectsCount = Projects
+            .Where(project => project.Facility?.IsRural == true)
+            .Count();
 
         urbanProjectsPercentage = 0;
         ruralProjectsPercentage = 0;

@@ -5,7 +5,7 @@
         <div class="table-wrapper">
             @if(Projects is not null)
             {
-                <QuickGrid Items="Projects" Pagination="pagination" Theme="" Class="quickgrid-table">
+                <QuickGrid Items="Projects.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
                     <PropertyColumn Title="عنوان پروژه" Property="@(project => project.Title)" />
                     @* <PropertyColumn Title="شهرستان" Property="@(project => project.City.PersianName)" /> *@
                     @* <PropertyColumn Sortable="true" Title="موقعیت" Property="@(project => project.Facility!.IsRural == true ? "روستایی" : "شهری")" /> *@
@@ -50,24 +50,26 @@
     [Parameter]
     public City? City { get; set; }
 
-    private IQueryable<ConstructionProject>? Projects;
+    private List<ConstructionProject>? Projects;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         using var context = DbFactory.CreateDbContext();
      
-        Projects = context.ConstructionProjects
+        Projects = await context.ConstructionProjects
             .Include(project => project.City)
             .Include(project => project.Type)
             .Include(project => project.ProjectProgresses)
             .Where(project => project.ProjectProgresses
                 .Max(progress => progress.Percentage) < 100)
-            .OrderByDescending(project => project.ProjectProgresses.Max(progress => progress.Percentage));
+            .OrderByDescending(project => project.ProjectProgresses.Max(progress => progress.Percentage))
+            .ToListAsync();
 
         if (City!.Id != 0)
         {
             Projects = Projects
-                .Where(m => m.City.Id == City.Id);
+                .Where(m => m.City.Id == City.Id)
+                .ToList();
         }
 
         pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
