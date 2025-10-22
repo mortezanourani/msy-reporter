@@ -2,16 +2,16 @@
 
 <div class="card city-federations-card">
 	<div class="card-header border-bottom">
-		<h6 class="title">وضعیت هیات های ورزشی @city!.PersianName</h6>
-		<InputSelect class="select" @bind-Value="cityId" @onclick="SelectCity">
-			@foreach (City city in cities!)
+		<h6 class="title">وضعیت هیات های ورزشی @City?.PersianName</h6>
+		<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="OnParametersSetAsync">
+			@foreach (City city in Cities!)
 			{
 				<option value="@city.Id">@city.PersianName</option>
 			}
 		</InputSelect>
 	</div>
 	<div class="card-body">
-		@if (federations is null)
+		@if (Federations is null)
 		{
 			<Loading />
 		}
@@ -37,13 +37,12 @@
 			</div>
 
 			<div class="federations-list">
-				@if (federations is not null)
+				@if (Federations is not null)
 				{
-					<QuickGrid Pagination="pagination" Items="federations" Theme="" Class="federations-table">
+					<QuickGrid Pagination="pagination" Items="Federations.AsQueryable()" Theme="" Class="federations-table">
 						<PropertyColumn Title="عنوان هیات" Property="@(federation => federation.Federation.PersianName)" />
-						@if (cityId != 0)
+						@if (CityId != 0)
 						{
-							@* <PropertyColumn Title="شهرستان" Property="@(federation => federation.City == null ? "استان" : federation.City.PersianName)" /> *@
 							<PropertyColumn Title="بخش" Property="@(federation => federation.District)" />
 						}
 						<PropertyColumn Title="شناسه ملی" Property="@(federation => federation.NationalId)" />
@@ -83,55 +82,58 @@
 </div>
 
 @code {
-	private int cityId;
+	[Parameter]
+	public int CityId { get; set; }
 
-	private City? city;
-	private List<City> cities = new List<City>();
+	private City? City;
+	private List<City> Cities = new List<City>();
 
-	private IQueryable<LocalFederation>? federations;
+	private List<LocalFederation>? Federations;
 
 	private int activeFederationsCount;
 	private int identifiedFederationsCount;
 	private int federationPresidentsCount;
 	private int federationInterimPresidentsCount;
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
 		using var context = DbFactory.CreateDbContext();
 
-		cities = context.Cities.ToList();
+		Cities = await context.Cities.ToListAsync();
 
-		SelectCity();
+		CityId = Cities.FirstOrDefault()!.Id;
 	}
 
-	private void SelectCity()
+	protected override async Task OnParametersSetAsync()
 	{
-		federations = null;
+		Federations = null;
 
-		city = cities.FirstOrDefault(city => city.Id == cityId);
-		
 		using var context = DbFactory.CreateDbContext();
+		
+		City = await context.Cities
+			.FirstOrDefaultAsync(city => city.Id == CityId);
 
-		federations = context.LocalFederations
+		Federations = await context.LocalFederations
 			.Include(federation => federation.City)
 			.Include(federation => federation.Federation)
 			.Include(federation => federation.LocalFederationPresidents)
-			.Where(federation => federation.City!.Id == cityId)
-			.OrderBy(federation => federation.Federation.PersianName);
+			.Where(federation => federation.City!.Id == CityId)
+			.OrderBy(federation => federation.Federation.PersianName)
+			.ToListAsync();
 
-		activeFederationsCount = federations!
+		activeFederationsCount = Federations!
 			.Count(federation => federation.LocalFederationPresidents.Any());
 
-		identifiedFederationsCount = federations!
+		identifiedFederationsCount = Federations!
 			.Count(federation => !string.IsNullOrEmpty(federation.NationalId));
 
-		federationPresidentsCount = federations!
+		federationPresidentsCount = Federations!
 			.Count(federation => federation.LocalFederationPresidents
 				.OrderByDescending(president => president.AppointmentDate)
 				.FirstOrDefault()!
 				.IsPresident == true);
 
-		federationInterimPresidentsCount = federations!
+		federationInterimPresidentsCount = Federations!
 			.Count(federation => federation.LocalFederationPresidents
 				.OrderByDescending(president => president.AppointmentDate)
 				.FirstOrDefault()!
