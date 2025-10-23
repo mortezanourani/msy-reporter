@@ -125,15 +125,15 @@ else
 
         <div class="card-body">
             <div class="course-employees-list">
-                @if (courseEmployees is not null)
+                @if (CourseEmployees is not null)
                 {
-                    <QuickGrid Items="courseEmployees" Pagination="pagination" Theme="" Class="course-employees-table">
+                    <QuickGrid Items="CourseEmployees.AsQueryable()" Pagination="pagination" Theme="" Class="course-employees-table">
                         <PropertyColumn Title="نام و نام خانوداگی" Property="@(employee => string.Format("{0} {1}", employee.FirstName, employee.LastName))" />
                         <PropertyColumn Title="کد ملی" Property="@(employee => employee.SeenCode)" />
                         <PropertyColumn Title="نام پدر" Property="@(employee => employee.FatherName)" />
                         <PropertyColumn Title="تاریخ تولد" Property="@(employee => employee.BirthDate)" />
                         <TemplateColumn>
-                            <a class="edit-link" href="/Dashboard/Employee/Courses/@context.AccountId">
+                            <a class="edit-link" href="/Dashboard/HumanResource/Employees/Courses/@context.Id">
                                 <img src="/icons/user-courses.svg" />
                             </a>
                         </TemplateColumn>
@@ -155,7 +155,7 @@ else
     [SupplyParameterFromForm]
     private Course? Course { get; set; }
 
-    private IQueryable<Employee>? courseEmployees;
+    private List<Employee>? CourseEmployees;
 
     protected override async Task OnInitializedAsync()
     {
@@ -170,17 +170,18 @@ else
             NavigationManager.NavigateTo("notfound");
         }
 
-        courseEmployees = context.Employees
+        CourseEmployees = await context.Employees
             .Where(employee => employee.Courses
                 .Any(course => course.Id == Id))
-            .OrderBy(employee => employee.LastName);
+            .OrderBy(employee => employee.LastName)
+            .ToListAsync();
 
         pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
     }
 
     private async Task UpdateCourse()
     {
-        Course!.Employees = courseEmployees!.ToArray();
+        Course!.Employees = CourseEmployees!.ToArray();
 
         using var context = DbFactory.CreateDbContext();
 

@@ -16,7 +16,11 @@
     </span>
 </div>
 
-@if (Course is not null)
+@if (Course is null || context is null)
+{
+    <Loading />
+}
+else
 {
     <div class="row">
         <div class="col1-1 mb-0">
@@ -184,6 +188,8 @@
     [Parameter]
     public Guid Id { get; set; }
 
+    private ApplicationDbContext? context { get; set; }
+
     private Course? Course { get; set; }
 
     private List<Employee>? courseEmployees = new List<Employee>();
@@ -193,7 +199,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
+        context = DbFactory.CreateDbContext();
+
         Course ??= await context.Courses
             .Include(course => course.Employees)
             .FirstOrDefaultAsync(m => m.Id == Id);
@@ -215,17 +222,15 @@
 
     private async Task SearchName(ChangeEventArgs args)
     {
-        using var context = DbFactory.CreateDbContext();
-
         searchText = args.Value!.ToString();
         employees = string.IsNullOrEmpty(searchText)
-            ? await context.Employees
+            ? await context!.Employees
                 .Where(employee => employee.Courses
                     .All(course => course.Id != Id))
                 .OrderBy(employee => employee.LastName)
                 .OrderBy(employee => employee.FirstName)
                 .ToListAsync()
-            : await context.Employees
+            : await context!.Employees
                 .Where(employee =>
                     employee.LastName.Contains(searchText)
                     ||
@@ -234,34 +239,6 @@
                 .Where(employee => employee.Courses
                     .All(course => course.Id != Id))
                 .ToListAsync();
-    }
-
-    private async Task UpdateCourse()
-    {
-        using var context = DbFactory.CreateDbContext();
-
-        context.Attach(Course!).State = EntityState.Modified;
-
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            var isExist = context.Courses
-                .Any(e => e.Id == Course!.Id);
-
-            if (!isExist)
-            {
-                NavigationManager.NavigateTo("notfound");
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        NavigationManager.NavigateTo("/Dashboard/HumanResource/Education/");
     }
 
     private async Task AddEmployee(Employee employee)
@@ -288,24 +265,21 @@
 
     private async Task UpdateEmployees()
     {
-        using var context = DbFactory.CreateDbContext();
-
-        Course ??= await context.Courses
-            .Include(course => course.Employees)
-            .FirstOrDefaultAsync(m => m.Id == Id);
-
-        Course!.Employees = courseEmployees!;
-        await context.SaveChangesAsync();
+        if (courseEmployees is not null)
+        {
+            Course!.Employees = courseEmployees!;
+            await context!.SaveChangesAsync();
+        }
 
         searchText = string.Empty;
-        employees = await context.Employees
+        employees = await context!.Employees
             .Where(employee => employee.Courses
                 .All(course => course.Id != Id))
             .OrderBy(employee => employee.FirstName)
             .OrderBy(employee => employee.LastName)
             .ToListAsync();
 
-        courseEmployees = await context.Employees
+        courseEmployees = await context!.Employees
             .Where(employee => employee.Courses
                 .Any(course => course.Id == Id))
             .OrderBy(employee => employee.FirstName)

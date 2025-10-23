@@ -2,65 +2,81 @@
 
 @rendermode InteractiveServer
 
-<div class="card user-courses-card">
-	<div class="user-info">
-		<div class="info-item">
-			<p>نام و نام خانوادگی:</p>
-			<b>@Employee?.FirstName @Employee?.LastName</b>
+@if (EmployeeId is null)
+{
+	<Loading CardMode=true />
+}
+else
+{
+	<div class="card user-courses-card">
+		<div class="user-info">
+			<div class="info-item">
+				<p>نام و نام خانوادگی:</p>
+				<b>@Employee?.FirstName @Employee?.LastName</b>
+			</div>
+			<div class="info-item">
+				<p>کد ملی:</p>
+				<b>@Employee?.SeenCode</b>
+			</div>
+			<div class="info-item">
+				<p>نام پدر:</p>
+				<b>@Employee?.FatherName</b>
+			</div>
 		</div>
-		<div class="info-item">
-			<p>کد ملی:</p>
-			<b>@Employee?.SeenCode</b>
-		</div>
-		<div class="info-item">
-			<p>نام پدر:</p>
-			<b>@Employee?.FatherName</b>
-		</div>
-	</div>
 
-	<div class="card-header border-bottom">
-		<h6 class="title">دوره های گذرانده شده در سال @Year</h6>
-		<InputSelect class="select" @bind-Value="Year" @bind-Value:after="SelectYear">
-			@foreach (string year in Years!)
-			{
-				<option value="@year">@year</option>
-			}
-		</InputSelect>
-	</div>
+		@if (Years is null)
+		{
+			<Loading CardMode=true />
+		}
+		else
+		{
+			<div class="card-header border-bottom">
+				<h6 class="title">دوره های گذرانده شده در سال @Year</h6>
+				<InputSelect class="select" @bind-Value="Year" @bind-Value:after="OnParametersSetAsync">
+					@foreach (string year in Years!)
+					{
+						<option value="@year">@year</option>
+					}
+				</InputSelect>
+			</div>
 
-	<div class="card-body">
-		<div class="courses-list">
-			@if (EmployeeCourses is not null)
-			{
-				<QuickGrid Items="EmployeeCourses.AsQueryable()" Theme="" Class="courses-table">
-					<PropertyColumn Title="عنوان دوره" Property="@(course => course.Title)" />
-					<PropertyColumn Title="ساعت دوره" Property="@(course => course.CourseTime)" />
-					<PropertyColumn Title="زمان برگزاری دوره" Property="@(course => string.Format("{0:0000}/{1:00}", course.Year, course.Month))" />
-					<PropertyColumn Title="نوع دوره" Property="@(course => course.IsGeneral ? "عمومی" : "تخصصی")" />
-					<PropertyColumn Title="نوع برگزاری دوره" Property="@(course => course.IsOnline ? "مجازی" : "حضوری")" />
-				</QuickGrid>
-			}
-		</div>
-		<div class="total-hour d-flex justify-content-between">
-			<p>مجموع دوره های سال @Year</p>
-			<p><b>@totalHours</b> ساعت</p>
-		</div>
+			<div class="card-body">
+				<div class="courses-list">
+					@if (EmployeeCourses is not null)
+					{
+						<QuickGrid Items="EmployeeCourses.AsQueryable()" Theme="" Class="courses-table">
+							<PropertyColumn Title="عنوان دوره" Property="@(course => course.Title)" />
+							<PropertyColumn Title="ساعت دوره" Property="@(course => course.CourseTime)" />
+							<PropertyColumn Title="زمان برگزاری دوره" Property="@(course => string.Format("{0:0000}/{1:00}", course.Year, course.Month))" />
+							<PropertyColumn Title="نوع دوره" Property="@(course => course.IsGeneral ? "عمومی" : "تخصصی")" />
+							<PropertyColumn Title="نوع برگزاری دوره" Property="@(course => course.IsOnline ? "مجازی" : "حضوری")" />
+						</QuickGrid>
+					}
+				</div>
+				<div class="total-hour d-flex justify-content-between">
+					<p>مجموع دوره های سال @Year</p>
+					<p><b>@totalHours</b> ساعت</p>
+				</div>
+			</div>
+		}
 	</div>
-</div>
+}
 
 @code {
 	[Parameter]
 	public Guid? EmployeeId { get; set; }
 
-	private List<string> Years = new List<string>();
-	private string? Year;
+	[Parameter]
+	public string? Year { get; set; }
+
+	private List<string>? Years;
 
 	private Employee? Employee;
 
 	private List<Course>? EmployeeCourses;
 	private int totalHours = 0;
 
-	protected override async Task OnParametersSetAsync()
+	protected override async Task OnInitializedAsync()
 	{
 		Employee = null;
 
@@ -71,8 +87,9 @@
 
 		using var context = DbFactory.CreateDbContext();
 
-		Employee = await context.Employees.
-			FirstOrDefaultAsync(employee => employee.Id == EmployeeId);
+		Employee = await context.Employees
+			.Include(employee => employee.Courses)
+			.FirstOrDefaultAsync(employee => employee.Id == EmployeeId);
 
 		Years = await context.Courses
 			.Include(course => course.Employees)
@@ -84,11 +101,9 @@
 			.ToListAsync();
 
 		Year = Years.FirstOrDefault();
-
-		await SelectYear();
 	}
 
-	private async Task SelectYear()
+	protected override async Task OnParametersSetAsync()
 	{
 		EmployeeCourses = null;
 
