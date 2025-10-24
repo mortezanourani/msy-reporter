@@ -20,91 +20,100 @@
 		<NavLink class="panel-link" href="/Dashboard/SportsGroup/Insurance/Add">ثبت آمار ورزشکاران سازمان یافته</NavLink>
 	</div>
 </div>
-<div class="row">
-	<div class="col1-1">
-		<div class="card list-card">
-			<div class="card-header border-bottom">
-				<h6 class="title">آمار ورزشکاران سازمان یافته شهرستان @City?.PersianName</h6>
-				<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
-					@foreach (City city in Cities!)
-					{
-						<option value="@city.Id">@city.PersianName</option>
-					}
-				</InputSelect>
-			</div>
-			@if (Insurances is null)
-			{
-				<Loading CardMode=true />
-			}
-			else
-			{
-				<div class="card-body">
-					<div class="table-wrapper">
-						@if (Insurances is not null)
+@if (Cities is null)
+{
+	<Loading CardMode=true />
+}
+else
+{
+	<div class="row">
+		<div class="col1-1">
+			<div class="card list-card">
+				<div class="card-header border-bottom">
+					<h6 class="title">آمار ورزشکاران سازمان یافته شهرستان @City?.PersianName</h6>
+					<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="OnParametersSetAsync">
+						@foreach (City city in Cities!)
 						{
-							<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
-								<PropertyColumn Title="هیات ورزشی" Property="@(insurance => insurance.Key.PersianName)" />
-								<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insurance => insurance.MenCount)" />
-								<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insurance => insurance.WomenCount)" />
-								<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insurance => insurance.MenCount + insurance.WomenCount)" />
-								<TemplateColumn>
-									<a class="edit-link" href="/Dashboard/SportsGroup/Insurance/List/@City!.Id/@context.Key.Id">
-										<img src="/icons/calendar-blue.svg" />
-									</a>
-								</TemplateColumn>
-							</QuickGrid>
+							<option value="@city.Id">@city.PersianName</option>
 						}
-					</div>
+					</InputSelect>
 				</div>
-				<div class="card-footer pt-0">
-					<div class="paginator border-top pt-3">
-						<nav role="navigation">
-							@if (pagination.TotalItemCount.HasValue)
+				@if (Insurances is null)
+				{
+					<Loading CardMode=true />
+				}
+				else
+				{
+					<div class="card-body">
+						<div class="table-wrapper">
+							@if (Insurances is not null)
 							{
-								var totalPages = pagination.TotalItemCount;
-								var pageIndex = pagination.CurrentPageIndex;
-								var currentPage = pageIndex + 1;
-								var lastPage = pagination.LastPageIndex + 1;
-								var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
-								var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
-								<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
-										class="btn"
-										aria-current="@AriaCurrentValue(pageIndex - 1)"
-										aria-label="@(pageIndex - 1)"
-										disabled=@((pageIndex <= 0) ? "disabled" : false)>
-									<img src="/icons/arrow-right.svg" />
-								</button>
-								<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
-								<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
-										class="btn"
-										aria-current="@AriaCurrentValue(pageIndex + 1)"
-										aria-label="@(pageIndex + 1)"
-										disabled=@((currentPage >= lastPage) ? "disabled" : false)>
-									<img src="/icons/arrow-left.svg" />
-								</button>
+								<QuickGrid Items="Insurances.AsQueryable()" Pagination="pagination" Theme="" Class="quickgrid-table">
+									<PropertyColumn Title="هیات ورزشی" Property="@(insurance => insurance.Key.PersianName)" />
+									<PropertyColumn Title="تعداد بیمه آقایان" Property="@(insurance => insurance.MenCount)" />
+									<PropertyColumn Title="تعداد بیمه بانوان" Property="@(insurance => insurance.WomenCount)" />
+									<PropertyColumn Title="مجموع ورزشکاران سازمان یافته" Property="@(insurance => insurance.MenCount + insurance.WomenCount)" />
+									<TemplateColumn>
+										<a class="edit-link" href="/Dashboard/SportsGroup/Insurance/List/@City!.Id/@context.Key.Id">
+											<img src="/icons/calendar-blue.svg" />
+										</a>
+									</TemplateColumn>
+								</QuickGrid>
 							}
-						</nav>
-						<div class="total border-0 p-0">
-							<div class="total">
-								@($"آقایان: {Insurances!.Sum(insurance => insurance.MenCount)}")
-							</div>
-							<div class="total">
-								@($"بانوان: {Insurances!.Sum(insurance => insurance.WomenCount)}")
-							</div>
-							<div class="total">
-								@($"مجموع: {Insurances!.Sum(insurance => insurance.WomenCount + insurance.MenCount)}")
+						</div>
+					</div>
+					<div class="card-footer pt-0">
+						<div class="paginator border-top pt-3">
+							<nav role="navigation">
+								@if (pagination.TotalItemCount.HasValue)
+								{
+									var totalPages = pagination.TotalItemCount;
+									var pageIndex = pagination.CurrentPageIndex;
+									var currentPage = pageIndex + 1;
+									var lastPage = pagination.LastPageIndex + 1;
+									var firstItemNumber = 1 + (pagination.ItemsPerPage * pagination.CurrentPageIndex);
+									var lastItemNumber = pagination.ItemsPerPage * (pagination.CurrentPageIndex + 1);
+									<button @onclick="@(() => GoToPageAsync(pageIndex - 1))"
+											class="btn"
+											aria-current="@AriaCurrentValue(pageIndex - 1)"
+											aria-label="@(pageIndex - 1)"
+											disabled=@((pageIndex <= 0) ? "disabled" : false)>
+										<img src="/icons/arrow-right.svg" />
+									</button>
+									<div class="total">@string.Format("صفحه {0} از {1}", currentPage, lastPage)</div>
+									<button @onclick="@(() => GoToPageAsync(pageIndex + 1))"
+											class="btn"
+											aria-current="@AriaCurrentValue(pageIndex + 1)"
+											aria-label="@(pageIndex + 1)"
+											disabled=@((currentPage >= lastPage) ? "disabled" : false)>
+										<img src="/icons/arrow-left.svg" />
+									</button>
+								}
+							</nav>
+							<div class="total border-0 p-0">
+								<div class="total">
+									@($"آقایان: {Insurances!.Sum(insurance => insurance.MenCount)}")
+								</div>
+								<div class="total">
+									@($"بانوان: {Insurances!.Sum(insurance => insurance.WomenCount)}")
+								</div>
+								<div class="total">
+									@($"مجموع: {Insurances!.Sum(insurance => insurance.WomenCount + insurance.MenCount)}")
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			}
+				}
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 @code {
-	private IQueryable<City>? Cities;
-	private int CityId = 1;
+	[Parameter]
+	public int CityId { get; set; }
+
+	private List<City>? Cities;
 	private City? City;
 
 	private List<ViewModel>? Insurances;
@@ -115,10 +124,11 @@
 	{
 		using var context = DbFactory.CreateDbContext();
 
-		Cities = context.Cities
-			.Where(city => city.Id != 0);
+		Cities = await context.Cities
+			.Where(city => city.Id != 0)
+			.ToListAsync();
 
-		await UpdateList();
+		CityId = Cities.FirstOrDefault().Id;
 	}
 
 	private async Task Search(ChangeEventArgs args)
@@ -141,11 +151,11 @@
 			)
 			.GroupBy(insurance => insurance.Federation)
 				.Select(group => new ViewModel
-					{
-						Key = group.Key,
-						MenCount = group.Sum(i => i.MenCount),
-						WomenCount = group.Sum(i => i.WomenCount),
-					})
+				{
+					Key = group.Key,
+					MenCount = group.Sum(i => i.MenCount),
+					WomenCount = group.Sum(i => i.WomenCount),
+				})
 			.OrderBy(select => select.Key.PersianName)
 			.ToListAsync()
 		: await context.Insurances
@@ -160,16 +170,16 @@
 			)
 			.GroupBy(insurance => insurance.Federation)
 				.Select(group => new ViewModel
-					{
-						Key = group.Key,
-						MenCount = group.Sum(i => i.MenCount),
-						WomenCount = group.Sum(i => i.WomenCount),
-					})
+				{
+					Key = group.Key,
+					MenCount = group.Sum(i => i.MenCount),
+					WomenCount = group.Sum(i => i.WomenCount),
+				})
 			.OrderBy(select => select.Key.PersianName)
 			.ToListAsync();
 	}
 
-	private async Task UpdateList()
+	protected override async Task OnParametersSetAsync()
 	{
 		Insurances = null;
 		searchText = string.Empty;
@@ -191,11 +201,11 @@
 			)
 			.GroupBy(insurance => insurance.Federation)
 				.Select(group => new ViewModel
-					{
-						Key = group.Key,
-						MenCount = group.Sum(i => i.MenCount),
-						WomenCount = group.Sum(i => i.WomenCount),
-					})
+				{
+					Key = group.Key,
+					MenCount = group.Sum(i => i.MenCount),
+					WomenCount = group.Sum(i => i.WomenCount),
+				})
 			.OrderBy(select => select.Key.PersianName)
 			.ToListAsync();
 
