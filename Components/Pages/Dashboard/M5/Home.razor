@@ -102,7 +102,7 @@
 
 	private City? City;
 
-	private IQueryable<City>? Cities;
+	private List<City>? Cities;
 
 	private List<PrivateFacility>? Facilities { get; set; }
 
@@ -112,8 +112,9 @@
 	{
 		using var context = DbFactory.CreateDbContext();
 
-		Cities = context.Cities
-			.Where(city => city.Id != 0);
+		Cities = await context.Cities
+			.Where(city => city.Id != 0)
+			.ToListAsync();
 
 		await UpdateList();
 	}
