@@ -8,77 +8,85 @@
 
 <PageTitle>ماده 88</PageTitle>
 
-<div class="row">
-	<div class="col1-1">
-		<div class="card facilities-list-card">
-			<div class="card-header border-bottom">
-				<h6 class="title">فهرست اماکن ورزشی وزارت ورزش و جوانان شهرستان @City?.PersianName</h6>
-				<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="UpdateList">
-					@foreach (City city in Cities!)
-					{
-						<option value="@city.Id">@city.PersianName</option>
-					}
-				</InputSelect>
-			</div>
-			@if (Facilities is null)
-			{
-				<Loading CardMode=true />
-			}
-			else
-			{
-				<div class="card-body">
-					<div class="facilities-list">
-						@if (Facilities is not null)
+@if (Cities is null)
+{
+	<Loading CardMode=true />
+}
+else
+{
+	<div class="row">
+		<div class="col1-1">
+			<div class="card facilities-list-card">
+				<div class="card-header border-bottom">
+					<h6 class="title">فهرست اماکن ورزشی وزارت ورزش و جوانان شهرستان @City?.PersianName</h6>
+					<InputSelect class="select" @bind-Value="CityId" @bind-Value:after="OnParametersSetAsync">
+						@foreach (City city in Cities!)
 						{
-							<QuickGrid Items="Facilities.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
-								<PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
-								<PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : string.Empty)" />
-								<PropertyColumn Title="موقعیت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
-								<PropertyColumn Title="جنسیت کاربران" Property="@(facility => facility.UsersGender!.PersianName)" />
-								<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />
-								<TemplateColumn>
-									<a class="edit-link" href="/Dashboard/Facilities/Edit/@context.Id">
-										<img src="/icons/square-edit.svg" />
-									</a>
-								</TemplateColumn>
-							</QuickGrid>
+							<option value="@city.Id">@city.PersianName</option>
 						}
-					</div>
+					</InputSelect>
 				</div>
-				<div class="card-footer pt-0">
-					<div class="paginator border-top pt-3">
-						<nav role="navigation">
-							@if (pagination.TotalItemCount.HasValue)
+				@if (Facilities is null)
+				{
+					<Loading CardMode=true />
+				}
+				else
+				{
+					<div class="card-body">
+						<div class="facilities-list">
+							@if (Facilities is not null)
 							{
-								for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
-								{
-									var capturedIndex = pageIndex;
-									<button @onclick="@(() => GoToPageAsync(capturedIndex))"
-											class="btn @PageButtonClass(capturedIndex)"
-											aria-current="@AriaCurrentValue(capturedIndex)"
-											aria-label="@(pageIndex + 1)">
-										@(pageIndex + 1)
-									</button>
-								}
+								<QuickGrid Items="Facilities.AsQueryable()" Pagination="pagination" Theme="" Class="facilities-table">
+									<PropertyColumn Title="عنوان مکان ورزشی" Property="@(facility => facility.Name)" />
+									<PropertyColumn Title="نوع مکان" Property="@(facility => facility.TypeId != null ? facility.Type!.PersianTitle : string.Empty)" />
+									<PropertyColumn Title="موقعیت جغرافیایی" Property="@(facility => facility.IsRural == true ? "روستایی" : "شهری")" />
+									<PropertyColumn Title="جنسیت کاربران" Property="@(facility => facility.UsersGender!.PersianName)" />
+									<PropertyColumn Title="وضعیت فعالیت" Property="@(facility => facility.IsActive == true ? "فعال" : "غیرفعال")" />
+									<TemplateColumn>
+										<a class="edit-link" href="/Dashboard/Facilities/Edit/@context.Id">
+											<img src="/icons/square-edit.svg" />
+										</a>
+									</TemplateColumn>
+								</QuickGrid>
 							}
-						</nav>
-						<div class="total">
-							@string.Format("{0} مکان", pagination.TotalItemCount)
 						</div>
 					</div>
-				</div>
+					<div class="card-footer pt-0">
+						<div class="paginator border-top pt-3">
+							<nav role="navigation">
+								@if (pagination.TotalItemCount.HasValue)
+								{
+									for (var pageIndex = 0; pageIndex <= pagination.LastPageIndex; pageIndex++)
+									{
+										var capturedIndex = pageIndex;
+										<button @onclick="@(() => GoToPageAsync(capturedIndex))"
+												class="btn @PageButtonClass(capturedIndex)"
+												aria-current="@AriaCurrentValue(capturedIndex)"
+												aria-label="@(pageIndex + 1)">
+											@(pageIndex + 1)
+										</button>
+									}
+								}
+							</nav>
+							<div class="total">
+								@string.Format("{0} مکان", pagination.TotalItemCount)
+							</div>
+						</div>
+					</div>
 
-			}
+				}
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 @code {
-	private int CityId = 1;
+	[Parameter]
+	public int CityId { get; set; }
 
 	private City? City;
 
-	private IQueryable<City>? Cities;
+	private List<City>? Cities;
 
 	private List<Facility>? Facilities { get; set; }
 
@@ -86,13 +94,14 @@
 	{
 		using var context = DbFactory.CreateDbContext();
 
-		Cities = context.Cities
-			.Where(city => city.Id != 0);
+		Cities = await context.Cities
+			.Where(city => city.Id != 0)
+			.ToListAsync();
 
-		await UpdateList();
+		CityId = Cities.FirstOrDefault()!.Id;
 	}
 
-	private async Task UpdateList()
+	protected override async Task OnParametersSetAsync()
 	{
 		Facilities = null;
 
