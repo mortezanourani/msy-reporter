@@ -44,33 +44,27 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var currentYear = 1404;
+        
         using var context = DbFactory.CreateDbContext();
 
-        var facilities = await context.PrivateFacilities
-            .Include(f => f.PrivateFacilityLicenses)
+        var population = await context.Population
+            .Where(m => m.Year >= currentYear - 10)
             .ToListAsync();
 
-        var urbanPopulation = facilities.Count();
+        UrbanMenPopulation = population
+            .Sum(m => m.UrbanMen);
 
-        UrbanMenPopulation = facilities
-            .Where(f => f.IsRural == true)
-            .Count();
+        UrbanWomenPopulation = population
+            .Sum(m => m.UrbanWomen);
 
-        UrbanWomenPopulation = facilities
-            .Where(f => f.IsRural == false)
-            .Count();
+        RuralMenPopulation = population
+            .Sum(m => m.RuralMen);
 
-        RuralMenPopulation = facilities
-            .Where(f => f.IsRural == true)
-            .Count();
-
-        RuralWomenPopulation = facilities
-            .Where(f => f.IsRural == false)
-            .Count();
+        RuralWomenPopulation = population
+            .Sum(m => m.RuralWomen);
 
         TotalPopulation = UrbanMenPopulation + UrbanWomenPopulation + RuralMenPopulation + RuralWomenPopulation;
-
-        await OnParametersSetAsync();
     }
 
     protected override async Task OnParametersSetAsync()
@@ -80,30 +74,26 @@
             return;
         }
 
+        var currentYear = 1404;
+        
         using var context = DbFactory.CreateDbContext();
 
-        var facilities = await context.PrivateFacilities
-            .Include(f => f.PrivateFacilityLicenses)
-            .Where(f => f.CityId == CityId)
+        var population = await context.Population
+            .Where(m => m.Year >= currentYear - 10)
+            .Where(m => m.CityId == CityId)
             .ToListAsync();
 
-        var urbanPopulation = facilities.Count();
+        UrbanMenPopulation = population
+            .Sum(m => m.UrbanMen);
 
-        UrbanMenPopulation = facilities
-            .Where(f => f.IsRural == true)
-            .Count();
+        UrbanWomenPopulation = population
+            .Sum(m => m.UrbanWomen);
 
-        UrbanWomenPopulation = facilities
-            .Where(f => f.IsRural == false)
-            .Count();
+        RuralMenPopulation = population
+            .Sum(m => m.RuralMen);
 
-        RuralMenPopulation = facilities
-            .Where(f => f.IsRural == true)
-            .Count();
-
-        RuralWomenPopulation = facilities
-            .Where(f => f.IsRural == false)
-            .Count();
+        RuralWomenPopulation = population
+            .Sum(m => m.RuralWomen);
 
         TotalPopulation = UrbanMenPopulation + UrbanWomenPopulation + RuralMenPopulation + RuralWomenPopulation;
     }
