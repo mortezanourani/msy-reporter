@@ -1,0 +1,107 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+
+@page "/Dashboard/Administration/Population"
+
+@rendermode InteractiveServer
+
+@layout _Layout
+
+<PageTitle>جمعیت استان</PageTitle>
+
+<div class="page-top-menu">
+	<h6 class="panel-title">جمعیت شهرستان ها</h6>
+	<div class="top-menu-links">
+		<NavLink class="panel-link" href="/Dashboard/Administration/Population/Add">ثبت اطلاعات جدید جمعیت</NavLink>
+	</div>
+</div>
+<div class="row">
+	<div class="col1-1">
+		<div class="card list-card">
+			<div class="card-header border-bottom">
+				<h6 class="panel-title"></h6>
+				@if (Years is not null)
+				{
+					<InputSelect class="select" @bind-Value="Year" @bind-Value:after="OnParametersSetAsync">
+						@foreach (int year in Years!)
+						{
+							<option value="@year">@year</option>
+						}
+					</InputSelect>
+				}
+			</div>
+			@if (Populations is null)
+			{
+				<Loading CardMode=true />
+			}
+			else
+			{
+				<div class="card-body">
+					<div class="table-wrapper">
+						@if (Populations is not null)
+						{
+							<QuickGrid Items="Populations.AsQueryable()" Theme="" Class="quickgrid-table">
+								<PropertyColumn IsDefaultSortColumn=true Title="شهرستان" Property="@(population => population.City.PersianName)" />
+								<PropertyColumn Title="جمعیت شهری مردان" Property="@(population => $"{population.UrbanMen:#,0}")" />
+								<PropertyColumn Title="جمعیت شهری زنان" Property="@(population => $"{population.UrbanWomen:#,0}")" />
+								<PropertyColumn Title="جمعیت شهری" Property="@(population => $"{population.UrbanMen + population.UrbanWomen:#,0}")" />
+								<PropertyColumn Title="جمعیت روستای مردان" Property="@(population => $"{population.RuralMen:#,0}")" />
+								<PropertyColumn Title="جمعیت روستایی زنان" Property="@(population => $"{population.RuralWomen:#,0}")" />
+								<PropertyColumn Title="جمعیت روستایی" Property="@(population => $"{population.RuralMen + population.RuralWomen:#,0}")" />
+								<PropertyColumn Title="جمعیت کل" Property="@(population => $"{population.RuralMen + population.RuralWomen + population.UrbanMen + population.UrbanWomen:#,0}")" />
+								<TemplateColumn>
+									<a class="edit-link" href="/Dashboard/Administration/Population/Edit/@context.Id">
+										<img src="/icons/square-edit.svg" />
+									</a>
+								</TemplateColumn>
+							</QuickGrid>
+						}
+					</div>
+				</div>
+				<div class="card-footer pt-0">
+					<div class="paginator border-top pt-3">
+						<div class="total">
+							@($"جمعیت کل استان {TotalPopulation:#,0}")
+						</div>
+					</div>
+				</div>
+
+			}
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public int Year { get; set; }
+
+	private List<int>? Years;
+
+	private List<Population>? Populations { get; set; }
+	private int TotalPopulation { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		using var context = DbFactory.CreateDbContext();
+
+		Years = await context.Population
+			.GroupBy(p => p.Year)
+			.Select(g => g.Key)
+			.OrderByDescending(y => y)
+			.ToListAsync();
+
+		Year = Years.FirstOrDefault();
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		using var context = DbFactory.CreateDbContext();
+
+		Populations = await context.Population
+			.Include(m => m.City)
+			.Where(m => m.Year == Year)
+			.ToListAsync();
+
+		TotalPopulation = Populations
+			.Sum(p => p.UrbanMen + p.RuralMen + p.UrbanWomen + p.RuralWomen);
+	}
+}

@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Reporter.Data;
 
 namespace Reporter.Data
 {
@@ -64,5 +65,6 @@ namespace Reporter.Data
         public virtual DbSet<TournamentLevel> TournamentLevels { get; set; }
 
         public virtual DbSet<UsersGender> UsersGenders { get; set; }
+        public DbSet<Reporter.Data.Population> Population { get; set; } = default!;
     }
 }
